@@ -1,0 +1,79 @@
+✖ photo reference survives closing and reopening the SQLite catalog (1.81169ms)
+✖ reimporting the same path reuses its reference (0.428414ms)
+✖ unknown identifiers never return another photo (0.438578ms)
+✖ a newer schema is refused without overwriting its version or data (4.833739ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 166.769125
+
+✖ failing tests:
+
+test at test/catalog.test.ts:15:1
+✖ photo reference survives closing and reopening the SQLite catalog (1.81169ms)
+  Error: Catalog not implemented
+      at new Catalog (file:///workspace/shared/revelumo-work/src/main/catalog.ts:2:42)
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/catalog.test.ts:17:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at test/catalog.test.ts:26:1
+✖ reimporting the same path reuses its reference (0.428414ms)
+  Error: Catalog not implemented
+      at new Catalog (file:///workspace/shared/revelumo-work/src/main/catalog.ts:2:42)
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/catalog.test.ts:27:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at test/catalog.test.ts:33:1
+✖ unknown identifiers never return another photo (0.438578ms)
+  Error: Catalog not implemented
+      at new Catalog (file:///workspace/shared/revelumo-work/src/main/catalog.ts:2:42)
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/catalog.test.ts:34:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at test/catalog.test.ts:39:1
+✖ a newer schema is refused without overwriting its version or data (4.833739ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /newer schema/. Input:
+
+  'Error: Catalog not implemented'
+
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/catalog.test.ts:44:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: Catalog not implemented
+        at new Catalog (file:///workspace/shared/revelumo-work/src/main/catalog.ts:2:42)
+        at file:///workspace/shared/revelumo-work/test/catalog.test.ts:44:23
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/catalog.test.ts:44:10)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19)
+        at Test.run (node:internal/test_runner/test:1447:12),
+    expected: /newer schema/,
+    operator: 'throws',
+    diff: 'simple'
+  }

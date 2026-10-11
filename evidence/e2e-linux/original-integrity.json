@@ -1,0 +1,20 @@
+[
+  {
+    "path": "test/fixtures/qa-invalid.jpg",
+    "before_sha256": "48de5aaaac26f0974913da018208e24b946d90209881e71710207ce947d9a1ce",
+    "after_sha256": "48de5aaaac26f0974913da018208e24b946d90209881e71710207ce947d9a1ce",
+    "unchanged": true
+  },
+  {
+    "path": "test/fixtures/qa-orientation-8.jpg",
+    "before_sha256": "4a14b83b2c17df90dc01fe88e09e4105c80831f959691778d5169d6c34229003",
+    "after_sha256": "4a14b83b2c17df90dc01fe88e09e4105c80831f959691778d5169d6c34229003",
+    "unchanged": true
+  },
+  {
+    "path": "test/fixtures/qa-orientation-6.jpg",
+    "before_sha256": "4568372f085885058eb2141536d068fffc9395e6fcfefa7824f531b65f63bd70",
+    "after_sha256": "4568372f085885058eb2141536d068fffc9395e6fcfefa7824f531b65f63bd70",
+    "unchanged": true
+  }
+]

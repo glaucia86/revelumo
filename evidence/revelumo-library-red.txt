@@ -1,0 +1,90 @@
+✖ imports by reference, returns no private path and leaves original bytes/location unchanged (6.881698ms)
+✖ canceling selection leaves the catalog empty (2.436363ms)
+✖ non-JPEG content cannot enter the catalog even with a .jpg suffix (1.90649ms)
+✖ decoder rejection prevents storing malformed JPEG-shaped content (1.838509ms)
+✖ missing files and directories return readable errors without a record (2.003113ms)
+✖ oversized JPEG is rejected before preview decoding (2.632484ms)
+✖ a missing original stays cataloged and reports an unavailable preview (1.343297ms)
+✖ preview lookup cannot use an arbitrary filesystem path (1.301465ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 0
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 129.165462
+
+✖ failing tests:
+
+test at test/library.test.ts:23:1
+✖ imports by reference, returns no private path and leaves original bytes/location unchanged (6.881698ms)
+  Error: Library not implemented
+      at new Library (file:///workspace/shared/revelumo-work/src/main/library.ts:2:44)
+      at setup (file:///workspace/shared/revelumo-work/test/library.test.ts:19:41)
+      at async TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/library.test.ts:24:38)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at test/library.test.ts:39:1
+✖ canceling selection leaves the catalog empty (2.436363ms)
+  Error: Library not implemented
+      at new Library (file:///workspace/shared/revelumo-work/src/main/library.ts:2:44)
+      at setup (file:///workspace/shared/revelumo-work/test/library.test.ts:19:41)
+      at async TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/library.test.ts:40:32)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at test/library.test.ts:45:1
+✖ non-JPEG content cannot enter the catalog even with a .jpg suffix (1.90649ms)
+  Error: Library not implemented
+      at new Library (file:///workspace/shared/revelumo-work/src/main/library.ts:2:44)
+      at setup (file:///workspace/shared/revelumo-work/test/library.test.ts:19:41)
+      at async TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/library.test.ts:46:38)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at test/library.test.ts:52:1
+✖ decoder rejection prevents storing malformed JPEG-shaped content (1.838509ms)
+  Error: Library not implemented
+      at new Library (file:///workspace/shared/revelumo-work/src/main/library.ts:2:44)
+      at setup (file:///workspace/shared/revelumo-work/test/library.test.ts:19:41)
+      at async TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/library.test.ts:53:38)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at test/library.test.ts:58:1
+✖ missing files and directories return readable errors without a record (2.003113ms)
+  Error: Library not implemented
+      at new Library (file:///workspace/shared/revelumo-work/src/main/library.ts:2:44)
+      at setup (file:///workspace/shared/revelumo-work/test/library.test.ts:19:41)
+      at async TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/library.test.ts:59:37)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at test/library.test.ts:65:1
+✖ oversized JPEG is rejected before preview decoding (2.632484ms)
+  Error: Library not implemented
+      at new Library (file:///workspace/shared/revelumo-work/src/main/library.ts:2:44)
+      at setup (file:///workspace/shared/revelumo-work/test/library.test.ts:19:41)
+      at async TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/library.test.ts:66:38)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at test/library.test.ts:72:1
+✖ a missing original stays cataloged and reports an unavailable preview (1.343297ms)
+  Error: Library not implemented
+      at new Library (file:///workspace/shared/revelumo-work/src/main/library.ts:2:44)
+      at setup (file:///workspace/shared/revelumo-work/test/library.test.ts:19:41)
+      at async TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/library.test.ts:73:38)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at test/library.test.ts:80:1
+✖ preview lookup cannot use an arbitrary filesystem path (1.301465ms)
+  Error: Library not implemented
+      at new Library (file:///workspace/shared/revelumo-work/src/main/library.ts:2:44)
+      at setup (file:///workspace/shared/revelumo-work/test/library.test.ts:19:41)
+      at async TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/library.test.ts:81:29)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

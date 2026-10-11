@@ -1,0 +1,94 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> revelumo@0.0.1 test
+> node --test test/*.test.ts
+
+✔ serves only packaged assets under the app origin (1.068831ms)
+✔ rejects foreign origins, escapes and non-asset extensions (0.367574ms)
+✔ mixed batch commits valid references, reports each failure and emits monotonic progress (13.505098ms)
+✔ canonical path deduplication includes symlink aliases and preserves identifier (5.494838ms)
+✔ decoding stays serial even with overlapping service requests (81.234015ms)
+✔ stopping a batch preserves committed photos and cached thumbnails after reopening (4.836685ms)
+✔ canceling multiple selection creates nothing; a missing legacy cache is generated once (3.290477ms)
+✔ photo reference survives closing and reopening the SQLite catalog (4.743527ms)
+✔ reimporting the same path reuses its reference (1.560619ms)
+✔ unknown identifiers never return another photo (1.53484ms)
+✔ a newer schema is refused without overwriting its version or data (1.627337ms)
+✔ thumbnail is derived data persisted with the reference and survives reopening (3.037664ms)
+✔ migrates a version-one catalog without changing photo identity (1.005798ms)
+✖ gallery bounds each page and retains photo identity for preview selection (1.991246ms)
+✖ gallery clamps pages when the library shrinks and handles an empty library (0.300935ms)
+✔ reads dimensions from an actual JPEG before invoking a decoder (2.224721ms)
+✔ refuses malformed JPEG and excessive pixel dimensions before decoding (1.738817ms)
+✔ import rejects a named pipe without waiting for a writer (131.722455ms)
+✔ preview rejects a named pipe without waiting for a writer (102.757424ms)
+✔ imports by reference, returns no private path and leaves original bytes/location unchanged (11.869327ms)
+✔ canceling selection leaves the catalog empty (3.708797ms)
+✔ non-JPEG content cannot enter the catalog even with a .jpg suffix (3.112184ms)
+✔ decoder rejection prevents storing malformed JPEG-shaped content (2.615699ms)
+✔ missing files and directories return readable errors without a record (8.541024ms)
+✔ oversized JPEG is rejected before preview decoding (3.070813ms)
+✔ a missing original stays cataloged and reports an unavailable preview (6.043369ms)
+✔ preview lookup cannot use an arbitrary filesystem path (3.691175ms)
+✔ preview carries the original JPEG bytes including EXIF orientation to the renderer (1.520509ms)
+✔ decoder failures cannot create a preview (0.43967ms)
+✔ accepts only the three supported typed operations (1.276718ms)
+✔ rejects malformed, unknown and overprivileged IPC payloads (0.352041ms)
+✔ accepts progress and UUID-scoped thumbnails but rejects paths and excess fields (0.179486ms)
+✔ a second Node process reopens the persisted photo reference and original (193.704337ms)
+✔ thumbnail is bounded and carries orientation rather than replacing the original (2.232602ms)
+✔ all eight EXIF orientation values survive derivative encoding (0.689049ms)
+✔ missing or malformed orientation falls back safely without out-of-range reads (0.360413ms)
+✔ thumbnail rejects over-budget originals before decoding and oversized derivatives (0.636531ms)
+✔ normalizes the development URL trailing slash without weakening document identity (0.781496ms)
+✔ rejects foreign ports, hosts, documents, credentials and malformed URLs (0.288206ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 37
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 529.214444
+
+✖ failing tests:
+
+test at test/gallery.test.ts:5:1
+✖ gallery bounds each page and retains photo identity for preview selection (1.991246ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 48
+  
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/gallery.test.ts:6:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 48,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/gallery.test.ts:12:1
+✖ gallery clamps pages when the library shrinks and handles an empty library (0.300935ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 2
+  
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/gallery.test.ts:13:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

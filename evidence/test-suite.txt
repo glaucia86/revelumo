@@ -1,0 +1,38 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> revelumo@0.0.1 test
+> node --test test/*.test.ts
+
+✔ serves only packaged assets under the app origin (1.341404ms)
+✔ rejects foreign origins, escapes and non-asset extensions (0.238122ms)
+✔ photo reference survives closing and reopening the SQLite catalog (4.538443ms)
+✔ reimporting the same path reuses its reference (1.264411ms)
+✔ unknown identifiers never return another photo (0.851269ms)
+✔ a newer schema is refused without overwriting its version or data (1.238332ms)
+✔ reads dimensions from an actual JPEG before invoking a decoder (1.528321ms)
+✔ refuses malformed JPEG and excessive pixel dimensions before decoding (0.601439ms)
+✔ import rejects a named pipe without waiting for a writer (107.126053ms)
+✔ preview rejects a named pipe without waiting for a writer (94.089891ms)
+✔ imports by reference, returns no private path and leaves original bytes/location unchanged (19.65034ms)
+✔ canceling selection leaves the catalog empty (3.526476ms)
+✔ non-JPEG content cannot enter the catalog even with a .jpg suffix (3.801633ms)
+✔ decoder rejection prevents storing malformed JPEG-shaped content (2.686083ms)
+✔ missing files and directories return readable errors without a record (5.100735ms)
+✔ oversized JPEG is rejected before preview decoding (3.998374ms)
+✔ a missing original stays cataloged and reports an unavailable preview (3.775264ms)
+✔ preview lookup cannot use an arbitrary filesystem path (2.354142ms)
+✔ preview carries the original JPEG bytes including EXIF orientation to the renderer (1.756118ms)
+✔ decoder failures cannot create a preview (0.59519ms)
+✔ accepts only the three supported typed operations (2.655107ms)
+✔ rejects malformed, unknown and overprivileged IPC payloads (0.346342ms)
+✔ a second Node process reopens the persisted photo reference and original (204.132169ms)
+✔ normalizes the development URL trailing slash without weakening document identity (0.976755ms)
+✔ rejects foreign ports, hosts, documents, credentials and malformed URLs (0.245183ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 371.091528

@@ -1,0 +1,53 @@
+✖ preview carries the original JPEG bytes including EXIF orientation to the renderer (0.685544ms)
+✖ decoder failures cannot create a preview (0.75691ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 110.610483
+
+✖ failing tests:
+
+test at test/preview.test.ts:6:1
+✖ preview carries the original JPEG bytes including EXIF orientation to the renderer (0.685544ms)
+  Error: Metadata-preserving preview not implemented
+      at jpegPreview (file:///workspace/shared/revelumo-work/src/main/preview.ts:2:9)
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/preview.test.ts:7:16)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at test/preview.test.ts:11:1
+✖ decoder failures cannot create a preview (0.75691ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Decode failed/. Input:
+
+  'Error: Metadata-preserving preview not implemented'
+
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/preview.test.ts:12:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: Metadata-preserving preview not implemented
+        at jpegPreview (file:///workspace/shared/revelumo-work/src/main/preview.ts:2:9)
+        at file:///workspace/shared/revelumo-work/test/preview.test.ts:12:23
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/preview.test.ts:12:10)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19)
+        at Test.run (node:internal/test_runner/test:1447:12),
+    expected: /Decode failed/,
+    operator: 'throws',
+    diff: 'simple'
+  }

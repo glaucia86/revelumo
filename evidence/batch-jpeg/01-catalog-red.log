@@ -1,0 +1,64 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> revelumo@0.0.1 test
+> node --test test/*.test.ts
+
+✔ serves only packaged assets under the app origin (0.930566ms)
+✔ rejects foreign origins, escapes and non-asset extensions (0.234286ms)
+✔ photo reference survives closing and reopening the SQLite catalog (3.345498ms)
+✔ reimporting the same path reuses its reference (0.82472ms)
+✔ unknown identifiers never return another photo (0.730651ms)
+✔ a newer schema is refused without overwriting its version or data (1.22383ms)
+✖ thumbnail is derived data persisted with the reference and survives reopening (1.925929ms)
+✖ migrates a version-one catalog without changing photo identity (0.785171ms)
+✔ reads dimensions from an actual JPEG before invoking a decoder (1.793403ms)
+✔ refuses malformed JPEG and excessive pixel dimensions before decoding (0.935294ms)
+✔ import rejects a named pipe without waiting for a writer (105.575819ms)
+✔ preview rejects a named pipe without waiting for a writer (115.651305ms)
+✔ imports by reference, returns no private path and leaves original bytes/location unchanged (19.190533ms)
+✔ canceling selection leaves the catalog empty (4.4765ms)
+✔ non-JPEG content cannot enter the catalog even with a .jpg suffix (3.073375ms)
+✔ decoder rejection prevents storing malformed JPEG-shaped content (2.250328ms)
+✔ missing files and directories return readable errors without a record (4.500006ms)
+✔ oversized JPEG is rejected before preview decoding (2.238962ms)
+✔ a missing original stays cataloged and reports an unavailable preview (2.587107ms)
+✔ preview lookup cannot use an arbitrary filesystem path (1.707336ms)
+✔ preview carries the original JPEG bytes including EXIF orientation to the renderer (1.855715ms)
+✔ decoder failures cannot create a preview (0.491026ms)
+✔ accepts only the three supported typed operations (1.909294ms)
+✔ rejects malformed, unknown and overprivileged IPC payloads (0.364289ms)
+✔ a second Node process reopens the persisted photo reference and original (189.828735ms)
+✔ normalizes the development URL trailing slash without weakening document identity (0.686325ms)
+✔ rejects foreign ports, hosts, documents, credentials and malformed URLs (0.243039ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 25
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 373.615505
+
+✖ failing tests:
+
+test at test/catalog.test.ts:50:1
+✖ thumbnail is derived data persisted with the reference and survives reopening (1.925929ms)
+  TypeError: reopened.thumbnail is not a function
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/catalog.test.ts:56:25)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at test/catalog.test.ts:60:1
+✖ migrates a version-one catalog without changing photo identity (0.785171ms)
+  TypeError: catalog.thumbnail is not a function
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/catalog.test.ts:67:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
