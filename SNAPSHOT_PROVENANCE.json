@@ -1,0 +1,31 @@
+{
+  "repository": "glaucia86/revelumo",
+  "commit_sha": "ca4ae00e18b21b1bcca69e217e4034c4a1f5d0c2",
+  "source": "Connected GitHub read-only API; not a git clone",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "git_blob_sha": "ae3e9e20704b553099f3d3dddcacaa14031f5f0e",
+      "sha256": "be3f3f0fd1a4186d028918bddb8d9c89bef2d0c8e5f832d739200b018b0ecdec",
+      "bytes": 1551
+    },
+    {
+      "path": "docs-agents/context-workflow.md",
+      "git_blob_sha": "3802d719849770e3840e6f86cb4e7dd69703c1fa",
+      "sha256": "910b3db5047515ffc8fbb2023e9f22942deb4b40a947b2e2ebc15fc3fc1b1d4c",
+      "bytes": 1269
+    },
+    {
+      "path": "docs-agents/domain.md",
+      "git_blob_sha": "1547697faa2953bbaef8a28ab1cefa1d1381b952",
+      "sha256": "eddf3a28d17b13c99f9ba0b5deacb14e387e1bb2e0a58d17e0efc0c410aca418",
+      "bytes": 1427
+    },
+    {
+      "path": "docs-agents/issue-tracker.md",
+      "git_blob_sha": "a92337c575dfc9bce59e4476415f2be88698072f",
+      "sha256": "82565d03c29dcf7a2a64f6ef9721b70b65a37fa0c3010e6bc2a357a0b1bbb8b5",
+      "bytes": 1759
+    }
+  ]
+}

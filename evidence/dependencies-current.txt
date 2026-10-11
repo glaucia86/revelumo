@@ -1,0 +1,13 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+revelumo@0.0.1 /workspace/shared/revelumo-work
+├── @electron-forge/cli@8.0.1
+├── @electron-forge/plugin-vite@8.0.1
+├── @electron-forge/shared-types@8.0.1
+├── @types/node@24.19.2
+├── @types/react-dom@19.3.0
+├── @types/react@19.3.0
+├── electron@44.7.0
+├── react-dom@19.3.0
+├── react@19.3.0
+├── typescript@5.9.3
+└── vite@8.3.4

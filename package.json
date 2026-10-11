@@ -1,0 +1,38 @@
+{
+  "name": "revelumo",
+  "productName": "Revelumo",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Editor fotográfico local — primeira fatia JPEG em desenvolvimento",
+  "type": "module",
+  "main": ".vite/build/index.cjs",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "install:electron": "install-electron"
+  },
+  "dependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "8.0.1",
+    "@electron-forge/shared-types": "8.0.1",
+    "@electron-forge/plugin-vite": "8.0.1",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "electron": "44.7.0",
+    "typescript": "^5.8.0",
+    "vite": "^8.0.0"
+  },
+  "config": {
+    "forge": "./forge.config.mts"
+  }
+}

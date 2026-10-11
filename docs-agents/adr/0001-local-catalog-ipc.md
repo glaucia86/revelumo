@@ -1,0 +1,9 @@
+# 0001: Catálogo SQLite local e IPC restrito
+
+Decisão aprovada na conversa em 11/10/2026: SQLite local, acesso exclusivo pelo processo principal e operações IPC limitadas e tipadas. A divisão em quatro fatias também foi aprovada; esta implementação cobre somente importar um JPEG por operação, visualizá-lo e reencontrá-lo ao reabrir.
+
+O banco fica em `app.getPath('userData')/catalog.sqlite`. Originais são referenciados por caminho canônico e nunca escritos pelo aplicativo. O renderer não recebe caminhos e não tem acesso ao banco, Node ou filesystem. Preload expõe apenas importar, listar e visualizar por identificador. O processo principal valida operação, payload e origem do IPC.
+
+Alternativas: JSON é simples, mas exige reescrita integral e migração posterior; banco remoto conflita com a operação local. SQLite mantém transações sem serviço separado. `node:sqlite` é o adaptador inicial, disponível no Node 24 local e no Node incorporado à família Electron escolhida; a compatibilidade foi verificada pelo fluxo de importação e reabertura no pacote Electron 44.7.0 Linux x64 em 11/10/2026. Outros sistemas ainda não foram testados.
+
+Consequências: operações síncronas pequenas de catálogo ficam no main nesta fatia. Lotes, cache de miniaturas, relocalização, estrelas, edição, RAW e otimização de grandes catálogos ficam fora do escopo. Impomos limite inicial de 32 MiB por arquivo e 40 megapixels para proteger esta primeira prévia; são limites conservadores da fatia, não metas validadas do produto. A visualização envia o JPEG original em memória ao renderer isolado, preservando EXIF/ICC, sem exportar nem alterar o original. O teto de 32 MiB limita a transferência; cache e redução de resolução ficam para uma evolução testada. Novos schemas desconhecidos são recusados, nunca sobrescritos.
