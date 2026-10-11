@@ -5,6 +5,8 @@ import { Catalog } from './catalog.ts';
 import { Library } from './library.ts';
 import { parseRequest } from '../shared/requests.ts';
 import { jpegPreview } from './preview.ts';
+import { jpegThumbnail } from './thumbnail.ts';
+import type { ImportProgress } from '../shared/contracts.ts';
 import { assetPath } from './assets.ts';
 import { isTrustedDocument } from './trusted-document.ts';
 
@@ -15,6 +17,7 @@ if (!ownsInstance) app.quit();
 let catalog: Catalog | undefined;
 let window: BrowserWindow | null = null;
 let importing = false;
+let progress: ImportProgress = { running: false, total: 0, completed: 0, succeeded: 0, failed: 0, currentName: null };
 const developmentUrl = MAIN_WINDOW_VITE_DEV_SERVER_URL;
 const entryUrl = developmentUrl || 'app://revelumo/index.html';
 const fail = (code: string, message: string) => ({ ok: false, code, message });
@@ -25,6 +28,14 @@ async function preview(bytes: Buffer): Promise<string> {
     if (image.isEmpty()) throw new Error('JPEG decode failed');
     const size = image.getSize();
     if (size.width * size.height > 40_000_000) throw new Error('JPEG exceeds pixel budget');
+  });
+}
+
+async function thumbnail(bytes: Buffer): Promise<string> {
+  return jpegThumbnail(bytes, (content, width, height) => {
+    const image = nativeImage.createFromBuffer(content);
+    if (image.isEmpty()) throw new Error('JPEG decode failed');
+    return image.resize({ width, height, quality: 'good' }).toJPEG(75);
   });
 }
 
@@ -64,7 +75,7 @@ if (ownsInstance) app.whenReady().then(async () => {
   const dataDir = app.getPath('userData');
   await mkdir(dataDir, { recursive: true });
   catalog = new Catalog(join(dataDir, 'catalog.sqlite'));
-  const library = new Library(catalog, preview);
+  const library = new Library(catalog, preview, thumbnail);
   ipcMain.handle('revelumo:invoke', async (event, input: unknown) => {
     const owner = window;
     if (!owner || event.sender !== owner.webContents || event.senderFrame !== owner.webContents.mainFrame ||
@@ -75,13 +86,16 @@ if (ownsInstance) app.whenReady().then(async () => {
     if (!request) return fail('invalid-request', 'Solicitação inválida.');
     try {
       if (request.op === 'list') return { ok: true, value: library.list() };
+      if (request.op === 'progress') return { ok: true, value: progress };
+      if (request.op === 'thumbnail') return await library.thumbnail(request.id);
       if (request.op === 'preview') return await library.preview(request.id);
       if (importing) return fail('busy', 'Uma importação já está em andamento.');
       importing = true;
+      progress = { running: true, total: 0, completed: 0, succeeded: 0, failed: 0, currentName: null };
       try {
-        const selection = await dialog.showOpenDialog(owner, { title: 'Importar um JPEG', properties: ['openFile'], filters: [{ name: 'JPEG', extensions: ['jpg', 'jpeg'] }] });
-        return await library.importSelected(selection.canceled ? null : selection.filePaths[0] ?? null);
-      } finally { importing = false; }
+        const selection = await dialog.showOpenDialog(owner, { title: 'Importar JPEGs', properties: ['openFile', 'multiSelections'], filters: [{ name: 'JPEG', extensions: ['jpg', 'jpeg'] }] });
+        return { ok: true, value: await library.importBatch(selection.canceled ? null : selection.filePaths, (state) => { progress = state; }, () => owner.isDestroyed()) };
+      } finally { importing = false; progress = { ...progress, running: false, currentName: null }; }
     } catch { return fail('catalog-error', 'Não foi possível concluir a operação. Tente novamente.'); }
   });
   await createWindow();

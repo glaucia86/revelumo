@@ -1,0 +1,82 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> revelumo@0.0.1 test
+> node --test test/*.test.ts
+
+✔ serves only packaged assets under the app origin (1.216179ms)
+✔ rejects foreign origins, escapes and non-asset extensions (0.333133ms)
+✖ mixed batch commits valid references, reports each failure and emits monotonic progress (20.035703ms)
+✖ canonical path deduplication includes symlink aliases and preserves identifier (4.40838ms)
+✖ decoding stays serial even with overlapping service requests (3.117281ms)
+✖ stopping a batch preserves committed photos and cached thumbnails after reopening (4.050881ms)
+✖ canceling multiple selection creates nothing; a missing legacy cache is generated once (2.793282ms)
+✔ photo reference survives closing and reopening the SQLite catalog (6.048546ms)
+✔ reimporting the same path reuses its reference (1.754555ms)
+✔ unknown identifiers never return another photo (1.412409ms)
+✔ a newer schema is refused without overwriting its version or data (1.750199ms)
+✔ thumbnail is derived data persisted with the reference and survives reopening (2.17727ms)
+✔ migrates a version-one catalog without changing photo identity (1.218522ms)
+✔ reads dimensions from an actual JPEG before invoking a decoder (3.568788ms)
+✔ refuses malformed JPEG and excessive pixel dimensions before decoding (0.778611ms)
+✔ import rejects a named pipe without waiting for a writer (152.118748ms)
+✔ preview rejects a named pipe without waiting for a writer (94.841322ms)
+✔ imports by reference, returns no private path and leaves original bytes/location unchanged (12.872118ms)
+✔ canceling selection leaves the catalog empty (3.413759ms)
+✔ non-JPEG content cannot enter the catalog even with a .jpg suffix (3.329144ms)
+✔ decoder rejection prevents storing malformed JPEG-shaped content (2.777458ms)
+✔ missing files and directories return readable errors without a record (9.729795ms)
+✔ oversized JPEG is rejected before preview decoding (2.158072ms)
+✔ a missing original stays cataloged and reports an unavailable preview (3.174916ms)
+✔ preview lookup cannot use an arbitrary filesystem path (1.870787ms)
+✔ preview carries the original JPEG bytes including EXIF orientation to the renderer (1.75766ms)
+✔ decoder failures cannot create a preview (0.494942ms)
+✔ accepts only the three supported typed operations (1.954811ms)
+✔ rejects malformed, unknown and overprivileged IPC payloads (0.448534ms)
+✔ a second Node process reopens the persisted photo reference and original (181.961816ms)
+✔ normalizes the development URL trailing slash without weakening document identity (0.712815ms)
+✔ rejects foreign ports, hosts, documents, credentials and malformed URLs (0.323168ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 27
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 475.707163
+
+✖ failing tests:
+
+test at test/batch.test.ts:22:1
+✖ mixed batch commits valid references, reports each failure and emits monotonic progress (20.035703ms)
+  TypeError: library.importBatch is not a function
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/batch.test.ts:26:32)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at test/batch.test.ts:36:1
+✖ canonical path deduplication includes symlink aliases and preserves identifier (4.40838ms)
+  TypeError: library.importBatch is not a function
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/batch.test.ts:39:32)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at test/batch.test.ts:43:1
+✖ decoding stays serial even with overlapping service requests (3.117281ms)
+  TypeError: library.importBatch is not a function
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/batch.test.ts:47:30)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at test/batch.test.ts:50:1
+✖ stopping a batch preserves committed photos and cached thumbnails after reopening (4.050881ms)
+  TypeError: library.importBatch is not a function
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/batch.test.ts:53:32)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at test/batch.test.ts:63:1
+✖ canceling multiple selection creates nothing; a missing legacy cache is generated once (2.793282ms)
+  TypeError: library.importBatch is not a function
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/batch.test.ts:66:34)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

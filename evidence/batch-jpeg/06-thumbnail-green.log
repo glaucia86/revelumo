@@ -1,0 +1,49 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> revelumo@0.0.1 test
+> node --test test/*.test.ts
+
+✔ serves only packaged assets under the app origin (1.082512ms)
+✔ rejects foreign origins, escapes and non-asset extensions (0.266464ms)
+✔ mixed batch commits valid references, reports each failure and emits monotonic progress (20.818497ms)
+✔ canonical path deduplication includes symlink aliases and preserves identifier (7.000489ms)
+✔ decoding stays serial even with overlapping service requests (72.663256ms)
+✔ stopping a batch preserves committed photos and cached thumbnails after reopening (7.655468ms)
+✔ canceling multiple selection creates nothing; a missing legacy cache is generated once (2.941658ms)
+✔ photo reference survives closing and reopening the SQLite catalog (4.256279ms)
+✔ reimporting the same path reuses its reference (1.016284ms)
+✔ unknown identifiers never return another photo (0.883667ms)
+✔ a newer schema is refused without overwriting its version or data (1.204242ms)
+✔ thumbnail is derived data persisted with the reference and survives reopening (2.157122ms)
+✔ migrates a version-one catalog without changing photo identity (0.943536ms)
+✔ reads dimensions from an actual JPEG before invoking a decoder (1.828035ms)
+✔ refuses malformed JPEG and excessive pixel dimensions before decoding (0.964948ms)
+✔ import rejects a named pipe without waiting for a writer (119.401913ms)
+✔ preview rejects a named pipe without waiting for a writer (102.817453ms)
+✔ imports by reference, returns no private path and leaves original bytes/location unchanged (27.074545ms)
+✔ canceling selection leaves the catalog empty (10.250148ms)
+✔ non-JPEG content cannot enter the catalog even with a .jpg suffix (9.881352ms)
+✔ decoder rejection prevents storing malformed JPEG-shaped content (3.151894ms)
+✔ missing files and directories return readable errors without a record (6.956454ms)
+✔ oversized JPEG is rejected before preview decoding (3.563963ms)
+✔ a missing original stays cataloged and reports an unavailable preview (6.032606ms)
+✔ preview lookup cannot use an arbitrary filesystem path (2.300054ms)
+✔ preview carries the original JPEG bytes including EXIF orientation to the renderer (1.281437ms)
+✔ decoder failures cannot create a preview (0.498818ms)
+✔ accepts only the three supported typed operations (1.80392ms)
+✔ rejects malformed, unknown and overprivileged IPC payloads (0.354315ms)
+✔ a second Node process reopens the persisted photo reference and original (210.761752ms)
+✔ thumbnail is bounded and carries orientation rather than replacing the original (1.71638ms)
+✔ all eight EXIF orientation values survive derivative encoding (0.590995ms)
+✔ missing or malformed orientation falls back safely without out-of-range reads (0.457357ms)
+✔ thumbnail rejects over-budget originals before decoding and oversized derivatives (2.149ms)
+✔ normalizes the development URL trailing slash without weakening document identity (1.054831ms)
+✔ rejects foreign ports, hosts, documents, credentials and malformed URLs (0.276239ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 36
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 473.136384

@@ -1,4 +1,12 @@
-# Estado da primeira fatia
+# Estado da implementação
+
+## Segunda fatia: lote e grade verificados — 11/10/2026, 23:05 UTC
+
+- 42/42 testes, typecheck e empacotamento Linux passaram. Revisão independente encontrou dois P2 de cancelamento/EXIF, corrigidos com regressões RED/GREEN.
+- Seleção múltipla, progresso por arquivo, fila serial antes da leitura, erro individual, cache derivado SQLite v2 e grade de 48 itens por página implementados. Migração do catálogo anterior verificada no app real.
+- E2E Linux: lote misto, reimportação, orientação miniatura/preview, 300 JPEGs sintéticos de 12 MP, paginação, reinício e encerramento durante lote novo. Oito itens do lote interrompido sobreviveram; os demais não foram retomados automaticamente.
+- Originais sintéticos preservados (603 hashes iguais). [Relatório, logs e capturas](../evidence/batch-jpeg/report.md). [ADR 0002](adr/0002-batch-jpeg-thumbnails.md).
+- Limites: sem benchmark no alvo 8 GB; sem Windows/macOS, matriz real de cor/câmeras ou E2E automatizado. Cache corrompido não é automaticamente regenerado; substituição externa do original não invalida miniatura até reimportação. Capa do README preservada.
 
 ## Checkpoint atual: gate Linux verificado — 11/10/2026, 22:44 UTC
 

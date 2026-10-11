@@ -18,6 +18,7 @@ Use progressive disclosure: este arquivo é o ponto de entrada. Consulte somente
 | Ler, planejar ou atualizar issues, specs e mapas Wayfinder | [issue-tracker.md](docs-agents/issue-tracker.md) |
 | Investigar conceitos do produto ou decisões de arquitetura | [domain.md](docs-agents/domain.md) |
 | Trabalhar na primeira fatia JPEG/SQLite | [0001-local-catalog-ipc.md](docs-agents/adr/0001-local-catalog-ipc.md) |
+| Trabalhar em lote JPEG, miniaturas e grade | [0002-batch-jpeg-thumbnails.md](docs-agents/adr/0002-batch-jpeg-thumbnails.md) |
 | Retomar implementação e verificar limitações reais | [implementation-status.md](docs-agents/implementation-status.md) |
 | Planejar uma investigação extensa, reduzir contexto ou passar trabalho adiante | [context-workflow.md](docs-agents/context-workflow.md) |
 

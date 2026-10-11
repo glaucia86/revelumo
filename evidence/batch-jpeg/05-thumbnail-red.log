@@ -1,0 +1,128 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> revelumo@0.0.1 test
+> node --test test/*.test.ts
+
+✔ serves only packaged assets under the app origin (1.135563ms)
+✔ rejects foreign origins, escapes and non-asset extensions (0.32366ms)
+✔ mixed batch commits valid references, reports each failure and emits monotonic progress (22.820444ms)
+✔ canonical path deduplication includes symlink aliases and preserves identifier (9.902452ms)
+✔ decoding stays serial even with overlapping service requests (74.079012ms)
+✔ stopping a batch preserves committed photos and cached thumbnails after reopening (4.496685ms)
+✔ canceling multiple selection creates nothing; a missing legacy cache is generated once (3.360981ms)
+✔ photo reference survives closing and reopening the SQLite catalog (4.563965ms)
+✔ reimporting the same path reuses its reference (1.398933ms)
+✔ unknown identifiers never return another photo (1.09294ms)
+✔ a newer schema is refused without overwriting its version or data (2.804627ms)
+✔ thumbnail is derived data persisted with the reference and survives reopening (2.743156ms)
+✔ migrates a version-one catalog without changing photo identity (1.332905ms)
+✔ reads dimensions from an actual JPEG before invoking a decoder (1.992283ms)
+✔ refuses malformed JPEG and excessive pixel dimensions before decoding (0.830051ms)
+✔ import rejects a named pipe without waiting for a writer (120.603347ms)
+✔ preview rejects a named pipe without waiting for a writer (99.862989ms)
+✔ imports by reference, returns no private path and leaves original bytes/location unchanged (14.864482ms)
+✔ canceling selection leaves the catalog empty (3.557522ms)
+✔ non-JPEG content cannot enter the catalog even with a .jpg suffix (3.078973ms)
+✔ decoder rejection prevents storing malformed JPEG-shaped content (4.804921ms)
+✔ missing files and directories return readable errors without a record (5.475275ms)
+✔ oversized JPEG is rejected before preview decoding (2.608767ms)
+✔ a missing original stays cataloged and reports an unavailable preview (3.306311ms)
+✔ preview lookup cannot use an arbitrary filesystem path (2.612723ms)
+✔ preview carries the original JPEG bytes including EXIF orientation to the renderer (2.025582ms)
+✔ decoder failures cannot create a preview (0.707539ms)
+✔ accepts only the three supported typed operations (1.401638ms)
+✔ rejects malformed, unknown and overprivileged IPC payloads (0.286635ms)
+✔ a second Node process reopens the persisted photo reference and original (208.033369ms)
+✖ thumbnail is bounded and carries orientation rather than replacing the original (1.958954ms)
+✖ all eight EXIF orientation values survive derivative encoding (0.328667ms)
+✖ missing or malformed orientation falls back safely without out-of-range reads (0.280596ms)
+✖ thumbnail rejects over-budget originals before decoding and oversized derivatives (0.335076ms)
+✔ normalizes the development URL trailing slash without weakening document identity (0.833205ms)
+✔ rejects foreign ports, hosts, documents, credentials and malformed URLs (0.35082ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 32
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 490.078809
+
+✖ failing tests:
+
+test at test/thumbnail.test.ts:12:1
+✖ thumbnail is bounded and carries orientation rather than replacing the original (1.958954ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   256,
+  -   171
+  - ]
+  
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/thumbnail.test.ts:16:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 256, 171 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/thumbnail.test.ts:20:1
+✖ all eight EXIF orientation values survive derivative encoding (0.328667ms)
+  TypeError [ERR_INVALID_ARG_TYPE]: The first argument must be of type string or an instance of Buffer, ArrayBuffer, or Array or an Array-like Object. Received undefined
+      at Buffer.from (node:buffer:364:9)
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/thumbnail.test.ts:23:52)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    code: 'ERR_INVALID_ARG_TYPE'
+  }
+
+test at test/thumbnail.test.ts:26:1
+✖ missing or malformed orientation falls back safely without out-of-range reads (0.280596ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/thumbnail.test.ts:27:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/thumbnail.test.ts:31:1
+✖ thumbnail rejects over-budget originals before decoding and oversized derivatives (0.335076ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/shared/revelumo-work/test/thumbnail.test.ts:33:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }

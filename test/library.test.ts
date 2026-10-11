@@ -8,7 +8,7 @@ import { Catalog } from '../src/main/catalog.ts';
 import { Library } from '../src/main/library.ts';
 
 // Electron decoding is an explicit adapter boundary. These tests cover the real
-// filesystem, SQLite and service, not the uninstalled Electron decoder.
+// filesystem, SQLite and service, not the Electron decoder.
 const previewAdapter = async (bytes: Buffer) => 'data:image/jpeg;base64,' + bytes.toString('base64');
 async function setup(t: any, decoder = previewAdapter) {
   const dir = await mkdtemp(join(tmpdir(), 'revelumo-library-'));

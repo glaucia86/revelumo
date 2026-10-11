@@ -40,13 +40,13 @@ A referência funcional é o fluxo de um editor como Lightroom Classic. O Revelu
 | Área | Estado atual |
 | :--- | :--- |
 | Catálogo SQLite | Testado em Node e no aplicativo Linux; referências persistem após encerrar e reabrir |
-| Importação JPEG | Um arquivo por operação, por referência; mesmo caminho canônico reaproveita o registro |
+| Importação JPEG | Seleção múltipla por referência, progresso e falhas por arquivo; mesmo caminho canônico reaproveita o registro |
 | Prévia | Bytes JPEG, EXIF e ICC preservados; exibição e orientação EXIF 6/8 verificadas com fixtures sintéticas no Electron Linux |
-| Interface desktop | Aplicativo empacotado e executado no desktop Linux cloud; importação, prévia e reabertura verificadas |
+| Interface desktop | Grade paginada com miniaturas derivadas; lote misto, prévia, reinício e interrupção testados no pacote Linux |
 | Edição e exportação | Planejadas, ainda não implementadas |
 | Distribuição | Pacote de desenvolvimento Linux x64 testado; sem instaladores ou releases; Windows/macOS pendentes |
 
-**Evidência disponível:** 25 testes do núcleo passaram em Node, o typecheck TypeScript passou e o Forge gerou o pacote Linux. No aplicativo real foram verificados cancelamento, importação, reimportação sem duplicata, rejeição de JPEG inválido, original ausente e reabertura após encerrar o processo. Os hashes das fixtures permaneceram iguais. [Relatório e capturas do teste Linux](evidence/e2e-linux/report.md).
+**Evidência disponível:** 42 testes do núcleo passaram em Node, o typecheck TypeScript passou e o Forge gerou o pacote Linux. No aplicativo real foram verificados cancelamento, importação, reimportação sem duplicata, rejeição de JPEG inválido, original ausente e reabertura após encerrar o processo. Os hashes das fixtures permaneceram iguais. [Primeira fatia](evidence/e2e-linux/report.md) · [Lote, grade e interrupção no Linux](evidence/batch-jpeg/report.md).
 
 Nesta fatia, cada JPEG pode ter até **32 MiB e 40 megapixels**, dentro dos tipos de frame aceitos pelo preflight. Orientações EXIF 6 e 8 foram verificadas em imagens sintéticas; fidelidade de cor e compatibilidade ampla ainda precisam de avaliação. Arquivos ausentes permanecem no catálogo e retornam erro ao abrir a prévia; relocalização vem depois.
 
@@ -101,7 +101,7 @@ flowchart TB
 
 **Decisões abertas:** o worker nativo poderá ser em Rust ou C++; o motor RAW ainda não foi escolhido. O motor do RawTherapee é um candidato a investigar, sujeito a avaliação técnica e de licença. Essas opções não são dependências da primeira fatia.
 
-Veja a [decisão de catálogo e IPC](docs-agents/adr/0001-local-catalog-ipc.md) e o [estado técnico com evidências](docs-agents/implementation-status.md).
+Veja a [decisão de catálogo e IPC](docs-agents/adr/0001-local-catalog-ipc.md), a [extensão de lote e miniaturas](docs-agents/adr/0002-batch-jpeg-thumbnails.md) e o [estado técnico com evidências](docs-agents/implementation-status.md).
 
 <a id="instalacao"></a>
 ## Instalação por sistema operacional
@@ -164,7 +164,7 @@ npm run package
 
 O `package-lock.json` registra as versões instaladas. O comando `install:electron` baixa o binário oficial do Electron necessário para executar o aplicativo; esta versão não o instala automaticamente junto com o pacote npm. Se o cache padrão não for gravável, use um diretório de cache autorizado com `npm --cache <diretório>` e `electron_config_cache=<diretório>` para instalação/empacotamento. O Forge está sem makers configurados: `package` gera a pasta do aplicativo; **não há geração de instaladores pronta**.
 
-O gate Linux da primeira fatia foi cumprido. Permanecem pendentes validação em Windows/macOS, o modo de desenvolvimento, distribuição e uma matriz maior de fotografias reais. O [checkpoint técnico](docs-agents/implementation-status.md) detalha resultados e limites.
+Os fluxos Linux da primeira e segunda fatias foram verificados; o alvo de 8 GB ainda não foi medido. Permanecem pendentes validação em Windows/macOS, o modo de desenvolvimento, distribuição e uma matriz maior de fotografias reais. O [checkpoint técnico](docs-agents/implementation-status.md) detalha resultados e limites.
 
 <a id="roadmap"></a>
 ## O caminho até o primeiro MVP

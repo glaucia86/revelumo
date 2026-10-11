@@ -1,0 +1,40 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> revelumo@0.0.1 test
+> node --test test/*.test.ts
+
+✔ serves only packaged assets under the app origin (1.114359ms)
+✔ rejects foreign origins, escapes and non-asset extensions (0.304971ms)
+✔ photo reference survives closing and reopening the SQLite catalog (4.49679ms)
+✔ reimporting the same path reuses its reference (1.14271ms)
+✔ unknown identifiers never return another photo (1.070874ms)
+✔ a newer schema is refused without overwriting its version or data (1.797123ms)
+✔ thumbnail is derived data persisted with the reference and survives reopening (2.103761ms)
+✔ migrates a version-one catalog without changing photo identity (0.925048ms)
+✔ reads dimensions from an actual JPEG before invoking a decoder (1.165223ms)
+✔ refuses malformed JPEG and excessive pixel dimensions before decoding (0.490075ms)
+✔ import rejects a named pipe without waiting for a writer (96.238868ms)
+✔ preview rejects a named pipe without waiting for a writer (100.624885ms)
+✔ imports by reference, returns no private path and leaves original bytes/location unchanged (22.923364ms)
+✔ canceling selection leaves the catalog empty (4.592813ms)
+✔ non-JPEG content cannot enter the catalog even with a .jpg suffix (3.339109ms)
+✔ decoder rejection prevents storing malformed JPEG-shaped content (2.95506ms)
+✔ missing files and directories return readable errors without a record (3.583215ms)
+✔ oversized JPEG is rejected before preview decoding (2.20378ms)
+✔ a missing original stays cataloged and reports an unavailable preview (2.888692ms)
+✔ preview lookup cannot use an arbitrary filesystem path (1.769848ms)
+✔ preview carries the original JPEG bytes including EXIF orientation to the renderer (1.790818ms)
+✔ decoder failures cannot create a preview (0.513229ms)
+✔ accepts only the three supported typed operations (1.491766ms)
+✔ rejects malformed, unknown and overprivileged IPC payloads (0.361805ms)
+✔ a second Node process reopens the persisted photo reference and original (204.2597ms)
+✔ normalizes the development URL trailing slash without weakening document identity (1.062963ms)
+✔ rejects foreign ports, hosts, documents, credentials and malformed URLs (0.349917ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 368.172428
