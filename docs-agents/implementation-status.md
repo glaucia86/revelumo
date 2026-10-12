@@ -1,5 +1,10 @@
 # Estado da implementação
 
+## Pré-release de código-fonte publicada — 12/10/2026
+
+- [v0.1.0-alpha.1](https://github.com/glaucia86/revelumo/releases/tag/v0.1.0-alpha.1) publicada em 2026-10-12T23:28:59Z, tag no SHA `bdb51e6c6eb78c5ad522639ff06ac76317c0a609`; [CI pós-merge](https://github.com/glaucia86/revelumo/actions/runs/38319815423) verde. Somente archives automáticos de fonte/notas; sem instaladores. [Estado e limites](versioning.md).
+- Os registros abaixo descrevem suas próprias fatias históricas. Esta atualização documental não altera produto, versão ou tag publicada.
+
 ## Issue #19: primeira interface de exportação JPEG — 12/10/2026
 
 - Botão do editor confirma a revisão v2 visível, aguarda autosave/histórico, escolhe destino no main e publica um novo JPEG sRGB/qualidade 90 em resolução original com EV/WB, orientação, créditos selecionados e GPS removido. Saída limitada a 32 MiB nesta versão, sem redução silenciosa de qualidade.

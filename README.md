@@ -35,7 +35,7 @@
 - [License and third parties](#license)
 - [About the creator](#creator)
 
-> **Development preview.** Revelumo already has a working desktop interface: a library, ratings, filters, exposure editing with persistent history, and relative white balance. There is no public release or installer yet. To try it, you need to run the project from source. The MVP and cross-platform validation are still in progress.
+> **Development preview.** Revelumo already has a working desktop interface: a library, ratings, filters, exposure editing with persistent history, and relative white balance. The experimental [0.1.0-alpha.1 source pre-release](https://github.com/glaucia86/revelumo/releases/tag/v0.1.0-alpha.1) is available; there are no public installers. To try it, you need to run the project from source. The MVP and cross-platform validation are still in progress.
 
 <a id="visao"></a>
 ## Your photography stays with you
@@ -295,7 +295,7 @@ The approved first stages use `node:sqlite` in Electron Main for the catalog and
 | Visual redesign | Cobre catalog implemented; full editor redesign still planned |
 | App languages: Brazilian Portuguese, English, and Spanish | Persistent selector; catalog/import and existing editor translated; crop pending; JPEG export translated |
 | RAW, HEIC reading, TIFF export, and batch adjustments | Planned; dependent on further decisions and validation |
-| Distribution | Installers, releases, and broader platform validation still pending |
+| Distribution | Experimental 0.1.0-alpha.1 source pre-release published; installers and broader platform validation remain pending |
 
 HDR and HEIC export are outside the first MVP. The roadmap describes a direction, without promised delivery dates.
 

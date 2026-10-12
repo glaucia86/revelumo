@@ -6,11 +6,11 @@ Mudanças relevantes para quem usa o Revelumo. `Unreleased` contém somente entr
 
 Nenhuma mudança posterior à candidata foi agrupada aqui ainda.
 
-## 0.1.0-alpha.1 — candidata em preparação, não publicada
+## 0.1.0-alpha.1 — 2026-10-12 (pré-release de código-fonte)
 
-Primeira pré-release experimental proposta de **código-fonte**, para pessoas desenvolvedoras; sem instaladores ou binários anexados. Conteúdo selecionado na base integrada `aa77bb8af6f865167f2e62f66cb1c76d57e9cf23` (PR #47). Os três campos package/lockfile declaram `0.1.0-alpha.1`; tag futura `v0.1.0-alpha.1` e GitHub Release não são criadas por esta preparação. Sem data de lançamento até a publicação real.
+[Publicada em 12/10/2026 às 23:28:59 UTC](https://github.com/glaucia86/revelumo/releases/tag/v0.1.0-alpha.1), somente código-fonte e notas; sem instaladores ou binários anexados. Tag imutável `v0.1.0-alpha.1` no commit `bdb51e6c6eb78c5ad522639ff06ac76317c0a609`, após [CI pós-merge verde](https://github.com/glaucia86/revelumo/actions/runs/38319815423). Os três campos package/lockfile declaram `0.1.0-alpha.1`.
 
-[Notas da candidata e limites](docs-agents/releases/0.1.0-alpha.1.md). O SHA final após integrar esta preparação precisa de seu próprio CI e verificação do pacote; testes dos snapshots anteriores não substituem esse gate.
+A preparação selecionou conteúdo na base `aa77bb8af6f865167f2e62f66cb1c76d57e9cf23` (PR #47); a [PR #48](https://github.com/glaucia86/revelumo/pull/48) integrou versões/notas antes da publicação separada. As [notas da candidata](docs-agents/releases/0.1.0-alpha.1.md) preservam esse estado histórico; a página da release registra a publicação concluída. Esta atualização documental posterior não altera a tag ou os archives publicados.
 
 ### Adicionado
 
