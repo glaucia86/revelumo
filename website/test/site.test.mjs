@@ -58,3 +58,8 @@ test('header and guide navigation have distinct localized landmark names',()=>{
   assert.equal(new Set(names).size,names.length);
  }
 });
+
+test('guide explicitly preserves white-balance redo and links complete localized source setup',()=>{
+ const expected=[['','white-balance edits neither','README.md'],['pt-BR/','ajustes de balanço de branco não','README.pt-BR.md'],['es/','cambios de balance de blancos no','README.es.md']];
+ for(const [route,phrase,readme] of expected){const html=readFileSync(join(out,route,'guide/index.html'),'utf8');assert.ok(html.toLowerCase().includes(phrase));assert.ok(html.includes(readme+'#instalacao'));assert.ok(html.includes('SQLite'));}
+});

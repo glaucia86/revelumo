@@ -22,21 +22,21 @@ Spec: design.md; approved visual refined with subtle hover/focus, entrance trans
 ## Task 1: Static localized routes
 Files: website/build.mjs, website/content.mjs, website/render.mjs, website/test/site.test.mjs.
 Interface: build({outDir,basePath}) produces index.html, guide/index.html, pt-BR equivalents and es equivalents; render uses locale content objects.
-- [ ] Test generated six routes and lang; watch failure before generator exists.
-- [ ] Implement minimal generator and localized content; green.
-- [ ] Test internal links/assets, hreflang and base paths; RED → GREEN.
+- [x] Test generated six routes and lang; watch failure before generator exists.
+- [x] Implement minimal generator and localized content; green.
+- [x] Test internal links/assets, hreflang and base paths; RED → GREEN.
 
 ## Task 2: Original Copper visual and interactions
 Files: website/public/style.css, website/public/site.js; renderer markup.
 Interface: native labeled range changes --split inside a comparison; content visible without script. Initial comparison is a labeled photographic illustration using CSS brightness, not a claim about the app engine.
-- [ ] Test semantic markup and comparison labeling; RED → GREEN.
-- [ ] Add responsive styling, local font, focus/hover and reduced motion.
+- [x] Test semantic markup and comparison labeling; RED → GREEN.
+- [x] Add responsive styling, local font, focus/hover and reduced motion.
 - [ ] Browser tests for locales/links, slider keyboard, no-JS, reduced motion, 320px and desktop; save results and inspect screenshots.
 
 ## Task 3: Independent verification and draft PR
 Files: .github/workflows/website.yml, website/README.md, website/evidence/report.md.
-- [ ] Site validation build on PR/push paths, contents:read only. Deployment stays separate until reviewed permission scope.
-- [ ] Run site suite/build, repository npm test/check:docs and git diff --check.
-- [ ] Independent spec/content and engineering/accessibility reviews; fix findings with regression tests.
-- [ ] Publish exact text sources to feature branch via connector and open draft PR; observe CI.
+- [x] Site validation build on PR/push paths, contents:read only. Deployment stays separate until reviewed permission scope.
+- [x] Run site suite/build, repository npm test/check:docs and git diff --check.
+- [x] Independent spec/content and engineering/accessibility reviews; fix findings with regression tests.
+- [x] Publish exact text sources to feature branch via connector and open draft PR; observe CI.
 - [ ] After deployment authorization/gates, verify public URLs and localization.
