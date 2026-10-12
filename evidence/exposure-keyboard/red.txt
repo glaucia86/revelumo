@@ -1,0 +1,8 @@
+Base: 6078f1fd9a592d485f2c76f804a6942f85796381
+Electron 44.7.0 / Chromium 152 / Linux x64, packaged app, synthetic catalog.
+Native Chromium keyboard: focus numeric input, Ctrl+A, '-', '1'.
+
+AssertionError [ERR_ASSERTION]: typing a minus then a digit retains the negative sign
+'0.1' !== '-1'
+
+Observed before changing product source. The previous complete-value tests passed before this assertion.

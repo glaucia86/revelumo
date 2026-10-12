@@ -41,7 +41,17 @@ app.on('before-quit', event => { if (win?.isDestroyed()) event.preventDefault();
 const js = code => win.webContents.executeJavaScript(code), api = (method, ...args) => js(`window.revelumo.${method}(${args.map(JSON.stringify).join(',')})`);
 async function until(work, label) { const end = Date.now() + 20000; while (Date.now() < end) { const value = await work(); if (value) return value; await delay(25); } throw new Error('Timed out: ' + label); }
 async function input(value) { await js(`(()=>{const e=document.querySelector('[aria-label="Exposição em EV"]');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(e,${JSON.stringify(String(value))});e.dispatchEvent(new Event('input',{bubbles:true}));})()`); }
-async function saved(value) { await until(() => js(`document.querySelector('.exposure input[type="number"]')?.value === '${value.toFixed(1)}' && document.querySelector('.save-status')?.textContent === 'Salvo'`), 'saved ' + value); }
+async function selectNumeric() {
+  await js('document.querySelector(".exposure input[type=number]").focus()');
+  await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'a', code: 'KeyA', windowsVirtualKeyCode: 65, modifiers: 2 });
+  await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', { type: 'keyUp', key: 'a', code: 'KeyA', windowsVirtualKeyCode: 65, modifiers: 2 });
+}
+async function typeCharacters(text) {
+  for (const key of text) await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', { type: 'char', text: key, key });
+}
+const numericValue = () => js('document.querySelector(".exposure input[type=number]").value');
+const blurNumeric = () => js('document.querySelector(".exposure input[type=number]").blur()');
+async function saved(value) { await until(() => js(`document.querySelector('.exposure input[type="number"]')?.value !== '' && Number(document.querySelector('.exposure input[type="number"]')?.value) === ${value} && document.querySelector('.save-status')?.textContent === 'Salvo'`), 'saved ' + value); }
 async function pixels() { return js(`(()=>{const c=document.querySelector('canvas');return {width:c.width,height:c.height,pixel:Array.from(c.getContext('2d').getImageData(10,10,1,1).data),revision:c.dataset.revision};})()`); }
 const textButton = label => `Array.from(document.querySelectorAll('button')).find(b=>b.textContent===${JSON.stringify(label)})`;
 const clickText = label => js(`${textButton(label)}.click()`);
@@ -84,9 +94,53 @@ try { require(path.join(repo, 'out', `Revelumo-${process.platform}-${process.arc
     await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', { type: 'keyUp', key: 'ArrowRight', code: 'ArrowRight', windowsVirtualKeyCode: 39 });
     await saved(0.1); win.webContents.debugger.detach();
     checks.push('Chromium accessibility slider/spinbutton names and keyboard increments');
+    // Native Chromium editing events, one key at a time. Assigning .value to a
+    // complete number cannot catch a controlled input erasing '-' or '.'.
+    win.webContents.debugger.attach('1.3');
+    await selectNumeric(); await typeCharacters('-1');
+    assert.equal(await numericValue(), '-1', 'typing a minus then a digit retains the negative sign');
+    await blurNumeric(); await saved(-1); assert.equal((await api('recipePhoto', id)).value.exposureTenths, -10);
+    assert.equal(await numericValue(), '-1.0', 'blur formats the latest valid value');
+    await selectNumeric(); await typeCharacters('1.2');
+    assert.equal(await numericValue(), '1.2', 'typing a decimal separator permits the next digit');
+    await saved(1.2); assert.equal((await api('recipePhoto', id)).value.exposureTenths, 12);
+    const beforeIncomplete = (await api('recipePhoto', id)).value;
+    await selectNumeric(); await typeCharacters('-'); await delay(350);
+    assert.equal(await numericValue(), '', 'native number input reports an incomplete sign as empty');
+    assert.deepEqual((await api('recipePhoto', id)).value, beforeIncomplete, 'incomplete sign never changes the confirmed recipe');
+    await typeCharacters('0.7'); await saved(-0.7);
+    assert.equal(await numericValue(), '-0.7', 'delayed typing retains the sign and decimal');
+    await selectNumeric(); await typeCharacters('1.');
+    await js('window.dispatchEvent(new Event("focus"))'); await clickText('Verificar disponibilidade');
+    await delay(350); await typeCharacters('2'); await saved(1.2);
+    assert.equal(await numericValue(), '1.2', 'focus, refresh and autosave renders preserve the decimal prefix');
+    for (const invalid of ['3.1', '-3.1', '0.15', '']) {
+      const before = (await api('recipePhoto', id)).value, revision = (await pixels()).revision;
+      await js('document.querySelector(".exposure input[type=number]").focus()');
+      await input(invalid); await delay(350);
+      assert.deepEqual((await api('recipePhoto', id)).value, before, `invalid ${invalid} does not save or advance revision`);
+      assert.equal((await pixels()).revision, revision, `invalid ${invalid} does not replace preview`);
+      assert.equal(await js('document.querySelector(".exposure input[type=range]").value'), '1.2');
+      await blurNumeric(); assert.equal(await numericValue(), '1.2', 'invalid text restores the latest valid EV on blur');
+    }
+    for (const boundary of ['-3', '3']) {
+      await selectNumeric(); await typeCharacters(boundary); await saved(Number(boundary));
+      assert.equal((await api('recipePhoto', id)).value.exposureTenths, Number(boundary) * 10);
+    }
+    await selectNumeric(); await typeCharacters('-'); await clickText('Redefinir exposição'); await saved(0);
+    assert.equal(await numericValue(), '0.0', 'reset replaces incomplete text');
+    await selectNumeric(); await typeCharacters('-');
+    await js('document.querySelector(".exposure input[type=range]").focus()');
+    await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', { type: 'keyDown', key: 'ArrowRight', code: 'ArrowRight', windowsVirtualKeyCode: 39 });
+    await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', { type: 'keyUp', key: 'ArrowRight', code: 'ArrowRight', windowsVirtualKeyCode: 39 });
+    await saved(0.1); assert.equal(await numericValue(), '0.1', 'slider replaces incomplete text');
+    win.webContents.debugger.detach();
+    checks.push('real numeric keyboard typing preserves negative/decimal prefixes across delay and refresh; invalid text never alters recipe/revision/preview and blur restores valid EV; limits, reset and slider stay synchronized');
     await input(3); await saved(3); await until(async () => (await pixels()).pixel[0] === 255, 'explicit clipping');
     await clickText('Redefinir exposição'); await saved(0); await until(async () => (await pixels()).pixel[0] === neutral.pixel[0], 'reset pixels');
-    await input(3.1); await input(0.15); await input('not a number'); await saved(0);
+    await js('document.querySelector(".exposure input[type=number]").focus()');
+    await input(3.1); await input(0.15); await input('not a number');
+    await js('document.querySelector(".exposure input[type=number]").blur()'); await saved(0);
     assert.equal((await api('recipePhoto', id)).value.exposureTenths, 0);
     const beforeBurst = saveCount;
     io = { reads: 0, hashes: 0, decodes: 0 };
@@ -96,7 +150,7 @@ try { require(path.join(repo, 'out', `Revelumo-${process.platform}-${process.arc
     await until(async () => Math.abs((await pixels()).pixel[0] - 239) <= 2, 'burst displays latest linear +2 EV pixels');
     let release; held = { promise: new Promise(resolve => { release = resolve; }), entered: false };
     await input(0.7); await until(() => held.entered, 'held committed response');
-    await input(-0.8); await delay(350);
+    win.webContents.debugger.attach('1.3'); await selectNumeric(); await typeCharacters('-0.8'); win.webContents.debugger.detach(); await delay(350);
     assert.notEqual(await js('document.querySelector(".save-status").textContent'), 'Salvo');
     assert.equal(activeSaves, 1); release(); held = null; await saved(-0.8); assert.equal(peakSaves, 1);
     checks.push('invalid EV unchanged, clipping, reset autosave, burst one commit, old confirmation never marks newer draft saved');
@@ -150,7 +204,7 @@ try { require(path.join(repo, 'out', `Revelumo-${process.platform}-${process.arc
     }
     checks.push('all eight EXIF orientations applied once with quadrant pixels and dimensions');
     await open();
-    await input(2.3); app.quit();
+    win.webContents.debugger.attach('1.3'); await selectNumeric(); await typeCharacters('2.3'); win.webContents.debugger.detach(); app.quit();
     checks.push('application quit requests last draft flush before close');
   } else if (mode === 'interrupt') {
     await saved(2.3); await input(-2.5);

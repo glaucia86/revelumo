@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "mode": "interrupt",
+  "checks": [
+    "forced exit during debounce: -2.5 EV draft intentionally not persisted; recovery promises only confirmed 2.3 EV"
+  ]
+}

@@ -11,6 +11,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
   const alive = useRef(true), ending = useRef(false), initialization = useRef<Promise<void>>(Promise.resolve());
   const worker = useRef<Worker | null>(null), ready = useRef(false), rendering = useRef(false), waiting = useRef<Draft | null>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
+  const [numericText, setNumericText] = useState('0.0');
   const [value, setValue] = useState(0), [loaded, setLoaded] = useState(false), [prepared, setPrepared] = useState(false);
   const [status, setStatus] = useState('Lendo ajuste salvo.'), [error, setError] = useState(''), [previewError, setPreviewError] = useState('');
   const [leaving, setLeaving] = useState(false), [compare, setCompare] = useState(false);
@@ -91,7 +92,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
         if (!result.ok) { setError(result.message); setStatus('Ajuste indisponível'); return; }
         session.current = result.value;
         draft.current = confirmed.current = { revision: result.value.revision, exposureTenths: result.value.exposureTenths };
-        setValue(result.value.exposureTenths); setLoaded(true); setStatus('Salvo');
+        setValue(result.value.exposureTenths); setNumericText((result.value.exposureTenths / 10).toFixed(1)); setLoaded(true); setStatus('Salvo');
       } catch { if (alive.current) { setError('Não foi possível ler o ajuste salvo.'); setStatus('Ajuste indisponível'); } }
     })();
     return () => { alive.current = false; cancelDelay(); worker.current?.terminate(); worker.current = null; waiting.current = null; if (canvas.current) canvas.current.width = canvas.current.height = 1; };
@@ -131,13 +132,17 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
     setValue(tenths); setError(''); setStatus('Alteração pendente');
     render({ ...draft.current, exposureTenths: comparison.current ? 0 : tenths }); schedule();
   }
+  function changeControl(text: string) {
+    setNumericText(Number(text).toFixed(1));
+    change(text);
+  }
   const disabled = !loaded || !prepared || leaving || Boolean(previewError);
   return <div className="editing">
     {preview && <figure><canvas ref={canvas} width={1} height={1} role="img" aria-label={`Prévia de edição de ${photo.name}`}/><figcaption>{photo.name} · Prévia sRGB até 2048 px</figcaption></figure>}
     <div className="exposure" aria-label="Ajuste de exposição">
-      <label>Exposição <input aria-label="Exposição" type="range" min="-3" max="3" step="0.1" value={value / 10} disabled={disabled} onChange={event => change(event.target.value)}/></label>
-      <input aria-label="Exposição em EV" type="number" min="-3" max="3" step="0.1" value={(value / 10).toFixed(1)} disabled={disabled} onChange={event => change(event.target.value)}/><span>EV</span>
-      <button disabled={disabled} onClick={() => change('0')}>Redefinir exposição</button>
+      <label>Exposição <input aria-label="Exposição" type="range" min="-3" max="3" step="0.1" value={value / 10} disabled={disabled} onChange={event => changeControl(event.target.value)}/></label>
+      <input aria-label="Exposição em EV" type="number" min="-3" max="3" step="0.1" value={numericText} disabled={disabled} onChange={event => { setNumericText(event.target.value); change(event.target.value); }} onBlur={() => setNumericText((draft.current.exposureTenths / 10).toFixed(1))}/><span>EV</span>
+      <button disabled={disabled} onClick={() => changeControl('0')}>Redefinir exposição</button>
       <button disabled={disabled} aria-pressed={compare} onClick={() => { comparison.current = !comparison.current; setCompare(comparison.current); render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths }); }}>Comparar com 0 EV</button>
       <span className="save-status" role="status" aria-live="polite">{status}</span>
       {(error || previewError) && <p role="alert">{error || previewError} {error && loaded && <button disabled={leaving} onClick={() => { cancelDelay(); void save(); }}>Tentar salvar novamente</button>}</p>}
