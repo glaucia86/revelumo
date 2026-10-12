@@ -80,10 +80,12 @@ jobs:
           $electron = Join-Path $root 'electron'
           $relocation = Join-Path $root 'relocation'
           $exposure = Join-Path $root 'exposure'
-          New-Item -ItemType Directory -Path $electron, $relocation, $exposure | Out-Null
+          $history = Join-Path $root 'history'
+          New-Item -ItemType Directory -Path $electron, $relocation, $exposure, $history | Out-Null
           "ELECTRON_SMOKE_DIR=$electron" >> $env:GITHUB_ENV
           "RELOCATION_SMOKE_DIR=$relocation" >> $env:GITHUB_ENV
           "EXPOSURE_SMOKE_DIR=$exposure" >> $env:GITHUB_ENV
+          "HISTORY_SMOKE_DIR=$history" >> $env:GITHUB_ENV
 
       - name: Packaged filters and exposure integration in two processes
         if: runner.os == 'Windows'
@@ -135,6 +137,17 @@ jobs:
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
 
+      - name: 'Exposure history: gestures, restart, interruption and retry races'
+        if: runner.os == 'Windows'
+        id: history
+        timeout-minutes: 5
+        run: |
+          foreach ($mode in @('first', 'reopen', 'gestures', 'history-failure', 'history-reopen', 'interrupt', 'interrupt-reopen', 'save-failure', 'many-pending', 'key-chord', 'retention', 'retention-reopen')) {
+            Write-Output "Exposure history mode: $mode"
+            npm run test:history -- "$env:HISTORY_SMOKE_DIR" $mode
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+
       - name: Results and limits
         if: always()
         env:
@@ -147,7 +160,7 @@ jobs:
           '| Step | Outcome |' >> $env:GITHUB_STEP_SUMMARY
           '| --- | --- |' >> $env:GITHUB_STEP_SUMMARY
           $results = $env:STEP_RESULTS | ConvertFrom-Json -AsHashtable
-          foreach ($id in @('versions', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence')) {
+          foreach ($id in @('versions', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history')) {
             "| $id | $($results[$id].outcome) |" >> $env:GITHUB_STEP_SUMMARY
           }
           if ($env:RUNNER_OS -ne 'Windows') {
@@ -175,6 +188,14 @@ jobs:
                 Get-Content -LiteralPath $path >> $env:GITHUB_STEP_SUMMARY
                 '```' >> $env:GITHUB_STEP_SUMMARY
               }
+            }
+          }
+          if ($env:HISTORY_SMOKE_DIR -and (Test-Path -LiteralPath $env:HISTORY_SMOKE_DIR)) {
+            Get-ChildItem -LiteralPath $env:HISTORY_SMOKE_DIR -Filter 'history-*' -File | ForEach-Object {
+              "### History / $($_.Name)" >> $env:GITHUB_STEP_SUMMARY
+              '```text' >> $env:GITHUB_STEP_SUMMARY
+              Get-Content -LiteralPath $_.FullName >> $env:GITHUB_STEP_SUMMARY
+              '```' >> $env:GITHUB_STEP_SUMMARY
             }
           }
           'Exposure uses committed synthetic JPEG/ICC fixtures and real packaged worker/canvas/SQLite. Pillow/LittleCMS fixture generation is not a CI/runtime dependency. The heavy 36 MP resource benchmark remains manual; see evidence/issue-12/report.md. Classification/availability-specific harnesses remain local, while core and import/relocation/exposure regressions run here.' >> $env:GITHUB_STEP_SUMMARY

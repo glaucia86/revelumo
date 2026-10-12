@@ -22,7 +22,7 @@ test('editing saves exposure by UUID and recovers the confirmed recipe after reo
   assert.deepEqual(library.recipe(photo.id), { ok: true, value: { photo, exposureTenths: 0, processingVersion: 1 } });
   const opened = await library.beginEditing(photo.id); assert.ok(opened.ok);
   const saved = await library.saveExposure(photo.id, opened.value.sessionId, 1, 10, 1);
-  assert.deepEqual(saved, { ok: true, value: { photo, exposureTenths: 10, processingVersion: 1, sessionId: opened.value.sessionId, revision: 1 } });
+  assert.deepEqual(saved, { ok: true, value: { photo, exposureTenths: 10, processingVersion: 1, sessionId: opened.value.sessionId, revision: 1, undoSteps: 1, redoSteps: 0 } });
   catalog.close(); catalog = new Catalog(db); library = new Library(catalog, decoder);
   assert.deepEqual(library.recipe(photo.id), { ok: true, value: { photo, exposureTenths: 10, processingVersion: 1 } });
   assert.deepEqual(readFileSync(file), original);

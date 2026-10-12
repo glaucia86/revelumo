@@ -1,0 +1,10 @@
+[9651:1012/112754.788240:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[9651:1012/112754.859333:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[9651:1012/112754.859534:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+AssertionError [ERR_ASSERTION]: the real bridge caps completed history at 100 steps
+
+1133 !== 100
+
+    at /workspace/scratch/827b15a15839/revelumo-history/test/electron-history.cjs:178:12
+
+EXIT_CODE=1

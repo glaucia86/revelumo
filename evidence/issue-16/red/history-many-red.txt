@@ -1,0 +1,11 @@
+[6258:1012/104639.705613:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[6258:1012/104639.791826:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[6258:1012/104639.791866:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[6258:1012/104640.055797:ERROR:ui/gfx/x/atom_cache.cc:236] Add application/vnd.portal.filetransfer to kAtomsToCache
+[6258:1012/104640.055885:ERROR:ui/gfx/x/atom_cache.cc:236] Add application/vnd.portal.files to kAtomsToCache
+Error: Timed out: saved 0.9
+    at until (/workspace/scratch/827b15a15839/revelumo-history/test/electron-history.cjs:40:174)
+    at async saved (/workspace/scratch/827b15a15839/revelumo-history/test/electron-history.cjs:44:31)
+    at async /workspace/scratch/827b15a15839/revelumo-history/test/electron-history.cjs:145:45
+
+EXIT_CODE=1

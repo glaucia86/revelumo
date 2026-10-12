@@ -1,0 +1,29 @@
+✔ a completed exposure adjustment can be undone and redone by UUID after reopening (11.829637ms)
+✖ history availability starts empty, follows undo/redo and never invents a neutral state for a v5 recipe (5.226631ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 147.946138
+
+✖ failing tests:
+
+test at test/exposure-history.test.ts:30:1
+✖ history availability starts empty, follows undo/redo and never invents a neutral state for a v5 recipe (5.226631ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  undefined !== 0
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-history/test/exposure-history.test.ts:42:58)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

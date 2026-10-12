@@ -1,0 +1,15 @@
+[3163:1012/103545.112615:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[3163:1012/103545.113312:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[3163:1012/103545.113329:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[3163:1012/103545.366976:ERROR:ui/gfx/x/atom_cache.cc:236] Add application/vnd.portal.filetransfer to kAtomsToCache
+[3163:1012/103545.367052:ERROR:ui/gfx/x/atom_cache.cc:236] Add application/vnd.portal.files to kAtomsToCache
+Error occurred in handler for 'revelumo:invoke': Error: Test: response lost after committed history
+    at /workspace/scratch/827b15a15839/revelumo-history/test/electron-history.cjs:15:57
+    at async Session.<anonymous> (node:electron/js2c/browser_init:1:119972)
+AssertionError [ERR_ASSERTION]: history failures offer a dedicated retry
+
+false !== true
+
+    at /workspace/scratch/827b15a15839/revelumo-history/test/electron-history.cjs:106:12
+
+EXIT_CODE=1

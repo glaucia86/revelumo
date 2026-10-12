@@ -6,7 +6,8 @@ ipcRenderer.on('revelumo:close-request', () => { closePending = true; for (const
 const api: RevelumoApi = {
   recipePhoto: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'recipe', id }),
   beginEditingPhoto: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'begin-edit', id }),
-  saveExposure: (id, sessionId, revision, exposureTenths, processingVersion) => ipcRenderer.invoke('revelumo:invoke', { op: 'exposure', id, sessionId, revision, exposureTenths, processingVersion }),
+  saveExposure: (id, sessionId, revision, exposureTenths, processingVersion, gestures) => ipcRenderer.invoke('revelumo:invoke', { op: 'exposure', id, sessionId, revision, exposureTenths, processingVersion, ...(gestures === undefined ? {} : { gestures }) }),
+  moveExposureHistory: (id, sessionId, revision, direction) => ipcRenderer.invoke('revelumo:invoke', { op: 'exposure-history', id, sessionId, revision, direction }),
   endEditingPhoto: (id, sessionId) => ipcRenderer.invoke('revelumo:invoke', { op: 'end-edit', id, sessionId }),
   onCloseRequested: (callback) => { closeListeners.add(callback); if (closePending) queueMicrotask(callback); return () => { closeListeners.delete(callback); }; },
   confirmClose: () => ipcRenderer.invoke('revelumo:invoke', { op: 'close-ready' }),

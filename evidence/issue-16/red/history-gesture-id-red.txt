@@ -1,0 +1,37 @@
+✔ a completed exposure adjustment can be undone and redone by UUID after reopening (13.810707ms)
+✔ history availability starts empty, follows undo/redo and never invents a neutral state for a v5 recipe (4.463171ms)
+✔ checkpoints during one gesture remain one step, while two gestures within one autosave remain distinct (8.609253ms)
+✔ undo cursor survives reopening, reset is reversible and a new adjustment removes redo (7.03793ms)
+✔ a gesture returning to its initial value is a no-op and preserves redo even across checkpoints (5.90245ms)
+✔ reopening an unfinished gesture recovers only its persisted checkpoint as one undo step (4.823794ms)
+✔ locked commits and retries preserve recipe, history and cursor together without duplicate save or undo (7.565981ms)
+✖ completed gesture IDs cannot be replayed as fresh edits under a newer revision (4.840029ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 199.090601
+
+✖ failing tests:
+
+test at test/exposure-history.test.ts:128:1
+✖ completed gesture IDs cannot be replayed as fresh edits under a newer revision (4.840029ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'invalid-request'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-history/test/exposure-history.test.ts:132:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'invalid-request',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

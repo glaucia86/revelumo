@@ -1,9 +1,12 @@
 import { DatabaseSync } from 'node:sqlite';
 import { randomUUID } from 'node:crypto';
 import { basename } from 'node:path';
-import type { PhotoSummary, PhotoFlag, LibraryFilters, LibraryResults } from '../shared/contracts.ts';
+import type { PhotoSummary, PhotoFlag, LibraryFilters, LibraryResults, ExposureGesture } from '../shared/contracts.ts';
 
 export type PhotoReference = PhotoSummary & { path: string; sha256: string | null; rating: number | null; flag: PhotoFlag };
+
+type ExposureHistory = { states: number[]; cursor: number; active: { key: string; exposureTenths: number } | null };
+const MAX_EXPOSURE_HISTORY_STEPS = 100;
 
 export class Catalog {
   private db: DatabaseSync;
@@ -12,7 +15,7 @@ export class Catalog {
     this.db = new DatabaseSync(filename);
     try {
       const version = Number(this.db.prepare('PRAGMA user_version').get()?.user_version);
-      if (version > 5) throw new Error('Catalog uses a newer schema');
+      if (version > 6) throw new Error('Catalog uses a newer schema');
       if (version === 0) {
         this.db.exec(`BEGIN;
           CREATE TABLE photos (id TEXT PRIMARY KEY, path TEXT NOT NULL UNIQUE, name TEXT NOT NULL);
@@ -42,6 +45,13 @@ export class Catalog {
         this.db.exec(`BEGIN;
           CREATE TABLE recipes (photo_id TEXT PRIMARY KEY REFERENCES photos(id), exposure_tenths INTEGER NOT NULL CHECK(typeof(exposure_tenths) = 'integer' AND exposure_tenths BETWEEN -30 AND 30), processing_version INTEGER NOT NULL CHECK(processing_version = 1));
           PRAGMA user_version = 5;
+          COMMIT;`);
+      }
+      if (version < 6) {
+        this.db.exec(`BEGIN;
+          CREATE TABLE exposure_history (photo_id TEXT PRIMARY KEY REFERENCES photos(id), states TEXT NOT NULL CHECK(json_valid(states)), cursor INTEGER NOT NULL CHECK(typeof(cursor) = 'integer' AND cursor >= 0), active TEXT CHECK(active IS NULL OR json_valid(active)));
+          INSERT INTO exposure_history SELECT photos.id, json_array(COALESCE(recipes.exposure_tenths, 0)), 0, NULL FROM photos LEFT JOIN recipes ON photos.id = recipes.photo_id;
+          PRAGMA user_version = 6;
           COMMIT;`);
       }
     } catch (error) {
@@ -120,12 +130,55 @@ export class Catalog {
     return row ? { exposureTenths: Number(row.exposure_tenths), processingVersion: row.processing_version as 1 } : { exposureTenths: 0, processingVersion: 1 };
   }
 
-  saveExposure(id: string, sha256: string, exposureTenths: number): void {
+  private history(id: string): ExposureHistory {
+    const row = this.db.prepare('SELECT states, cursor, active FROM exposure_history WHERE photo_id = ?').get(id);
+    return row ? { states: JSON.parse(String(row.states)), cursor: Number(row.cursor), active: row.active === null ? null : JSON.parse(String(row.active)) } : { states: [this.recipe(id).exposureTenths], cursor: 0, active: null };
+  }
+
+  exposureHistory(id: string): { undoSteps: number; redoSteps: number } {
+    const { states, cursor, active } = this.history(id);
+    const changed = active !== null && active.exposureTenths !== states[cursor];
+    return { undoSteps: Math.min(MAX_EXPOSURE_HISTORY_STEPS, cursor + (changed ? 1 : 0)), redoSteps: changed ? 0 : states.length - cursor - 1 };
+  }
+
+  private finishGesture(history: ExposureHistory): void {
+    if (history.active && history.active.exposureTenths !== history.states[history.cursor]) {
+      history.states = history.states.slice(0, history.cursor + 1);
+      history.states.push(history.active.exposureTenths); history.cursor++;
+      const expired = Math.max(0, history.states.length - MAX_EXPOSURE_HISTORY_STEPS - 1);
+      history.states = history.states.slice(expired); history.cursor -= expired;
+    }
+    history.active = null;
+  }
+
+  saveExposure(id: string, sha256: string, sessionId: string, gestures: ExposureGesture[]): number {
+    return this.changeExposureHistory(id, sha256, history => {
+      for (const gesture of gestures) {
+        const key = `${sessionId}:${gesture.id}`;
+        if (history.active?.key !== key) this.finishGesture(history);
+        history.active = { key, exposureTenths: gesture.exposureTenths };
+        if (gesture.complete) this.finishGesture(history);
+      }
+    });
+  }
+
+  moveExposureHistory(id: string, sha256: string, direction: 'undo' | 'redo'): number {
+    return this.changeExposureHistory(id, sha256, history => {
+      this.finishGesture(history);
+      history.cursor = Math.max(0, Math.min(history.states.length - 1, history.cursor + (direction === 'undo' ? -1 : 1)));
+    });
+  }
+
+  private changeExposureHistory(id: string, sha256: string, change: (history: ExposureHistory) => void): number {
     this.db.exec('BEGIN IMMEDIATE');
     try {
       if (this.find(id)?.sha256 !== sha256) throw new Error('Photo identity changed');
-      this.db.prepare('INSERT INTO recipes VALUES (?, ?, 1) ON CONFLICT(photo_id) DO UPDATE SET exposure_tenths = excluded.exposure_tenths, processing_version = 1').run(id, exposureTenths);
+      const history = this.history(id); change(history);
+      const exposureTenths = history.active?.exposureTenths ?? history.states[history.cursor];
+      this.db.prepare('INSERT INTO recipes (photo_id, exposure_tenths, processing_version) VALUES (?, ?, 1) ON CONFLICT(photo_id) DO UPDATE SET exposure_tenths = excluded.exposure_tenths, processing_version = 1').run(id, exposureTenths);
+      this.db.prepare('INSERT INTO exposure_history (photo_id, states, cursor, active) VALUES (?, ?, ?, ?) ON CONFLICT(photo_id) DO UPDATE SET states = excluded.states, cursor = excluded.cursor, active = excluded.active').run(id, JSON.stringify(history.states), history.cursor, history.active === null ? null : JSON.stringify(history.active));
       this.db.exec('COMMIT');
+      return exposureTenths;
     } catch (error) { this.db.exec('ROLLBACK'); throw error; }
   }
 
