@@ -82,7 +82,7 @@ Um arraste completo ou uma edição numérica concluída representa um passo do 
 - **Cor e orientação:** fixtures sintéticas sRGB/Display-P3 e EXIF 1–8 foram verificadas no Electron. Compatibilidade ampla com câmeras, perfis ICC e fluxos profissionais ainda precisa ser avaliada.
 - **Persistência:** uma interrupção recupera o último estado realmente salvo. Alterações posteriores ainda não persistidas podem ser perdidas.
 - **Originais:** o catálogo não é uma cópia de segurança. Mantenha seus próprios backups das fotos e do catálogo.
-- **Ainda em desenvolvimento:** balanço de branco, recorte/rotação e exportação. Esses recursos não estão disponíveis nesta versão integrada.
+- **Ainda em desenvolvimento:** balanço de branco, recorte e exportação JPEG. Esses recursos não estão disponíveis nesta versão integrada.
 
 <details>
 <summary>Como funciona a relocalização de um original</summary>
@@ -230,7 +230,7 @@ flowchart TB
 - **Catálogo:** `app.getPath('userData')/catalog.sqlite` guarda referências, identidade, miniaturas, classificação, receitas e histórico. O schema atual é **v6**, com migração transacional de v5; versões antigas que não conhecem o novo schema recusam o banco, sem apagá-lo.
 - **Edição:** a API entrega o JPEG original para preparar a prévia; o worker deriva uma imagem sRGB reduzida e aplica a exposição em RGB linear. O histórico armazena valores e metadados, sem uma imagem por passo. Receita, cursor e checkpoint são persistidos de forma transacional.
 
-**Decisões em aberto:** motor RAW, eventual worker nativo em Rust ou C++ e licença do produto. RawTherapee é um candidato a investigar, sujeito a avaliação técnica e de licença, sem dependência aprovada.
+**Decisões em aberto:** motor RAW, eventual worker nativo em Rust ou C++ e licença do produto. RawTherapee foi avaliado em um [experimento inicial no Windows](evidence/rawtherapee-cli-windows/report.md); a investigação não definiu o motor nem aprovou sua adoção como dependência.
 
 [Catálogo e IPC](docs-agents/adr/0001-local-catalog-ipc.md) · [Lote e miniaturas](docs-agents/adr/0002-batch-jpeg-thumbnails.md) · [Exposição e autosave](docs-agents/adr/0004-jpeg-exposure-autosave.md) · [Histórico persistente](docs-agents/issue-16-contract.md)
 
@@ -242,10 +242,10 @@ flowchart TB
 | Biblioteca JPEG local | Importação, grade, miniaturas, persistência e relocalização implementadas |
 | Organização | Estrelas, marcações e filtros implementados |
 | Primeira edição não destrutiva | Exposição, autosave e histórico persistente de 100 passos implementados |
-| Balanço de branco, recorte e rotação | Em desenvolvimento; ainda não disponíveis na versão integrada |
-| Exportação | Em desenvolvimento; geração de novos arquivos JPEG/TIFF ainda não disponível |
+| Balanço de branco e recorte | Em desenvolvimento; ainda não disponíveis na versão integrada |
+| Exportação JPEG | Em desenvolvimento; geração de novos arquivos ainda não disponível |
 | Evolução visual UI V2 | Proposta em avaliação, ainda não integrada |
-| RAW, leitura HEIC e ajustes em lote | Planejados; dependem das próximas decisões e validações |
+| RAW, leitura HEIC, exportação TIFF e ajustes em lote | Planejados; dependem das próximas decisões e validações |
 | Distribuição | Instaladores, releases e validação ampliada por sistema ainda pendentes |
 
 HDR e exportação HEIC ficam para depois do MVP. O roadmap indica direção, sem datas de entrega prometidas.
