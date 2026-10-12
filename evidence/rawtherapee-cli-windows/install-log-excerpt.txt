@@ -1,0 +1,8 @@
+2026-10-12 02:44:30.976   User privileges: Administrative
+2026-10-12 02:44:30.988   Administrative install mode: Yes
+2026-10-12 02:44:30.988   Install mode root key: HKEY_LOCAL_MACHINE
+2026-10-12 02:44:42.419   Key: HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\rawtherapee.exe
+2026-10-12 02:44:42.420   Key: HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\rawtherapee-cli.exe
+2026-10-12 02:44:42.420   Creating new uninstall key: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\RawTherapee5.13_is1
+2026-10-12 02:44:42.490   Installation process succeeded.
+2026-10-12 02:44:42.506   Need to restart Windows? No

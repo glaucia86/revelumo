@@ -17,3 +17,5 @@ Melhoria de identidade do executável e PowerShell adotada conforme Standards. B
 Resumo por eixo: Standards — 0 violações duras, 1 melhoria adotada; Spec — critérios centrais pendentes pela instalação, 1 melhoria adotada. Não há achado de produto corrigido, nem aprovação para fechar a issue.
 
 Checkpoint posterior: fonte/licenças do innoextract oficial portátil consultadas e listagem autorizada pelo reviewer, sem setup/aceite. Falha de suporte reproduzida e adicionada ao relatório, esclarecendo que o bloqueio é aceite/instalação específica, não uma proibição geral inferida de instalar. Evidência de ausência da CLI permanece.
+
+Após autorização humana de instalação: ambos os agentes revisaram somente por leitura o checkpoint e os registros reais. Standards e Spec confirmam relato coerente da diferença administrativa/HKLM e interrupção antes da engine, sem alegação de conversão. Sugeriram distinguir diretamente a preparação histórica do estado atual; adotado em report.md e verification.txt. A issue permanece parcial, com conversão/recursos/erros/offline pendentes. Sem achados adicionais de escopo ou alegações indevidas.

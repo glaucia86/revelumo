@@ -1,6 +1,12 @@
 # Issue #14 — spike RawTherapee CLI, Windows
 
-## Resultado e bloqueio
+**Atualização após autorização:** licença/instalação autorizadas e instalador executado; o log revelou modo administrativo e uma chave de desinstalação HKLM, diferentes da autorização sem admin. Execução da CLI interrompida antes da conversão. Ver [checkpoint de instalação](installation-checkpoint.md). As seções abaixo preservam o estado da preparação anterior à autorização; o bloqueio atual é a diferença de efeitos da instalação, não falta de aceite.
+
+## Registro histórico: preparação anterior à autorização
+
+Todas as seções seguintes descrevem a preparação inicial, antes da autorização e execução de instalação. Para o estado atual, efeitos e tamanho instalado, consultar `installation-checkpoint.md`.
+
+### Resultado e bloqueio naquele momento
 
 **Investigar/continuar após autorização específica; motor não escolhido.** Pesquisa e preparação local concluídas em 12/10/2026. Conversão RAW não executada: não havia CLI instalada, e a restrição recebida proíbe aceitar novas licenças sem confirmação. O instalador oficial usa `LicenseFile=...LICENSE` (fonte `WindowsInnoSetup.iss.in:50`). A confirmação foi solicitada nesta sessão e não recebida até o registro. Isso não é proibição geral de instalar: uma alternativa de extração portátil oficial foi submetida ao reviewer, autorizada e testada, mas não suportou o pacote. Não executar instalação silenciosa sem o aceite humano exigido.
 
