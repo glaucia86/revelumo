@@ -1,6 +1,6 @@
 import { test, type TestContext } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -188,4 +188,32 @@ test('does not interpret prefixed HTML attributes as links or anchors', t => {
     { line: 4, message: 'Anchor "#fake" is missing in "SUPPORT.md".' },
     { line: 5, message: 'Anchor "#other" is missing in "SUPPORT.md".' },
   ]);
+});
+
+// Published document paths and fragments are a reader-facing compatibility seam.
+test('historical RAW report keeps its entrypoint and links to the Wiki archive', () => {
+  const root = fileURLToPath(new URL('../', import.meta.url));
+  const report = 'evidence/rawtherapee-cli-windows/report.md';
+  const text = readFileSync(join(root, report), 'utf8');
+  assert.ok(text.includes('(https://github.com/glaucia86/revelumo/wiki/RawTherapee-CLI-original-report)'));
+  assert.ok(text.includes('(https://github.com/glaucia86/revelumo/blob/f6dd8fd5ffc28b6d94162b71bb8c8d8ba2cbbdf7/evidence/rawtherapee-cli-windows/report.md)'));
+  assert.deepEqual(checkDocs(root, { documents: [report], readmes: [] }), []);
+});
+
+test('historical RAW report preserves every original section anchor', t => {
+  const { root, write } = fixture(t);
+  const report = 'evidence/rawtherapee-cli-windows/report.md';
+  const text = readFileSync(new URL('../' + report, import.meta.url), 'utf8');
+  const anchors = [
+    'issue-14--resultados-do-spike-rawtherapee-cli', 'resultado',
+    'base-ambiente-e-autorização', 'proveniência-e-componente', 'reprodução',
+    'visual-cor-e-repetição', 'recursos-e-retenção', 'falhas-demonstradas',
+    'offline-licença-e-plataformas', 'próxima-fatia',
+  ];
+  write(report, text);
+  write('SUPPORT.md', anchors.map(anchor => `[Historical section](${report}#${anchor})`).join('\n'));
+  assert.deepEqual(checkDocs(root), []);
+  for (const anchor of anchors.slice(1)) {
+    assert.ok(text.includes(`(https://github.com/glaucia86/revelumo/wiki/RawTherapee-CLI-original-report#${anchor})`));
+  }
 });
