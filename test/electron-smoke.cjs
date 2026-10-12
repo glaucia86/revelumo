@@ -51,7 +51,7 @@ require('./hidden-electron.cjs')(path.join(archive, '.vite', 'build', 'index.cjs
   check('packaged origin and limited bridge', () => assert.equal(win.webContents.getURL(), 'app://revelumo/index.html'));
   const exposed = await js('({keys:Object.keys(window.revelumo).sort(),node:typeof require})');
   check('renderer exposes only approved bridge operations', () => {
-    assert.deepEqual(exposed.keys, ['importJpeg','importProgress','listPhotos','queryPhotos','previewPhoto','thumbnailPhoto','originalAvailability','originalStatus','relocatePhoto','classificationPhoto','classifyPhoto','recipePhoto','beginEditingPhoto','saveExposure','saveAdjustments','moveExposureHistory','endEditingPhoto','onCloseRequested','confirmClose'].sort());
+    assert.deepEqual(exposed.keys, ['importJpeg','importProgress','listPhotos','queryPhotos','previewPhoto','thumbnailPhoto','originalAvailability','originalStatus','relocatePhoto','classificationPhoto','classifyPhoto','recipePhoto','beginEditingPhoto','saveExposure','saveAdjustments','moveExposureHistory','endEditingPhoto','onCloseRequested','confirmClose','startJpegExport','recoverJpegExport','jpegExportStatus','cancelJpegExport'].sort());
     assert.equal(exposed.node, 'undefined');
   });
   const listed = await js('window.revelumo.listPhotos()'); assert.equal(listed.ok, true);
