@@ -4,12 +4,12 @@ Mudanças relevantes para quem usa o Revelumo. `Unreleased` contém somente entr
 
 ## Unreleased
 
-Base de aplicação integrada em 12/10/2026: `fbc46631502c9b00f8d667abf4f98491e6ad289a` (PR #33). Versão do projeto: `0.0.1`; nenhuma tag, alpha ou release publicada. As entradas documentais desta atualização passam a fazer parte de `Unreleased` quando a PR for integrada.
+Estado conferido em 12/10/2026 no commit `d3a56d94042f7011ec1b157771c4eb9055fbd307` (PR #41 integrada). Versão do projeto: `0.0.1`; nenhuma tag ou release presente na conferência. Esse snapshot orienta as entradas abaixo, mas não é uma candidata de lançamento. A primeira alpha de código-fonte segue proposta no [procedimento de versões](docs-agents/versioning.md).
 
 ### Adicionado
 
 - Editor existente traduzido em PT-BR/EN/ES: exposição, WB relativo, histórico, comparação, classificação, relocalização, erros e saída; troca conserva rascunhos e operações em voo. Recorte/exportação continuam pendentes. [Issue #32](https://github.com/glaucia86/revelumo/issues/32), [evidências e limites](evidence/editor-language/report.md).
-- Seletor persistente Português (Brasil)/English/Español/Seguir sistema; catálogo, importação, filtros, paginação e mensagens de preferência traduzidos. Preferência local separada do catálogo, fallback inglês e preservação do estado de edição. Editor/exportação ainda não traduzidos nesta fatia. [Issue #30](https://github.com/glaucia86/revelumo/issues/30), [evidências e limites](evidence/language-catalog/report.md).
+- Seletor persistente Português (Brasil)/English/Español/Seguir sistema; catálogo, importação, filtros, paginação e mensagens de preferência traduzidos. Preferência local separada do catálogo, fallback inglês e preservação do estado de edição. A tradução do editor foi integrada depois, na issue #32 acima; exportação ainda não existe. [Issue #30](https://github.com/glaucia86/revelumo/issues/30), [evidências e limites](evidence/language-catalog/report.md).
 
 - Catálogo SQLite local, importação de JPEG por referência e prévia, preservando os originais. Importação em lote com progresso e resultado por arquivo, miniaturas persistentes orientadas e grade paginada. Reabrir preserva itens confirmados; um lote interrompido não retoma automaticamente. [PR #1](https://github.com/glaucia86/revelumo/pull/1).
 - Indicação de original ausente e relocalização individual após igualdade de SHA-256, preservando registro e miniatura. Cancelamento, conteúdo diferente e conflito preservam a referência anterior. Registros antigos já ausentes sem hash exigem nova importação, sem substituir o registro anterior. [PR #6](https://github.com/glaucia86/revelumo/pull/6).
@@ -19,6 +19,7 @@ Base de aplicação integrada em 12/10/2026: `fbc46631502c9b00f8d667abf4f98491e6
 - Histórico persistente de exposição: Desfazer/Refazer e retenção dos últimos 100 passos por foto, inclusive após reabertura. [PR #26](https://github.com/glaucia86/revelumo/pull/26).
 - Balanço de branco JPEG relativo: Temperatura/Matiz, redefinição e autosave, preservando o histórico exclusivo de exposição. Schema v7 e receita processingVersion 2; sem escala Kelvin ou revelação RAW. [PR #28](https://github.com/glaucia86/revelumo/pull/28).
 - README em inglês, português e espanhol, distinguindo implementação, direção visual aprovada e recursos planejados. [PR #27](https://github.com/glaucia86/revelumo/pull/27).
+- Site público estático do projeto com publicação GitHub Pages, separado do aplicativo desktop e de qualquer distribuição de binários. [PR #36](https://github.com/glaucia86/revelumo/pull/36), [PR #38](https://github.com/glaucia86/revelumo/pull/38), [código do site](website/README.md).
 - Guias de contribuição, suporte e segurança, formulários de issue, template de PR e checagem offline dos links locais e navegação entre idiomas. [Guia de contribuição](CONTRIBUTING.md).
 
 ### Alterado
@@ -46,7 +47,7 @@ Base de aplicação integrada em 12/10/2026: `fbc46631502c9b00f8d667abf4f98491e6
 ### Limites conhecidos
 
 - Somente JPEG. Recorte, exportação JPEG, RAW/HEIC, TIFF e ajustes em lote ainda não estão disponíveis. O experimento RawTherapee do [PR #21](https://github.com/glaucia86/revelumo/pull/21) não integrou um motor RAW.
-- A direção A · Cobre cobre o catálogo e o shell; o redesenho completo do editor permanece na [issue #31](https://github.com/glaucia86/revelumo/issues/31). A interface atual está em português; seleção PT/EN/ES no aplicativo permanece planejada.
+- A direção A · Cobre cobre o catálogo e o shell; o redesenho completo do editor permanece na [issue #31](https://github.com/glaucia86/revelumo/issues/31). Catálogo e editor existente já oferecem PT-BR/EN/ES e seleção persistente de idioma; isso não antecipa interfaces de recorte/exportação.
 - Cache corrompido não se recupera automaticamente; alteração externa do original não invalida a miniatura até reimportação. Nome, tamanho e miniatura não comprovam identidade.
 - Windows foi verificado por automação com seletor substituído. Inspeção visual e diálogo nativo Windows permanecem pendentes na [issue #4](https://github.com/glaucia86/revelumo/issues/4). Ubuntu teve testes/tipos/pacote na CI; smokes Electron recentes não foram executados ali. Há roteiros gráficos Linux históricos em seus próprios snapshots. macOS não foi validado.
 - Sem validação no alvo de 8 GB ou ampla matriz de câmeras/cor. Forge produz pasta de desenvolvimento; sem instaladores, assinatura ou notarização. A MIT do código não concede direitos sobre fotos, retratos, fontes ou outros recursos de terceiros.
