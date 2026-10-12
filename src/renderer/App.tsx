@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import type { BatchItem, ImportProgress, PhotoSummary, PhotoStatus, Preview } from '../shared/contracts.ts';
+import type { BatchItem, ImportProgress, PhotoSummary, PhotoStatus, PhotoAvailability, Preview } from '../shared/contracts.ts';
 import { lastPage, pagePhotos } from './gallery.ts';
 
 export function App() {
@@ -10,7 +10,7 @@ export function App() {
   const [relocating, setRelocating] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoSummary | null>(null);
   const [currentStatus, setCurrentStatus] = useState<PhotoStatus | null>(null);
-  const [statuses, setStatuses] = useState<Record<string, PhotoStatus>>({});
+  const [statuses, setStatuses] = useState<Record<string, PhotoAvailability>>({});
   const [refresh, setRefresh] = useState(0);
   const [viewing, setViewing] = useState(false);
   const [message, setMessage] = useState('Abrindo catálogo…');
@@ -42,7 +42,7 @@ export function App() {
       for (const photo of visible) {
         if (!active) break;
         try {
-          const status = await window.revelumo.originalStatus(photo.id);
+          const status = await window.revelumo.originalAvailability(photo.id);
           if (!active) break;
           if (status.ok) setStatuses(current => ({ ...current, [photo.id]: status.value }));
         } catch { /* A failed status check must not falsely label an original missing. */ }
@@ -143,7 +143,7 @@ export function App() {
     <div className="workspace">
       <aside><h2>Biblioteca <span>{photos.length}</span></h2><p className="quiet">Originais preservados</p>
         <button className="photo" disabled={relocating} onClick={showGrid} aria-pressed={!viewing}>Todas as fotos</button>
-        <button className="photo" disabled={loading || importing || relocating} onClick={() => { setRefresh(current => current + 1); if (viewing && selectedPhoto) void openPhoto(selectedPhoto); }}>Verificar originais</button>
+        <button className="photo" disabled={loading || importing || relocating} onClick={() => { setRefresh(current => current + 1); if (viewing && selectedPhoto) void openPhoto(selectedPhoto); }}>Verificar disponibilidade</button>
         <p className="quiet">JPEG · catálogo local<br/>Miniaturas derivadas</p>
         {importing && <div className="import-progress" role="status" aria-live="polite"><p>{progress?.total ? `${progress.completed} de ${progress.total} arquivos` : 'Aguardando seleção…'}</p>
           {progress && progress.total > 0 && <><progress max={progress.total} value={progress.completed}/><p className="current-file">{progress.currentName}</p></>}
@@ -153,9 +153,9 @@ export function App() {
         {viewing ? <><button className="back" disabled={relocating} onClick={showGrid}>← Voltar à grade</button>{preview ? <figure><img src={preview.dataUrl} alt={preview.photo.name}/><figcaption>{preview.photo.name}</figcaption></figure> :
           currentStatus && currentStatus.state !== 'available' ? <div className="original-notice" role="status"><h2>{selectedPhoto?.name}</h2><p>{currentStatus.message}</p>{currentStatus.canRelocate && <button disabled={relocating || importing} onClick={() => void relocatePhoto()} aria-label={`Localizar original de ${selectedPhoto?.name}`}>{relocating ? 'Localizando…' : 'Localizar original'}</button>}</div> : <p className="quiet">{message || 'Abrindo prévia…'}</p>}</> :
           <>{failures.length > 0 && <details className="failures"><summary>{failures.length} arquivo(s) não importado(s)</summary><ul>{failures.map((item, index) => <li key={index}>{item.name}: {!item.result.ok && item.result.message}</li>)}</ul></details>}
-            {photos.length ? <><div className="grid" role="list" aria-label="Fotos importadas">{visible.map(photo => <div role="listitem" key={photo.id}><button className="tile" onClick={() => void openPhoto(photo)} aria-label={`Abrir ${photo.name}`} aria-describedby={statuses[photo.id] && statuses[photo.id].state !== 'available' ? `original-${photo.id}` : undefined}>
+            {photos.length ? <><div className="grid" role="list" aria-label="Fotos importadas">{visible.map(photo => <div role="listitem" key={photo.id}><button className="tile" onClick={() => void openPhoto(photo)} aria-label={`Abrir ${photo.name}`} aria-describedby={statuses[photo.id] && statuses[photo.id].state !== 'present' ? `original-${photo.id}` : undefined}>
               <span className="thumbnail">{thumbnails[photo.id] ? <img src={thumbnails[photo.id]} alt=""/> : <span title={thumbnailErrors[photo.id]}>{thumbnailErrors[photo.id] ? 'Miniatura indisponível' : 'Carregando…'}</span>}</span><span className="filename">{photo.name}</span>
-              {statuses[photo.id] && statuses[photo.id].state !== 'available' && <span className="original-status" id={`original-${photo.id}`}>{statuses[photo.id].state === 'missing' ? 'Original ausente' : statuses[photo.id].state === 'changed' ? 'Original diferente' : 'Original indisponível'}</span>}
+              {statuses[photo.id] && statuses[photo.id].state !== 'present' && <span className="original-status" id={`original-${photo.id}`}>{statuses[photo.id].state === 'missing' ? 'Original ausente' : 'Original indisponível'}</span>}
             </button></div>)}</div><nav className="pagination" aria-label="Páginas da biblioteca"><button disabled={page === 0} onClick={() => setPage(current => current - 1)}>Anterior</button><span>Página {page + 1} de {lastPage(photos.length) + 1}</span><button disabled={page >= lastPage(photos.length)} onClick={() => setPage(current => current + 1)}>Próxima</button></nav></> :
               <div className="empty"><span className="mark">R</span><h2>Toda foto começa com um olhar.</h2><p>Importe JPEGs para começar. Os arquivos continuam onde estão.</p></div>}
           </>}

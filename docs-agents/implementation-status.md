@@ -1,5 +1,11 @@
 # Estado da implementação
 
+## PR #6: disponibilidade leve na grade - 12/10/2026
+
+- Corrigido o comentário Copilot sobre I/O de `originalStatus` por página/foco/refresh. Grade usa `originalAvailability`: abre/confere/fecha descritor sem ler bytes, hash, decode ou identificação do legado; presença é explicitamente não verificada. Verificação completa e política SHA-256 continuam nas operações protegidas. Sem cache de identidade baseado em nome/tamanho/mtime.
+- RED Electron com 96 leituras em 48 itens em cache; GREEN com zero conteúdo/hash/decode em página, navegação, foco e refresh. Substituto com metadados iguais continua bloqueado ao abrir. Windows: 56 aprovações, zero falhas, três skips (59 testes), typecheck/pacote e runners afetados passaram. [Evidências](../evidence/availability-windows/report.md).
+- Medição delimitada já executada: pacote de ~367,8 MiB, sem instalador; memória de quatro processos em cenários sintéticos, sem somar RSS como RAM única. [Método, dados e limites](../evidence/availability-windows/resources.md). Sem otimizações especulativas ou validação no alvo de 8 GB.
+
 ## Issue #4: relocalização por identidade - 12/10/2026
 
 - Decisão SHA-256/legado aprovada e registrada na [ADR 0003](adr/0003-original-identity-relocation.md) e na [issue #4](https://github.com/glaucia86/revelumo/issues/4), que permanece aberta. Base funcional `b82e1f2`; preparação oficial Matt Pocock separada em `ce3cbdc`; feature em `feat/issue-4-relocate`, sem publicação.

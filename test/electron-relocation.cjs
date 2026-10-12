@@ -113,8 +113,11 @@ require(path.join(archive, '.vite', 'build', 'index.cjs'));
     assert.equal(await js('document.querySelector("figcaption").textContent'),'original.jpg');
     for (const options of dialogs.filter(options=>options.title==='Localizar original')) assert.deepEqual(options.properties,['openFile']);
     checks.push('single-file dialogue adapter relinks equal SHA-256 and restores actual preview without changing ID, name or cache');
-    // The accessible legacy row was identified by the initial page status check.
+    // A grid probe no longer enrolls legacy rows. Explicitly preview this one
+    // accessible original before moving it to establish its content identity.
     const readable = legacyPhotos[0];
+    assert.equal((await api('originalAvailability', readable.id)).value.identityRecorded, false);
+    assert.equal((await api('previewPhoto', readable.id)).ok, true);
     const legacyMoved = path.join(folder,'legacy-readable-relocated.jpg'); fs.renameSync(files['legacy-readable'],legacyMoved);
     assert.equal((await api('originalStatus',readable.id)).value.canRelocate,true);
     selection = {canceled:false,filePaths:[legacyMoved]};

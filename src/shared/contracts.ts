@@ -4,6 +4,7 @@ export type Result<T> = { ok: true; value: T } | { ok: false; code: FailureCode;
 export type ImportOutcome = { canceled: true } | { canceled: false; photo: PhotoSummary };
 export type Preview = { photo: PhotoSummary; dataUrl: string };
 export type PhotoStatus = { photo: PhotoSummary; state: 'available' | 'missing' | 'unreadable' | 'changed'; canRelocate: boolean; message: string };
+export type PhotoAvailability = { photo: PhotoSummary; state: 'present' | 'missing' | 'unreadable'; identityRecorded: boolean; contentVerified: false; message: string };
 export interface RevelumoApi {
   importJpeg(): Promise<Result<BatchOutcome>>;
   importProgress(): Promise<Result<ImportProgress>>;
@@ -11,6 +12,7 @@ export interface RevelumoApi {
   listPhotos(): Promise<Result<PhotoSummary[]>>;
   previewPhoto(id: string): Promise<Result<Preview>>;
   originalStatus(id: string): Promise<Result<PhotoStatus>>;
+  originalAvailability(id: string): Promise<Result<PhotoAvailability>>;
   relocatePhoto(id: string): Promise<Result<ImportOutcome>>;
 }
 

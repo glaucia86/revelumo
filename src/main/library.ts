@@ -4,7 +4,7 @@ import { basename } from 'node:path';
 import { createHash } from 'node:crypto';
 import { setImmediate } from 'node:timers/promises';
 import { Catalog } from './catalog.ts';
-import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcome, PhotoSummary, PhotoStatus, Preview, Result } from '../shared/contracts.ts';
+import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcome, PhotoSummary, PhotoStatus, PhotoAvailability, Preview, Result } from '../shared/contracts.ts';
 
 const MAX_BYTES = 32 * 1024 * 1024;
 export type PreviewDecoder = (bytes: Buffer) => Promise<string>;
@@ -78,6 +78,21 @@ export class Library {
   }
 
   list(): PhotoSummary[] { return this.catalog.list().map(summary); }
+
+  // Presence is a cheap snapshot, never proof of content identity. No JPEG
+  // bytes are read, decoded or hashed, and legacy records are not enrolled.
+  async availability(id: string): Promise<Result<PhotoAvailability>> {
+    const photo = this.catalog.find(id);
+    if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
+    let state: PhotoAvailability['state'];
+    try {
+      const handle = await open(photo.path, constants.O_RDONLY | constants.O_NONBLOCK);
+      try { state = (await handle.stat()).isFile() ? 'present' : 'unreadable'; }
+      finally { await handle.close(); }
+    } catch (error) { state = ['ENOENT', 'ENOTDIR'].includes((error as NodeJS.ErrnoException).code || '') ? 'missing' : 'unreadable'; }
+    const message = state === 'present' ? 'Arquivo acessível. Conteúdo ainda não verificado.' : state === 'missing' ? 'Original ausente.' : 'Não foi possível acessar o original.';
+    return { ok: true, value: { photo: summary(photo), state, identityRecorded: photo.sha256 !== null, contentVerified: false, message } };
+  }
 
   status(id: string): Promise<Result<PhotoStatus>> {
     return this.serial(async () => {

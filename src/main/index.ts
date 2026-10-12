@@ -88,6 +88,7 @@ if (ownsInstance) app.whenReady().then(async () => {
       if (request.op === 'list') return { ok: true, value: library.list() };
       if (request.op === 'progress') return { ok: true, value: progress };
       if (request.op === 'status') return await library.status(request.id);
+      if (request.op === 'availability') return await library.availability(request.id);
       if (request.op === 'thumbnail') return await library.thumbnail(request.id);
       if (request.op === 'preview') return await library.preview(request.id);
       if (selectingFiles) return fail('busy', 'Outra seleção de arquivos está em andamento. Aguarde.');
