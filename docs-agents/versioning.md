@@ -8,6 +8,39 @@ Referência da [issue #8](https://github.com/glaucia86/revelumo/issues/8). Aprov
 
 Esta issue entrega documentos. Não cria tag/release, envia ao npm, configura makers/assinatura/notarização ou muda app/workflow. `private: true` permanece; `makers: []` significa que `npm run package` gera uma pasta de desenvolvimento, não instaladores. Código e documentação originais agora estão sob MIT; avisos de terceiros permanecem separados em THIRD_PARTY_NOTICES.md.
 
+## SemVer durante o desenvolvimento inicial
+
+Usar o formato [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html). `0.y.z` indica desenvolvimento inicial, sem contrato público estável; o sufixo `alpha.N` identifica uma prévia experimental. Nesta série proposta, cada nova candidata publicada para o mesmo marco aumenta `N` (`0.1.0-alpha.1`, `0.1.0-alpha.2`), sem modificar o conteúdo de uma versão já publicada nem reutilizar seu identificador. Um novo marco funcional pode iniciar outra série, por exemplo `0.2.0-alpha.1`; a escolha é feita durante a definição do escopo, nunca por quantidade de commits ou automaticamente a cada merge. `1.0.0` exige definir o contrato público e seus compromissos de compatibilidade.
+
+A versão do aplicativo não substitui `schemaVersion` do catálogo nem `processingVersion` das receitas. Mudanças nesses contratos exigem validação própria e notas de migração, preservação de originais e limites de compatibilidade. Estar em alpha não dispensa esses cuidados.
+
+## Primeira alpha proposta: código-fonte experimental
+
+A entrega proposta é um marco para pessoas desenvolvedoras que queiram estudar e compilar o projeto. Uma release agrupa entregas integradas, notas, evidências e limitações; sua tag deve resolver para um único SHA integrado com CI terminal verde. [Archives de código-fonte gerados pelo GitHub](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) (`zip`/`tar.gz`) são cópias do código versionado, **não instaladores, executáveis prontos ou prova de suporte multiplataforma**. Publicar o site também não publica uma versão do aplicativo.
+
+Escopo de referência em `d3a56d94042f7011ec1b157771c4eb9055fbd307` (12/10/2026), ainda sujeito à seleção da candidata:
+
+- Catálogo JPEG/SQLite, importação em lote, miniaturas, identidade e relocalização, classificação e filtros.
+- Exposição não destrutiva, histórico de exposição, WB relativo, comparação, autosave e reabertura.
+- Catálogo Cobre e traduções do catálogo/editor existente em PT-BR/EN/ES.
+- Documentação, licença MIT do código original, avisos de terceiros e site do projeto.
+
+Recorte na interface, exportação JPEG utilizável, RAW/HEIC/TIFF, edição em lote, redesenho completo do editor e distribuição de binários ficam fora desse marco de referência. Componentes internos ou trabalho em branches não tornam esses fluxos disponíveis. Se o escopo mudar antes de preparar a candidata, atualizar esta lista e as evidências; não incorporar trabalho em andamento por antecipação.
+
+A candidata continua **proposta**, não pronta: faltam seleção final do conteúdo, preparação do changelog/versões, integração e validação do SHA final e publicação autorizada. Os testes do snapshot de referência não validam o futuro commit de preparação. A publicação proposta usa somente código-fonte e notas, com marcação **pre-release**, sem anexar a pasta `out/` ou outros binários.
+
+Binários exigirão uma fatia separada: formatos e makers por plataforma, proveniência e integridade dos artefatos, avisos/licenças redistribuídos, testes de instalação/abertura/desinstalação e política explícita de assinatura/notarização e seus custos. Não contratar serviços, criar certificados ou ampliar permissões nesta preparação.
+
+### Notas a preencher na janela de publicação
+
+- Estado e público: pré-release experimental de código-fonte, para desenvolvimento; sem instaladores.
+- Versão/tag e SHA completo: os três campos package/lockfile e a seção do changelog devem coincidir.
+- Entregas: resumo do conjunto integrado e links às PRs relevantes, sem listar planos como funcionalidades.
+- Verificação: CI do SHA final, jobs/resultados/skips, pacote testado, ambiente e relatório de evidências. Registrar limites Windows/Linux/macOS separadamente.
+- Uso e limitações: apontar para o [guia de contribuição](../CONTRIBUTING.md), informar requisitos de desenvolvimento, limitações funcionais, compatibilidade de catálogo/receitas e o que não foi validado.
+- Direitos e distribuição: [MIT](../LICENSE), [avisos de terceiros](../THIRD_PARTY_NOTICES.md) e inventário dos arquivos realmente publicados. Revisar direitos de recursos incluídos no código-fonte também; ausência de binários não elimina essa conferência.
+- Publicação: autorização, confirmação de tag inexistente, tag verificada no SHA aprovado e URL/data reais somente após conclusão. Não alterar uma tag já publicada para corrigir o código; preparar nova versão.
+
 ## Preparar
 
 1. Escolher um conjunto coerente de mudanças já integrado em `main`, identificar seu SHA completo e listar PRs realmente incluídas. Trabalho em outra branch, como #5, não entra como entregue. Guardar `git rev-parse HEAD` e conferir checkout limpo com `git status --short`.
