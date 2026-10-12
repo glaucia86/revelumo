@@ -1,0 +1,27 @@
+name: Website
+on:
+  pull_request:
+    paths: ['website/**', 'docs/assets/screenshots/**', 'src/renderer/theme/fonts/**', 'public/licenses/Geist-OFL.txt', 'LICENSE', '.github/workflows/website.yml']
+  push:
+    branches: [main]
+    paths: ['website/**', 'docs/assets/screenshots/**', 'src/renderer/theme/fonts/**', 'public/licenses/Geist-OFL.txt', 'LICENSE', '.github/workflows/website.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: website-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: node --test website/test/site.test.mjs
+      - run: node website/build.mjs
