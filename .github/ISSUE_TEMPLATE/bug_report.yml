@@ -1,0 +1,80 @@
+name: Bug report
+description: Report a reproducible problem in Revelumo.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Reports are welcome in English, Brazilian Portuguese, or Spanish.
+        Search [existing issues](https://github.com/glaucia86/revelumo/issues) first.
+        For suspected vulnerabilities, read [SECURITY.md](https://github.com/glaucia86/revelumo/blob/main/SECURITY.md) before posting.
+
+        This is a public issue. Use synthetic examples. Do not attach personal photographs or catalogs, secrets, personal paths, or private EXIF/GPS data. Redact logs and screenshots before sharing them. This form collects information; it does not execute commands.
+  - type: input
+    id: revision
+    attributes:
+      label: Commit tested
+      description: Run git rev-parse HEAD in your checkout, or explain if the commit is unknown. There is no public release yet.
+      placeholder: Commit SHA
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS/version/architecture, Node version, and npm version. Do not include usernames or personal paths.
+      placeholder: |
+        OS and version:
+        Architecture:
+        Node (node --version):
+        npm (npm --version):
+    validations:
+      required: true
+  - type: dropdown
+    id: run-mode
+    attributes:
+      label: How were you running the project?
+      options:
+        - Development mode (npm start)
+        - Locally packaged app (npm run package)
+        - Install, typecheck, test, or package command
+        - Other or unsure
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Give the smallest repeatable workflow, using a fresh test catalog and synthetic images when relevant. Include the failing command if applicable.
+      placeholder: |
+        1. Prepare...
+        2. Run or select...
+        3. Observe...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead? Mention whether it repeats and whether reopening changes it.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized logs or other context (optional)
+      description: Paste only relevant, redacted excerpts. Synthetic examples are preferred; do not upload a personal photo or catalog.
+  - type: checkboxes
+    id: public-data
+    attributes:
+      label: Public report check
+      options:
+        - label: I have checked that this report and any attachments contain no sensitive or personal data.
+          required: true

@@ -22,7 +22,8 @@
     "make": "electron-forge make",
     "install:electron": "install-electron",
     "test:history": "electron test/electron-history.cjs",
-    "test:wb": "electron test/electron-white-balance.cjs"
+    "test:wb": "electron test/electron-white-balance.cjs",
+    "check:docs": "node scripts/check-docs.mjs"
   },
   "dependencies": {
     "react": "^19.3.0",
@@ -41,5 +42,6 @@
   },
   "config": {
     "forge": "./forge.config.mts"
-  }
+  },
+  "license": "MIT"
 }

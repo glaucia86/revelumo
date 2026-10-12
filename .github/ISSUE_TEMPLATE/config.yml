@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Setup and support
+    url: https://github.com/glaucia86/revelumo/blob/main/SUPPORT.md
+    about: Read setup guidance and find the right place for questions.
+  - name: Security reporting guidance
+    url: https://github.com/glaucia86/revelumo/blob/main/SECURITY.md
+    about: Read this before sharing a suspected vulnerability. Public issues are not confidential.

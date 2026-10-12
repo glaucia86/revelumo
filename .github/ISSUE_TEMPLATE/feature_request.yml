@@ -1,0 +1,48 @@
+name: Feature request
+description: Describe a photography workflow or improvement to discuss.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Requests are welcome in English, Brazilian Portuguese, or Spanish.
+        Check the [roadmap](https://github.com/glaucia86/revelumo/blob/main/README.md) and [existing issues](https://github.com/glaucia86/revelumo/issues) first.
+        A request starts a discussion; it does not promise implementation or a delivery date.
+
+        This is a public issue. Use synthetic examples and avoid personal photos or catalogs, private metadata, credentials, and other sensitive information. This form collects information; it does not execute commands.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the photography or development workflow and where it falls short today.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: What should a person be able to do? Describe observable behavior rather than prescribing an implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Smallest useful scope (optional)
+      description: Suggest a focused first step and anything that can wait. Note dependencies or related issues if known.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or workarounds (optional)
+      description: What have you tried, and why is it insufficient?
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context (optional)
+      description: Add non-sensitive examples or references. Use synthetic images and preserve third-party attribution and licenses.
+  - type: checkboxes
+    id: public-data
+    attributes:
+      label: Public report check
+      options:
+        - label: I have checked that this request and any attachments contain no sensitive or personal data.
+          required: true
