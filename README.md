@@ -1,207 +1,282 @@
 # Revelumo
 
-<img src="docs/assets/revelumo-cover.jpg" alt="Revelumo: Mais espaço para o seu olhar. Capa conceitual com dunas e lagoa, um hibisco laranja e uma pessoa surfando; imagens demonstrativas geradas, não capturas do aplicativo." width="100%" />
+**English** · [Português (Brasil)](README.pt-BR.md) · [Español](README.es.md)
 
-<sub>Capa conceitual com imagens demonstrativas geradas. Não é uma captura de tela do aplicativo.</sub>
+<img src="docs/assets/revelumo-cover.jpg" alt="Revelumo: More room for your vision. Concept cover with dunes and a lagoon, an orange hibiscus, and a surfer." width="100%" />
 
-### Suas fotografias. No seu computador.
+<sub>Concept cover with generated demonstration images. This is not a screenshot of the application.</sub>
 
-Um espaço para organizar, revelar e dar forma às suas fotografias.
+### Your photographs. On your computer.
 
-Editor fotográfico desktop independente, pensado para amadores e entusiastas.
-Local, sem assinatura e sem funcionalidades de IA no produto.
+An independent desktop photo editor for hobbyists and enthusiasts. A local library to organize your photos and start developing JPEGs while preserving the originals.
 
-![Estágio: em desenvolvimento](https://img.shields.io/badge/estágio-em_desenvolvimento-d95332?style=flat-square&labelColor=171717)
-![Arquitetura: local](https://img.shields.io/badge/arquitetura-local-ededed?style=flat-square&labelColor=171717)
-![Interface: Electron e React](https://img.shields.io/badge/interface-Electron_%2B_React-ededed?style=flat-square&labelColor=171717)
-![Catálogo: SQLite](https://img.shields.io/badge/catálogo-SQLite-ededed?style=flat-square&labelColor=171717)
+**Local · No subscription · No AI features in the product**
 
-[Visão](#visao) · [Status](#status) · [Arquitetura](#arquitetura) · [Instalação](#instalacao) · [Desenvolvimento](#desenvolvimento) · [Roadmap](#roadmap)
+[![CI](https://github.com/glaucia86/revelumo/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/glaucia86/revelumo/actions/workflows/ci.yml)
+![Stage: in development](https://img.shields.io/badge/stage-in_development-efb28a?style=flat-square&labelColor=151515)
+![Interface: Electron and React](https://img.shields.io/badge/interface-Electron_%2B_React-ededed?style=flat-square&labelColor=171717)
+![Catalog: SQLite](https://img.shields.io/badge/catalog-SQLite-ededed?style=flat-square&labelColor=171717)
 
----
+[Interface](#interface) · [Current features](#status) · [Try it](#instalacao) · [Development](#desenvolvimento) · [Architecture](#arquitetura) · [Roadmap](#roadmap)
 
-> **Prévia de desenvolvimento.** O fluxo JPEG foi validado de ponta a ponta no pacote Linux x64 deste ambiente de teste. O pacote Windows x64 passou por smoke automatizado com fixtures sintéticas; diálogo nativo e inspeção visual Windows seguem pendentes. Ainda não há release nem instaladores; macOS não foi validado. As seções abaixo distinguem o que existe hoje do que está planejado.
+> **Development preview.** Revelumo already has a working desktop interface: a library, ratings, filters, and exposure editing with persistent history. There is no public release or installer yet. To try it, you need to run the project from source. The MVP and cross-platform validation are still in progress.
 
 <a id="visao"></a>
-## A fotografia fica com você
+## Your photography stays with you
 
-O Revelumo nasce para reunir biblioteca e edição em um fluxo desktop acessível, com processamento no próprio computador e originais preservados.
+- **Local library.** Your catalog and adjustments stay on your computer, without cloud photo processing or synchronization.
+- **Preserved originals.** Importing records a reference to the file. The application does not move or overwrite the photograph.
+- **Non-destructive editing.** Exposure is stored as a separate recipe and applied to the preview.
+- **Independent development.** Zero cost and no subscription guide the project. The repository is public; its license has yet to be chosen.
 
-- **Local por princípio.** Catálogo no seu computador, sem processamento de fotos ou sincronização em nuvem.
-- **Originais preservados.** A importação atual registra uma referência ao arquivo, sem mover ou regravar a fotografia.
-- **Um fluxo completo como destino.** Organizar, selecionar, editar e exportar fazem parte do plano; a primeira etapa começa no catálogo JPEG.
-- **Construção independente.** Custo zero e ausência de assinatura orientam o projeto. O repositório é público; a licença ainda precisa ser definida.
+Lightroom Classic is a functional reference for the library and editing workflow. Revelumo has its own identity, with no Adobe affiliation or promise of feature parity.
 
-A referência funcional é o fluxo de um editor como Lightroom Classic. O Revelumo tem identidade própria, sem vínculo com a Adobe ou promessa de paridade de recursos.
+<a id="interface"></a>
+## A working desktop interface
+
+The application opens an Electron window with a React interface. You can import JPEGs, browse thumbnails, rate photos, and filter the library. Opening a photo lets you adjust exposure, compare it with 0 EV, and undo or redo adjustments.
+
+### The library in action
+
+<img src="evidence/batch-jpeg/22-large-grid-reopened.png" alt="Actual Revelumo library screenshot on Linux, showing a grid of synthetic test thumbnails after restarting the application." width="100%" />
+
+<sub>Actual screenshot from the JPEG batch-import milestone on Linux, using synthetic test images. This predates the current rating, filtering, and editing controls. [Milestone report](evidence/batch-jpeg/report.md).</sub>
+
+<details>
+<summary>See the photo preview from the same milestone</summary>
+
+<img src="evidence/batch-jpeg/24-page-two-preview.png" alt="Actual screenshot of a synthetic JPEG preview in Revelumo, with a button to return to the grid." width="100%" />
+
+This screenshot records grid-to-preview navigation before the exposure editor was added. The current controls and their verification are described in the [exposure](evidence/issue-12/report.md) and [persistent history](evidence/issue-16/report.md) reports.
+
+</details>
+
+**Selected visual direction: A · Cobre (Copper).** A neutral dark workspace with copper accents on controls and selections has been chosen for the redesign. This approves the design direction; the mockup has not been integrated into the application. The screenshots above document the existing implementation.
+
+**Languages:** the current app interface is in Portuguese. This README is available in English, Brazilian Portuguese, and Spanish; language selection inside the app is planned and is not available yet.
 
 <a id="status"></a>
-## Onde estamos
+## What you can do today
 
-| Área | Estado atual |
+| Feature | Available in the current implementation |
 | :--- | :--- |
-| Catálogo SQLite | Testado em Node e no aplicativo Linux; referências persistem após encerrar e reabrir |
-| Importação JPEG | Seleção múltipla por referência, progresso e falhas por arquivo; mesmo caminho canônico reaproveita o registro |
-| Prévia | API preserva bytes JPEG/EXIF/ICC; edição mostra derivação sRGB até 2048 px, validada com perfis sRGB/P3 e EXIF 1–8 no Electron Windows |
-| Interface desktop | Grade paginada com miniaturas derivadas; lote misto, prévia, reinício e interrupção testados no pacote Linux |
-| Original ausente e relocalização | Indicação na grade/prévia; localizar uma foto por SHA-256, preservando ID/dados; fluxo automatizado Windows, com limites nativos descritos abaixo |
-| Edição JPEG | Exposição ±3 EV em RGB linear, receita SQLite e autosave com flush/reabertura; [limites e evidências](evidence/issue-12/report.md) |
-| Exportação e RAW | Planejados, ainda não implementados |
-| Distribuição | Pacote de desenvolvimento Linux x64 testado; sem instaladores ou releases; Windows/macOS pendentes |
+| Import JPEGs | Multiple files imported by reference, per-file progress and errors; importing the same canonical path again reuses the catalog entry |
+| Browse the library | Derived thumbnail grid, 48 photos per page, and a preview of the selected photo |
+| Rate photos | 1–5 stars or unrated; selected, rejected, and unflagged states |
+| Filter the library | Minimum star rating or unrated, combined with a flag; filters are retained when returning from the preview within the session |
+| Locate missing originals | Missing-file notices and individual relocation by SHA-256 identity, preserving the photo ID, rating, and adjustments |
+| Adjust exposure | −3 to +3 EV in 0.1 EV steps, with gain in linear RGB; comparison with 0 EV and reset |
+| Save adjustments | A recipe in SQLite, autosave, and confirmation before leaving the editor or closing normally |
+| Undo and redo | Persistent exposure history retaining the latest 100 steps per photo, without time-based expiration |
 
-**Evidência disponível:** 42 testes do núcleo passaram em Node, o typecheck TypeScript passou e o Forge gerou o pacote Linux. No aplicativo real foram verificados cancelamento, importação, reimportação sem duplicata, rejeição de JPEG inválido, original ausente e reabertura após encerrar o processo. Os hashes das fixtures permaneceram iguais. [Primeira fatia](evidence/e2e-linux/report.md) · [Lote, grade e interrupção no Linux](evidence/batch-jpeg/report.md).
+### A workflow to try
 
-**Verificação adicional Windows:** 39 testes aprovados, três skips com motivos explícitos, typecheck e pacote x64 passaram. Smoke automatizado com o código empacotado verificou acessibilidade da grade, importação, miniaturas, paginação, prévia e persistência em dois processos Electron. O seletor nativo foi substituído no teste; não houve inspeção visual Windows. [Resultados, dependências e limites](evidence/missing-originals-windows/review-windows.md).
+1. Click **Importar JPEGs** (Import JPEGs) and select photographs on your computer.
+2. Open a thumbnail, assign stars or a flag, and return to the grid to filter the library.
+3. Open a photo and adjust **Exposição** (Exposure) with the slider or numeric field.
+4. Try **Comparar com 0 EV** (Compare with 0 EV), **Redefinir exposição** (Reset exposure), **Desfazer exposição** (Undo exposure), and **Refazer exposição** (Redo exposure).
+5. Wait for the saved confirmation. Close and reopen the app to continue with the persisted catalog, recipe, and history.
 
-Nesta fatia, cada JPEG pode ter até **32 MiB e 40 megapixels**, dentro dos tipos de frame aceitos pelo preflight. Orientações EXIF 6 e 8 foram verificadas em imagens sintéticas; fidelidade de cor e compatibilidade ampla ainda precisam de avaliação.
+A complete drag or completed numeric edit counts as one history step, even if autosave runs during a pause. A new adjustment after undoing discards the redo path. Beyond 100 steps, the oldest steps are no longer available. The current history covers exposure only. [Behavior and limits](docs-agents/issue-16-contract.md).
 
-Se o original mudar de lugar, a foto continua no catálogo com sua miniatura. A grade consulta disponibilidade ao carregar a página, voltar ao aplicativo e por **Verificar disponibilidade**, sem ler ou calcular hash de todos os originais. Presença não comprova integridade; o conteúdo é verificado ao abrir a foto selecionada. **Localizar original** permite escolher uma foto por vez e só aceita exatamente os mesmos bytes, comprovados por SHA-256. ID, nome catalogado e dados associados são preservados. O aplicativo não move nem regrava arquivos. Um registro antigo sem identificação cujo original já esteja ausente não pode ser religado; é possível importar o arquivo como um novo registro, mantendo o anterior. Reimportar conteúdo diferente no mesmo caminho não substitui silenciosamente a identidade registrada. [Política aprovada](docs-agents/adr/0003-original-identity-relocation.md) · [Verificações Windows da #4](evidence/relocation-windows/report.md) · [Correção de I/O da grade](evidence/availability-windows/report.md).
+### Important limits
 
-<a id="arquitetura"></a>
-## Arquitetura
+- **JPEG at this stage:** up to 32 MiB and 40 megapixels per file, within the frame types accepted by the initial validation. RAW and HEIC are not supported yet.
+- **Editing preview:** an sRGB derivative, up to 2048 px on its longest side. This is not a full-resolution export; gamut, clipping, and quantization limit the preview.
+- **Color and orientation:** synthetic sRGB/Display-P3 fixtures and EXIF orientations 1–8 have been verified in Electron. Broad compatibility with cameras, ICC profiles, and professional workflows still needs evaluation.
+- **Persistence:** an interruption recovers the last state actually saved. Later changes that have not been persisted may be lost.
+- **Originals:** the catalog is not a backup. Keep your own backups of the photos and catalog.
+- **Still in development:** white balance, cropping, and JPEG export. These features are not available in the integrated version described here.
 
-**Uma aplicação desktop. Uma biblioteca local. Limites claros entre interface e arquivos.**
+<details>
+<summary>How locating a missing original works</summary>
 
-O diagrama mostra a base escrita hoje e a evolução proposta. Os componentes Electron/React foram validados no fluxo JPEG do pacote Linux de desenvolvimento. As conexões tracejadas representam trabalho futuro.
+The thumbnail remains in the catalog when the original moves. The grid checks availability when loading a page, returning to the app, or clicking **Verificar disponibilidade** (Check availability), without reading or hashing every original. File presence does not prove integrity; the selected photo receives the full check.
 
-```mermaid
-flowchart TB
-    subgraph desktop["Desktop local · base atual"]
-        UI["Renderer · React + TypeScript"]
-        PRE["Preload · API limitada e tipada"]
-        MAIN["Electron Main · valida origem e payload"]
-        LIB["Serviço de biblioteca · importar, listar, visualizar"]
-        DB[("Catálogo SQLite")]
-        DEC["Adaptador de prévia JPEG · Electron nativeImage"]
-        EDIT["Worker Chromium — prévia sRGB / exposição JPEG"]
-        UI <--> EDIT
-        UI <-->|"biblioteca / receita por ID"| PRE
-        PRE <-->|"IPC restrito"| MAIN
-        MAIN <--> LIB
-        LIB <--> DB
-        LIB --> DEC
-    end
+**Localizar original** (Locate original) accepts one file at a time and requires exactly the same bytes, verified by SHA-256. The ID, cataloged name, and associated data are preserved. Reimporting different content at the same path does not silently replace the recorded identity.
 
-    FILES["Originais no disco · somente leitura"] -->|"leitura por referência"| LIB
+An older entry without an identity whose original is already missing cannot be safely relinked. In that case, you can import the file as a new entry and keep the old one. [Identity policy](docs-agents/adr/0003-original-identity-relocation.md) · [Relocation checks](evidence/relocation-windows/report.md).
 
-    subgraph future["Evolução proposta · não implementada"]
-        WORKER["Worker de imagem · Rust ou C++ a decidir"]
-        PIPE["Pipeline RAW / outros ajustes futuros"]
-        EXPORT["Novos arquivos · JPEG / TIFF"]
-        WORKER --> PIPE --> EXPORT
-    end
-
-    MAIN -.->|"tarefas de processamento futuras"| WORKER
-    FILES -.->|"leitura futura"| WORKER
-
-    classDef current fill:#e8eee7,stroke:#466451,color:#14221e;
-    classDef planned fill:#fff9e7,stroke:#9b7c36,color:#3c321d,stroke-dasharray:5 5;
-    class UI,PRE,MAIN,LIB,DB,DEC,FILES,EDIT current;
-    class WORKER,PIPE,EXPORT planned;
-```
-
-### As fronteiras de hoje
-
-- **Renderer:** apresenta a biblioteca e a prévia. Não recebe caminhos dos originais nem acesso direto a Node, filesystem ou SQLite.
-- **Preload:** expõe somente `importJpeg`, `importProgress`, `thumbnailPhoto`, `listPhotos`, `previewPhoto`, `originalStatus` e `relocatePhoto` pelo `contextBridge`. As operações IPC são `import`, `progress`, `thumbnail`, `list`, `preview`, `status` e `relocate`; consulta e relocalização exigem UUID, sem receber caminhos livres ou hashes do renderer.
-- **Main:** controla o diálogo nativo, valida as requisições e concentra o acesso ao catálogo e aos arquivos. A janela usa isolamento de contexto, sandbox e Node desabilitado no renderer.
-- **SQLite:** guarda o catálogo em `app.getPath('userData')/catalog.sqlite`, agora com schema v5, hash do original, classificação e receita de exposição. A migração preserva registros e cache; identidade do legado é obtida somente do original acessível, sob demanda. Fotos continuam no local original; o catálogo não é uma cópia de segurança delas. Versões anteriores que não conhecem v5 recusam abrir o banco atualizado, sem apagá-lo.
-- **Prévia de edição:** derivação sRGB até 2048 px com orientação EXIF, ganho de exposição em RGB linear e autosave da receita. A API `previewPhoto` ainda transmite o JPEG original uma vez; o canvas mostrado para edição é reduzido e quantizado, com limites de gamut e clipping. Veja [pipeline, persistência e limites](docs-agents/adr/0004-jpeg-exposure-autosave.md).
-
-**Decisões abertas:** o worker nativo poderá ser em Rust ou C++; o motor RAW ainda não foi escolhido. O motor do RawTherapee é um candidato a investigar, sujeito a avaliação técnica e de licença. Essas opções não são dependências da primeira fatia.
-
-Veja a [decisão de catálogo e IPC](docs-agents/adr/0001-local-catalog-ipc.md), a [extensão de lote e miniaturas](docs-agents/adr/0002-batch-jpeg-thumbnails.md) e o [estado técnico com evidências](docs-agents/implementation-status.md).
+</details>
 
 <a id="instalacao"></a>
-## Instalação por sistema operacional
+## How to try it
 
-**Ainda não há arquivos para baixar.** Os passos abaixo descrevem a experiência de distribuição pretendida, quando houver uma release validada no [repositório público oficial](https://github.com/glaucia86/revelumo).
+**There is no `.exe` installer, `.dmg` image, or Linux package published as a release yet.** The commands below prepare a development copy on your computer. Packaging generates an application folder; it does not install Revelumo on the system.
 
-### Windows
+### Prerequisites
 
-Formato pretendido: **instalador `.exe`**.
+- [Git](https://git-scm.com/downloads).
+- [Node.js 24](https://nodejs.org/en/download), with npm. This is the version used by CI.
+- Internet access to download the source, dependencies, and official Electron binary.
+- A graphical session to open the application. Linux also needs the system libraries required by Electron for your distribution.
 
-1. Baixar o instalador compatível com seu sistema a partir da release oficial.
-2. Executar o instalador e seguir suas instruções.
-3. Abrir o Revelumo pelo menu Iniciar.
+Check your terminal:
 
-Assinatura digital e experiência com o SmartScreen ainda precisam ser definidas e testadas. Caso o Windows apresente um aviso de segurança, confira a origem e as instruções daquela release antes de continuar.
+```sh
+git --version
+node --version
+npm --version
+```
 
-### macOS
+You do not need a separate SQLite server: the catalog uses SQLite provided by the Node/Electron runtime. See the framework's [development prerequisites](https://www.electronjs.org/docs/latest/tutorial/tutorial-prerequisites).
 
-Formato pretendido: **imagem `.dmg`**.
+### Prepare the source
 
-1. Baixar a imagem compatível com seu Mac a partir da release oficial.
-2. Abrir o `.dmg` e arrastar o Revelumo para Aplicativos.
-3. Abrir o aplicativo pela pasta Aplicativos.
+In **PowerShell or Command Prompt on Windows**, **Terminal on macOS**, or a **Linux terminal**, run:
 
-A abordagem inicial aprovada é distribuir o `.dmg` sem contratar assinatura ou notarização pagas. Compatibilidade com Apple Silicon e Intel, abertura do aplicativo e avisos do macOS ainda precisam ser testados e documentados. As instruções de instalação deverão preservar as proteções do sistema.
+```sh
+git clone https://github.com/glaucia86/revelumo.git
+cd revelumo
+npm ci
+npm run install:electron
+npm run typecheck
+npm test
+```
 
-### Linux
+`npm ci` uses the repository's lockfile. `install:electron` downloads the official binary required by this Electron version, which does not automatically install it with the npm package. If a command fails, resolve that failure before continuing.
 
-**Formato de distribuição a definir.** AppImage, `.deb` e `.rpm` são possibilidades de empacotamento, sem escolha ou suporte confirmados.
+### Open it on your system
 
-Quando houver uma release, ela deverá informar as distribuições e arquiteturas testadas, as dependências necessárias e o procedimento exato de instalação. O pacote local Linux x64 foi aberto e testado, mas ainda não há instalador ou comando público de instalação validado.
+| System | Development path | What has been verified |
+| :--- | :--- | :--- |
+| Windows | PowerShell or Command Prompt; use the common commands above and below | x64 package, tests, and automated Electron integration; visual inspection and the native Windows dialog are still pending |
+| macOS | Terminal; the same commands are the starting point | Not yet validated on macOS, Intel, or Apple Silicon; execution is not guaranteed at this stage |
+| Linux | Terminal in a graphical session; use the common commands | x64 package launched and workflows visually inspected in one Linux environment; this does not establish support for every distribution |
 
-> **Requisitos:** versões mínimas dos sistemas e arquiteturas suportadas ainda não foram estabelecidas. Um computador com 8 GB de RAM e sem GPU dedicada é um alvo de teste, não um requisito mínimo comprovado.
+To start development mode:
+
+```sh
+npm start
+```
+
+This command is configured in the project, but its complete workflow has not yet been validated end to end. Existing evidence focuses on the packaged application.
+
+Alternatively, build a local package on your own system:
+
+```sh
+npm run package
+```
+
+The output is in `out/`. For the x64 targets already packaged, the executable is located at:
+
+- **Windows:** `out/Revelumo-win32-x64/Revelumo.exe`.
+- **Linux:** `out/Revelumo-linux-x64/Revelumo`.
+- **macOS:** the `.app` output still needs to be produced and validated for this project.
+
+The Windows executable in this folder is a development package, not an installer. Keep the folder's files together. The configuration currently uses `makers: []`: `npm run make` is not a ready-to-use installer-generation workflow. [Package versus make in Forge](https://www.electronforge.io/cli).
+
+> Minimum OS versions, supported architectures, and memory requirements have not been established. A computer with 8 GB RAM and no dedicated GPU is a test target, not a proven minimum requirement. Do not disable system protections to try opening a build.
 
 <a id="desenvolvimento"></a>
-## Desenvolvimento local
+## Development and verification
 
-### Testar o núcleo agora
+### Main commands
 
-Com **Node.js 24** e esta árvore de código disponível localmente, execute na raiz:
+| Command | Purpose |
+| :--- | :--- |
+| `npm run typecheck` | Check TypeScript types |
+| `npm test` | Run the core suite with real Node, filesystem, and SQLite |
+| `npm start` | Open Electron Forge development mode |
+| `npm run package` | Generate the local application in `out/`, without an installer |
+
+To run only the core tests with Node.js 24, you do not need to install dependencies:
 
 ```sh
 node --test test/*.test.ts
 ```
 
-Esse caminho não exige instalar dependências do projeto. Os testes do núcleo não incluem o decodificador Electron real. A execução TypeScript pelo Node remove os tipos, mas não substitui o typecheck.
+Node's type stripping does not replace typechecking. Core tests substitute the decoder; integration with the real decoder, worker, canvas, IPC, and renderer is exercised by the packaged Electron tests.
 
-### Preparar o aplicativo desktop
+### CI and evidence
 
-Dependências instaladas, typecheck, testes e empacotamento foram verificados neste ambiente. A execução gráfica foi feita pelo binário gerado em `out/Revelumo-linux-x64/Revelumo`; o modo de desenvolvimento `npm start` ainda não foi testado de ponta a ponta. Com o lockfile incluído:
+The [CI workflow](.github/workflows/ci.yml) checks PRs, pushes to `main`, and manual runs on **Windows and Ubuntu**, using Node 24, lockfile installation, typechecking, tests, and packaging. Windows also runs import, relocation, filtering, exposure, and history scenarios in the packaged Electron app, including reopening in separate processes.
 
-```sh
-npm ci
-npm run install:electron
-npm run typecheck
-npm test
-npm start
-npm run package
+- [Current GitHub Actions runs](https://github.com/glaucia86/revelumo/actions/workflows/ci.yml)
+- [Reproducing CI and platform-specific limits](docs-agents/ci.md)
+- [Batch import, grid, and interruption on Linux](evidence/batch-jpeg/report.md)
+- [Classification and filters on Windows](evidence/filters-windows/report.md)
+- [Exposure, autosave, color, and resource measurements](evidence/issue-12/report.md)
+- [Persistent history, retention, and Linux visual QA](evidence/issue-16/report.md)
+
+Reports record each milestone's revision and environment; references to pending publication or CI in those records are historical. Consult PRs and Actions for the remote status. Automated tests use synthetic images and substitute the native dialog at the file-selection boundary. They do not establish validation with real photographs, screen readers, 8 GB hardware, or macOS. Most detailed engineering reports are currently in Portuguese.
+
+CI keeps results in logs and job summaries, without package uploads or persistent caches. The CI matrix is not an end-user support declaration.
+
+<a id="arquitetura"></a>
+## Local architecture
+
+```mermaid
+flowchart TB
+    UI["Interface · React + TypeScript"]
+    EDIT["Chromium worker · sRGB preview and exposure"]
+    PRE["Preload · limited, typed API"]
+    MAIN["Electron Main · origin and request validation"]
+    LIB["Library · catalog, identity, and editing sessions"]
+    DB[("Local SQLite · catalog, recipes, and history")]
+    DEC["Electron nativeImage · validation and thumbnails"]
+    FILES["Originals on disk · read-only"]
+
+    UI <--> EDIT
+    UI <-->|"operations by ID"| PRE
+    PRE <-->|"restricted IPC"| MAIN
+    MAIN <--> LIB
+    LIB <--> DB
+    LIB --> DEC
+    FILES -->|"read by reference"| LIB
+
+    classDef local fill:#202020,stroke:#efb28a,color:#f1f1f1;
+    class UI,EDIT,PRE,MAIN,LIB,DB,DEC,FILES local;
 ```
 
-O `package-lock.json` registra as versões instaladas. O comando `install:electron` baixa o binário oficial do Electron necessário para executar o aplicativo; esta versão não o instala automaticamente junto com o pacote npm. Se o cache padrão não for gravável, use um diretório de cache autorizado com `npm --cache <diretório>` e `electron_config_cache=<diretório>` para instalação/empacotamento. O Forge está sem makers configurados: `package` gera a pasta do aplicativo; **não há geração de instaladores pronta**.
+- **Interface:** library, filters, classification, and editing controls. The renderer receives neither original file paths nor direct access to Node, files, or SQLite.
+- **Preload and main:** the [typed API](src/shared/contracts.ts) and [request validation](src/shared/requests.ts) restrict operations. Dialogs and file access belong to the main process; the window maintains context isolation, sandboxing, and disabled Node integration in the renderer.
+- **Catalog:** `app.getPath('userData')/catalog.sqlite` stores references, identity, thumbnails, classification, recipes, and history. The current schema is **v6**, with a transactional migration from v5; older versions that do not recognize the new schema refuse the database without deleting it.
+- **Editing:** the API delivers the original JPEG to prepare the preview; the worker derives a reduced sRGB image and applies exposure in linear RGB. History stores values and metadata, without an image per step. The recipe, cursor, and checkpoint are persisted transactionally.
 
-### CI de verificação
+**Implemented stack:** Electron, React, TypeScript, Vite/Electron Forge, and SQLite. No Rust code is integrated, and installing Rust is not required for this version.
 
-O [workflow](.github/workflows/ci.yml) verifica PRs, pushes em `main` e execuções manuais em runners standard Windows e Ubuntu, com Node 24, instalação pelo lockfile, typecheck, testes e pacote. Windows também executa os smokes sobre o pacote, em dois processos por cenário e com fixtures sintéticas. Resultados ficam nos logs e no job summary, sem cache persistente ou upload de artefatos. Essa matriz não estabelece suporte ao usuário final, instaladores ou validação macOS. [Reprodução e limites](docs-agents/ci.md) · [Evidências da issue #7](evidence/ci/report.md).
+**Open decisions:** the RAW engine, a possible native worker in Rust or C++, and the product license. RawTherapee was evaluated in an [initial Windows experiment](evidence/rawtherapee-cli-windows/report.md); that investigation did not select the engine or approve it as a dependency.
 
-Os fluxos Linux da primeira e segunda fatias foram verificados; o alvo de 8 GB ainda não foi medido. Permanecem pendentes validação em Windows/macOS, o modo de desenvolvimento, distribuição e uma matriz maior de fotografias reais. O [checkpoint técnico](docs-agents/implementation-status.md) detalha resultados e limites.
+[Catalog and IPC](docs-agents/adr/0001-local-catalog-ipc.md) · [Batches and thumbnails](docs-agents/adr/0002-batch-jpeg-thumbnails.md) · [Exposure and autosave](docs-agents/adr/0004-jpeg-exposure-autosave.md) · [Persistent history](docs-agents/issue-16-contract.md)
 
 <a id="roadmap"></a>
-## O caminho até o primeiro MVP
+## The path to the first MVP
 
-| Etapa | Entrega pretendida | Situação |
-| :--- | :--- | :--- |
-| 01 · Encontrar suas fotos | Importação por referência, catálogo e prévia JPEG; reencontrar fotos ao reabrir | Validada no fluxo Linux x64 |
-| 02 · Organizar o olhar | Grade, relocalização de arquivos e classificação por estrelas | Grade, relocalização e estrelas/flags implementadas |
-| 03 · Revelar | Edição não destrutiva e cópia de ajustes em lote | Planejada |
-| 04 · Compartilhar | Exportação de novos arquivos JPEG e TIFF | Planejada |
+| Milestone | Status |
+| :--- | :--- |
+| Local JPEG library | Import, grid, thumbnails, persistence, and relocation implemented |
+| Organization | Stars, flags, and filters implemented |
+| First non-destructive editing tools | Exposure, autosave, and persistent 100-step history implemented |
+| White balance and cropping | In development; not yet available in the integrated version |
+| JPEG export | In development; new output files are not yet available |
+| Visual redesign | A · Cobre (Copper) direction selected; implementation pending |
+| App languages: Portuguese, English, and Spanish | Planned; language selection not implemented |
+| RAW, HEIC reading, TIFF export, and batch adjustments | Planned; dependent on further decisions and validation |
+| Distribution | Installers, releases, and broader platform validation still pending |
 
-RAW e leitura HEIC dependem de uma matriz de compatibilidade e da validação do motor de imagem. HDR e exportação HEIC ficam para depois do MVP. O roadmap indica direção, sem datas de entrega prometidas.
+HDR and HEIC export are outside the first MVP. The roadmap describes a direction, without promised delivery dates.
 
-## Acompanhe a construção
+## Follow the project
 
-Decisões e trabalho do projeto estão organizados em [GitHub Issues](https://github.com/glaucia86/revelumo/issues), disponíveis publicamente. As condições para contribuições públicas ainda precisam ser definidas.
+Decisions, dependencies, and ongoing work are tracked in [GitHub Issues](https://github.com/glaucia86/revelumo/issues) and [pull requests](https://github.com/glaucia86/revelumo/pulls). Terms for public contributions still need to be defined.
 
-**Licença:** pendente de escolha. Ainda não há licença open source concedida pelo projeto.
+**License:** not yet chosen. A public repository does not grant an open-source license.
 
 ---
 
-<div align="center">
+## Creator
 
-Criado por **[Glaucia Lemos](https://github.com/glaucia86)** · Principal Software Engineer · Codex Ambassador
+<p align="center">
+  <a href="https://github.com/glaucia86"><img src="https://avatars.githubusercontent.com/u/1631477?v=4" alt="Portrait of Glaucia Lemos" width="120" height="120" /></a>
+</p>
 
-**Revelumo · Fotografia em primeiro lugar.**
+### Glaucia Lemos
 
-</div>
+Principal Software Engineer, former Microsoft employee, Microsoft MVP, and Codex Ambassador. She creates technical content, gives talks, and runs live coding sessions about JavaScript, TypeScript, and software development. She is the creator of Revelumo.
+
+[GitHub](https://github.com/glaucia86) · [LinkedIn](https://www.linkedin.com/in/glaucialemos/) · [X / Twitter](https://twitter.com/glaucia_lemos86) · [YouTube](https://www.youtube.com/user/l32759) · [Twitch](https://www.twitch.tv/glaucia_lemos86) · [More links](https://linktr.ee/glaucia_lemos86)
+
+---
+
+**Revelumo · Photography comes first.**
