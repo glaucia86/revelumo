@@ -1,5 +1,11 @@
 # Estado da implementação
 
+## Issue #30: idioma persistente e catálogo — 12/10/2026
+
+- Português do Brasil, inglês e espanhol no catálogo/importação e shell; escolha global em preferences.json no userData, independente do catálogo/fotos. Detecção ordenada do SO e fallback inglês, escrita atômica/serializada, arquivo futuro ou não legível preservado em modo somente leitura com tentativa após reparo.
+- Mensagens tipadas com parâmetros, plurais e Intl; catálogo não depende de comparar frases portuguesas. Troca de idioma mantém seleção/filtros/página, rascunho numérico e salvamento em voo. Editor/exportação continuam fora desta fatia.
+- [Verificação, revisões e limites](../evidence/language-catalog/report.md). Sem instalador/release, novas dependências ou validação macOS.
+
 ## PR #6: disponibilidade leve na grade - 12/10/2026
 
 - Corrigido o comentário Copilot sobre I/O de `originalStatus` por página/foco/refresh. Grade usa `originalAvailability`: abre/confere/fecha descritor sem ler bytes, hash, decode ou identificação do legado; presença é explicitamente não verificada. Verificação completa e política SHA-256 continuam nas operações protegidas. Sem cache de identidade baseado em nome/tamanho/mtime.

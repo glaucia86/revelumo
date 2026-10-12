@@ -2,6 +2,8 @@
 // Dialog is an external adapter replacement. Every window is hidden at creation.
 const electron = require('electron');
 const { app, dialog, BrowserWindow: RealWindow } = electron;
+// Pin the OS adapter for legacy Portuguese UI assertions; language tests cover detection.
+app.getPreferredSystemLanguages = () => ['pt-BR'];
 function fatal(error) { console.error(error?.stack || String(error)); app.exit(1); }
 process.on('uncaughtException', fatal);
 process.on('unhandledRejection', fatal);

@@ -2,6 +2,8 @@
 // Only the external native-dialog adapter is replaced. Fixtures and catalogs
 // are synthetic and isolated; renderer, IPC, nativeImage and SQLite are real.
 const { app, BrowserWindow, dialog, nativeImage } = require('electron');
+// Pin the OS adapter for legacy Portuguese UI assertions; language tests cover detection.
+app.getPreferredSystemLanguages = () => ['pt-BR'];
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');

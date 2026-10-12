@@ -89,3 +89,9 @@ Os modos adicionais verificam ACK de Undo/Redo preservando T/M, WB+EV com sRGB/P
 `npm run check:docs` roda no workflow existente, após configurar Node e antes de instalar dependências. Verifica destinos e âncoras locais e navegação entre os READMEs em inglês, português e espanhol; não acessa a rede nem executa o conteúdo dos documentos. Seus testes de comportamento entram em `npm test`. Falhas aparecem no job e no resumo com a etapa `docs`.
 
 Formulários em `.github/ISSUE_TEMPLATE/` e o template de PR apenas estruturam relatos. Não há workflow de execução de issues, interpolação do conteúdo de relatos em shell, secrets ou novas permissões. Mantêm-se `pull_request`, `push` em `main`, `workflow_dispatch`, `contents: read` e checkout sem persistir credenciais. CI não equivale a aprovação de merge, validação visual ou auditoria de licenças de um futuro instalador.
+
+## Idioma persistente e catálogo (#30)
+
+`npm run test:language -- <perfil-temporário> first` valida catálogo PT-BR/EN/ES, lote misto, paginação/filtros, erro já visível, perda de confirmação, falha real de gravação e rascunho/save de exposição durante troca. `reopen` reutiliza esse perfil em outro processo. Use outro perfil para `system-first` seguido de `system-reopen`; a preferência continua `system` e acompanha o SO simulado após reinício. Cada modo `fallback`, `os-error`, `boot-error`, `corrupt`, `future` e `oversized` recebe seu próprio perfil novo.
+
+A fronteira de idioma do SO é substituída intencionalmente; os smokes antigos fixam português para suas asserções existentes. O novo harness percorre os três idiomas e erros de detecção. IPC, renderer, SQLite, arquivos de preferência e sandbox são reais. Em CI esses cenários rodam no Windows; Ubuntu executa núcleo/typecheck/package. Testes de permissão POSIX e FIFO são pulados explicitamente no Windows. Veja [evidência local Linux](../evidence/language-catalog/report.md).

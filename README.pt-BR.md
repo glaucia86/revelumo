@@ -62,7 +62,7 @@ A imagem principal acima mostra o catálogo **A · Cobre** implementado: ambient
 
 O editor já oferece exposição, balanço de branco relativo, autosave e histórico de exposição. Esta é sua interface funcional atual; o redesenho completo do editor em Cobre continua planejado. [Detalhes da captura e créditos das fotos](docs/assets/screenshots/README.md).
 
-**Idiomas:** a interface atual do aplicativo está em português. Este README está disponível em inglês, português do Brasil e espanhol; a seleção de idioma dentro do aplicativo está planejada e ainda não está disponível.
+**Idiomas:** catálogo, importação e estrutura do aplicativo oferecem português do Brasil, inglês e espanhol com seletor persistente. A primeira abertura segue os idiomas do sistema, com fallback para inglês. Tradução do editor e da exportação permanece em fatias separadas; o aplicativo inteiro ainda não está traduzido.
 
 <a id="status"></a>
 ## O que você pode fazer hoje
@@ -271,7 +271,7 @@ As primeiras etapas aprovadas usam `node:sqlite` no Electron Main para o catálo
 | Recorte | Em desenvolvimento; ainda não disponível na versão integrada |
 | Exportação JPEG | Em desenvolvimento; geração de novos arquivos ainda não disponível |
 | Redesenho visual | Catálogo Cobre implementado; redesenho completo do editor ainda planejado |
-| Idiomas do aplicativo: português, inglês e espanhol | Planejados; seleção de idioma ainda não implementada |
+| Idiomas do aplicativo: português do Brasil, inglês e espanhol | Seletor persistente e catálogo/importação traduzidos; editor/exportação pendentes |
 | RAW, leitura HEIC, exportação TIFF e ajustes em lote | Planejados; dependem das próximas decisões e validações |
 | Distribuição | Instaladores, releases e validação ampliada por sistema ainda pendentes |
 
