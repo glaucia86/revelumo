@@ -4,7 +4,13 @@ Mudanças relevantes para quem usa o Revelumo. `Unreleased` contém somente entr
 
 ## Unreleased
 
-Snapshot histórico inicial conferido em 12/10/2026 no commit `d3a56d94042f7011ec1b157771c4eb9055fbd307` (PR #41 integrada). Versão do projeto: `0.0.1`; nenhuma tag ou release presente na conferência. As entradas posteriores registram integrações adicionais e não são validadas retroativamente por esse snapshot; nenhuma entrada aqui é uma candidata de lançamento. A primeira alpha de código-fonte segue proposta no [procedimento de versões](docs-agents/versioning.md).
+Nenhuma mudança posterior à candidata foi agrupada aqui ainda.
+
+## 0.1.0-alpha.1 — candidata em preparação, não publicada
+
+Primeira pré-release experimental proposta de **código-fonte**, para pessoas desenvolvedoras; sem instaladores ou binários anexados. Conteúdo selecionado na base integrada `aa77bb8af6f865167f2e62f66cb1c76d57e9cf23` (PR #47). Os três campos package/lockfile declaram `0.1.0-alpha.1`; tag futura `v0.1.0-alpha.1` e GitHub Release não são criadas por esta preparação. Sem data de lançamento até a publicação real.
+
+[Notas da candidata e limites](docs-agents/releases/0.1.0-alpha.1.md). O SHA final após integrar esta preparação precisa de seu próprio CI e verificação do pacote; testes dos snapshots anteriores não substituem esse gate.
 
 ### Adicionado
 
@@ -40,12 +46,12 @@ Snapshot histórico inicial conferido em 12/10/2026 no commit `d3a56d94042f7011e
 
 ### Exportação JPEG visível
 
-- Comando no editor exporta a revisão v2 confirmada após autosave/histórico: JPEG sRGB qualidade 90 em resolução original, créditos selecionados e remoção de GPS, novo arquivo exclusivo. Limite operacional de saída 32 MiB, sem redução silenciosa de qualidade; recorte/receitas desconhecidas são recusados.
-- Destino no main, cancelamento com resultado real, recuperação da mesma tentativa após falha de IPC e recibo preservado em PT-BR/EN/ES. Não há nova dependência, version bump, tag, instalador ou release. [Evidências e limites](evidence/issue-19-ui/report.md).
+- Comando no editor exporta a revisão v2 confirmada após autosave/histórico: JPEG sRGB com parâmetro de qualidade Chromium 0,90 em resolução original, créditos selecionados e remoção de GPS, novo arquivo exclusivo. Limite operacional de saída 32 MiB, sem redução silenciosa de qualidade; recorte/receitas desconhecidas são recusados.
+- Destino no main, cancelamento com resultado real, recuperação da mesma tentativa após falha de IPC e recibo preservado em PT-BR/EN/ES. Na fatia da [PR #47](https://github.com/glaucia86/revelumo/pull/47), não houve nova dependência, version bump, tag, instalador ou release; esta preparação agora declara a versão candidata. [Evidências e limites](evidence/issue-19-ui/report.md).
 
 ### Verificação
 
-- Circuito técnico da exportação une autenticação do original, engine, créditos selecionados sem GPS e publicação exclusiva, com reabertura independente. Fatia preparatória anterior à interface descrita abaixo; suporte a crop permanece pendente. [Issue #19](https://github.com/glaucia86/revelumo/issues/19), [evidências e custo de memória](evidence/issue-19-circuit/report.md).
+- Circuito técnico da exportação une autenticação do original, engine, créditos selecionados sem GPS e publicação exclusiva, com reabertura independente. Fatia preparatória anterior à interface descrita acima; suporte a crop permanece pendente. [Issue #19](https://github.com/glaucia86/revelumo/issues/19), [evidências e custo de memória](evidence/issue-19-circuit/report.md).
 
 - Preparação da exportação: engine JPEG full-frame sRGB com exposição/WB v2, renderer isolado e testes de recursos/lifecycle. Naquele snapshot ainda faltavam metadados/gravação/UI, integrados em fatias posteriores. [Issue #19](https://github.com/glaucia86/revelumo/issues/19), [evidências](evidence/issue-19-engine/report.md).
 
@@ -56,7 +62,7 @@ Snapshot histórico inicial conferido em 12/10/2026 no commit `d3a56d94042f7011e
 ### Limites conhecidos
 
 - Somente JPEG. Recorte, RAW/HEIC, TIFF e ajustes em lote ainda não estão disponíveis. O experimento RawTherapee do [PR #21](https://github.com/glaucia86/revelumo/pull/21) não integrou um motor RAW.
-- A direção A · Cobre cobre o catálogo e o shell; o redesenho completo do editor permanece na [issue #31](https://github.com/glaucia86/revelumo/issues/31). Catálogo e editor existente já oferecem PT-BR/EN/ES e seleção persistente de idioma; a interface JPEG descrita abaixo usa os mesmos idiomas; recorte continua pendente.
+- A direção A · Cobre cobre o catálogo e o shell; o redesenho completo do editor permanece na [issue #31](https://github.com/glaucia86/revelumo/issues/31). Catálogo e editor existente já oferecem PT-BR/EN/ES e seleção persistente de idioma; a interface JPEG descrita acima usa os mesmos idiomas; recorte continua pendente.
 - Cache corrompido não se recupera automaticamente; alteração externa do original não invalida a miniatura até reimportação. Nome, tamanho e miniatura não comprovam identidade.
 - Windows foi verificado por automação com seletor substituído. Inspeção visual e diálogo nativo Windows permanecem pendentes na [issue #4](https://github.com/glaucia86/revelumo/issues/4). Ubuntu teve testes/tipos/pacote na CI; smokes Electron recentes não foram executados ali. Há roteiros gráficos Linux históricos em seus próprios snapshots. macOS não foi validado.
 - Sem validação no alvo de 8 GB ou ampla matriz de câmeras/cor. Forge produz pasta de desenvolvimento; sem instaladores, assinatura ou notarização. A MIT do código não concede direitos sobre fotos, retratos, fontes ou outros recursos de terceiros.
