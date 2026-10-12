@@ -50,3 +50,20 @@ with localcontext() as context:
 
 fixture = {'oracle': 'Python Decimal, 60 digits, scalar per-channel; never product code', 'input': PIXELS, 'cases': cases}
 Path('test/fixtures/jpeg-adjustments-reference.json').write_text(json.dumps(fixture, indent=2) + '\n')
+
+# Real-decoder references compose the independently generated LittleCMS sRGB
+# baseline with the same Decimal oracle, never Chromium or the product LUTs.
+with localcontext() as context:
+    context.prec = 60
+    raw = [D(2) ** D('.5'), D(2) ** D('-.5'), D(2) ** D('-.5')]
+    normalization = sum(D(n) / d * gain for (n, d), gain in zip(WEIGHTS, raw))
+    gains = [gain / normalization / 2 for gain in raw]
+    transform = lambda pixel: [output_channel(byte, gain) for byte, gain in zip(pixel, gains)]
+    profiles = json.loads(Path('test/fixtures/exposure-color-reference.json').read_text())['profiles']
+    decoder = {
+        'oracle': 'LittleCMS baseline + Python Decimal 60 digits; T100 M100 EV-1',
+        'profiles': {name: {'expected': transform(item['srgb']), 'tolerance': 4} for name, item in profiles.items()},
+        'quadrants': {name: transform(pixel) for name, pixel in {'R': [255, 0, 0], 'G': [0, 255, 0], 'B': [0, 0, 255], 'Y': [255, 255, 0]}.items()},
+        'quadrantTolerance': 6,
+    }
+Path('test/fixtures/white-balance-decoder-reference.json').write_text(json.dumps(decoder, indent=2) + '\n')

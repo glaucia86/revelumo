@@ -155,7 +155,7 @@ jobs:
         run: |
           $wb = Join-Path $env:RUNNER_TEMP ('revelumo-wb-' + [guid]::NewGuid())
           "WB_SMOKE_DIR=$wb" >> $env:GITHUB_ENV
-          foreach ($mode in @('first', 'reopen', 'controls', 'preview-race', 'save-race', 'keyboard', 'many-pending', 'close-race', 'close-reopen')) {
+          foreach ($mode in @('first', 'reopen', 'controls', 'preview-race', 'save-race', 'history-ack', 'keyboard', 'many-pending', 'close-race', 'close-reopen', 'color', 'layout')) {
             Write-Output "White balance mode: $mode"
             npm run test:wb -- "$wb" $mode
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

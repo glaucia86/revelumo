@@ -64,7 +64,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
   const [moving, setMoving] = useState(false);
   const movingNow = useRef(false);
   const historyFlight = useRef<Promise<void> | null>(null);
-  const historyRequest = useRef<{ revision: number; direction: 'undo' | 'redo' } | null>(null);
+  const historyRequest = useRef<{ revision: number; direction: 'undo' | 'redo'; temperature: number; tint: number } | null>(null);
   const [historyFailure, setHistoryFailure] = useState(false);
 
   function confirms(result: EditSession, current: EditSession, requested: { revision: number } & Partial<PhotoAdjustments>): boolean {
@@ -90,7 +90,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
         cancelDelay();
       }
       const current = session.current;
-      const requested = historyRequest.current ?? { revision: draft.current.revision + 1, direction };
+      const requested = historyRequest.current ?? { revision: draft.current.revision + 1, direction, temperature: draft.current.temperature, tint: draft.current.tint };
       historyRequest.current = requested;
       const { revision } = requested;
       setStatus('Salvando…');

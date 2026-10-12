@@ -6,7 +6,7 @@
 
 - `npm test`: 100 aprovados, zero falhas/skips; `npm run typecheck`: exit 0.
 - `npm run package`: exit 0, Electron 44.7.0 Linux x64. Cache existente em pasta gravável via `electron_config_cache`; sem novas dependências/instalações.
-- Nove processos Electron reais sobre o pacote, diretório sintético novo, todos exit 0: `first`, `reopen`, `controls`, `preview-race`, `save-race`, `keyboard`, `many-pending`, `close-race`, `close-reopen`. Relatórios JSON anexos registram runtime/checks.
+- Doze processos Electron reais sobre o pacote, diretório sintético novo, todos exit 0: `first`, `reopen`, `controls`, `preview-race`, `save-race`, `history-ack`, `keyboard`, `many-pending`, `close-race`, `close-reopen`, `color`, `layout`. Relatórios JSON anexos registram runtime/checks.
 - SQLite real: migração v6→v7, WB-only/reset preservando futuro Redo, retry idempotente, sessões/revisões inválidas, lock, relocalização, ausência/substituição, identidade e originais preservados.
 - Fila única EV/WB: ACK atrasado/perdido/incorreto, 1025 gestos EV em falha SQLite com snapshots WB intermediário/final, Undo/Redo após flush WB e fechamento antes de debounce. Asserção exige lote real de 1024, evitando um falso teste de estresse.
 - Preview: oracle literal cinza128 aquecido `[146,124,106]`; T/M100 `[161,117,117]`; neutro +1EV `[176,176,176]`. Replay de resposta antiga na comparação reproduziu falha antes do ID próprio de prévia; o mesmo teste passa após correção.
@@ -20,6 +20,14 @@ Dois erros de harness foram diagnosticados, não tratados como bugs do produto: 
 
 ## Gates ainda em andamento neste checkpoint
 
-Regressão completa #12/#16, verificações adicionais de WB em perfis/EXIF, inspeção visual, revisões independentes Standards e Spec da integração e CI Windows/Ubuntu do SHA publicado. Este relatório não declara merge nem entrega final enquanto esses gates estiverem pendentes.
+Reconferência da revisão Spec após correções, revisão Standards independente e CI Windows/Ubuntu do head corrigido. A regressão anterior de 26 processos passou no primeiro snapshot; está sendo repetida após as correções abaixo. Este relatório não declara merge nem entrega final enquanto esses gates estiverem pendentes.
 
 Limites: dados sintéticos, diálogo substituído, sem leitor de tela/teclado físico, sem Windows local/macOS, sem teste no hardware-alvo de 8 GB. Sem instaladores, lançamento, IA, RAW, exportação, recorte ou nova stack. O README está fora desta alteração por coordenação do estudo visual.
+
+## Revisão e correções verificadas
+
+- Spec independente do snapshot inicial: dois P2, ACK histórico sem validar T/M e controles cortados na janela mínima. [Parecer](code-review.md). Ambos tiveram RED real no Electron e regressão GREEN no pacote corrigido: `history-ack` rejeita alteração de T e M nos ACKs de Undo/Redo, preserva draft e retry; `layout` exige hit-test/alcance dos controles em 760×540. O pedido de histórico agora congela T/M após flush; o painel tem rolagem contida.
+- Cor integrada: sRGB/P3 + WB100/100 e EV−1 contra Decimal/LittleCMS (tolerância 4); EXIF1–8 com quadrantes (tolerância 6), ordem/dimensões exatas. Reset exige recuperar a base exatamente; dez hashes preservados. [Proveniência](../../test/fixtures/jpeg-adjustments-provenance.md).
+- Inspeção visual default 1160×780 no aplicativo Linux cloud mostrou labels/valores/reset e status legíveis, sem sobreposição. O teste de tamanho mínimo revelou o problema corrigido acima; nova inspeção final em andamento.
+- Primeiro CI: [run 38269097695](https://github.com/glaucia86/revelumo/actions/runs/38269097695): Ubuntu passou; Windows encontrou EPERM no teardown de um teste, pois o segundo Catalog fechava num after-hook posterior à remoção do diretório. Corrigido com finally que fecha a conexão antes do teardown. Nenhum assert funcional foi removido nem erro mascarado. Novo CI ainda necessário.
+- Após fixes: core 100/100, typecheck e package exit 0; sequência WB completa de doze processos em diretório novo passou. Sem flags para desativar sandbox/GPU.

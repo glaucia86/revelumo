@@ -50,10 +50,12 @@ test('white-balance-only saves and resets preserve exposure Undo and future Redo
   assert.deepEqual([reset.value.undoSteps, reset.value.redoSteps], [1, 1]);
   const again = await f.library.saveAdjustments(f.id, f.session, 6, { exposureTenths: 10, temperature: 15, tint: -60 }, 2, []); assert.ok(again.ok);
   assert.ok((await f.library.endEditing(f.id, f.session)).ok);
-  const reopenedCatalog = new Catalog(f.db), reopened = new Library(reopenedCatalog, decoder); t.after(() => reopenedCatalog.close());
-  const editing = await reopened.beginEditing(f.id); assert.ok(editing.ok);
-  const redone = await reopened.moveExposureHistory(f.id, editing.value.sessionId, 1, 'redo'); assert.ok(redone.ok);
-  assert.deepEqual([redone.value.exposureTenths, redone.value.temperature, redone.value.tint, redone.value.undoSteps, redone.value.redoSteps], [20, 15, -60, 2, 0]);
+  const reopenedCatalog = new Catalog(f.db), reopened = new Library(reopenedCatalog, decoder);
+  try {
+    const editing = await reopened.beginEditing(f.id); assert.ok(editing.ok);
+    const redone = await reopened.moveExposureHistory(f.id, editing.value.sessionId, 1, 'redo'); assert.ok(redone.ok);
+    assert.deepEqual([redone.value.exposureTenths, redone.value.temperature, redone.value.tint, redone.value.undoSteps, redone.value.redoSteps], [20, 15, -60, 2, 0]);
+  } finally { reopenedCatalog.close(); }
 });
 
 test('full-recipe revisions are idempotent, reject stale snapshots, and keep the confirmed recipe after a failed commit', async (t) => {

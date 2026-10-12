@@ -32,3 +32,7 @@ Clipping único: RGB (255,200,180), T=+100, M=+100, EV=−1 resulta em (234,134,
 Seis mutações temporárias separadas foram detectadas pela suíte: clipping antes da exposição, sinais invertidos de temperatura/matiz, retirada da normalização, gamma incorreto e alteração do alpha. Todas foram revertidas antes da verificação final.
 
 Estes testes observam a fronteira de pixels já sRGB. Decoder, ICC, EXIF, orientação, redução, worker real, sessões, revisões, UI, persistência e hashes dos JPEGs exigem a fatia vertical de integração. Nenhuma tolerância adicional do Electron é inferida destes testes exatos.
+
+## Integração decoder com WB
+
+`white-balance-decoder-reference.json` é reproduzido pelo mesmo gerador Decimal offline. Compõe o baseline independente LittleCMS já congelado em `exposure-color-reference.json` com T=100/M=100/EV=−1. No Electron real, sRGB e Display-P3 são comparados com tolerância de quatro unidades codificadas, separada da igualdade exata do núcleo. As primárias/quadrantes com oito EXIF usam tolerância seis para JPEG/decoder e transformação, além de ordem e dimensões exatas. Esses limites não certificam fidelidade perceptual; reset WB+EV exige recuperar exatamente a mesma base decodificada, sem tolerância/acumulação.
