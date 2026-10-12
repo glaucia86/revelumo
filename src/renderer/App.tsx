@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { BatchItem, ImportProgress, PhotoSummary, PhotoStatus, PhotoAvailability, Preview } from '../shared/contracts.ts';
 import { lastPage, pagePhotos } from './gallery.ts';
+import { ClassificationControls } from './ClassificationControls.tsx';
 
 export function App() {
   const [photos, setPhotos] = useState<PhotoSummary[]>([]);
@@ -8,6 +9,7 @@ export function App() {
   const [loading, setLoading] = useState(true);
   const [importing, setImporting] = useState(false);
   const [relocating, setRelocating] = useState(false);
+  const [classifying, setClassifying] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoSummary | null>(null);
   const [currentStatus, setCurrentStatus] = useState<PhotoStatus | null>(null);
   const [statuses, setStatuses] = useState<Record<string, PhotoAvailability>>({});
@@ -59,13 +61,13 @@ export function App() {
 
   useEffect(() => {
     const onFocus = () => {
-      if (importing || relocating) return;
+      if (importing || relocating || classifying) return;
       setRefresh(current => current + 1);
       if (viewing && selectedPhoto) void openPhoto(selectedPhoto);
     };
     window.addEventListener('focus', onFocus);
     return () => window.removeEventListener('focus', onFocus);
-  }, [importing, relocating, viewing, selectedPhoto]);
+  }, [importing, relocating, classifying, viewing, selectedPhoto]);
 
   useEffect(() => {
     if (!importing) return;
@@ -139,19 +141,19 @@ export function App() {
 
   return <main>
     <header><div><span className="eyebrow">SEU OLHAR, EM PRIMEIRO LUGAR</span><h1>Revelumo<span> / biblioteca</span></h1></div>
-      <button disabled={loading || importing || relocating} onClick={() => void importPhotos()}>Importar JPEGs</button></header>
+      <button disabled={loading || importing || relocating || classifying} onClick={() => void importPhotos()}>Importar JPEGs</button></header>
     <div className="workspace">
       <aside><h2>Biblioteca <span>{photos.length}</span></h2><p className="quiet">Originais preservados</p>
-        <button className="photo" disabled={relocating} onClick={showGrid} aria-pressed={!viewing}>Todas as fotos</button>
-        <button className="photo" disabled={loading || importing || relocating} onClick={() => { setRefresh(current => current + 1); if (viewing && selectedPhoto) void openPhoto(selectedPhoto); }}>Verificar disponibilidade</button>
+        <button className="photo" disabled={relocating || classifying} onClick={showGrid} aria-pressed={!viewing}>Todas as fotos</button>
+        <button className="photo" disabled={loading || importing || relocating || classifying} onClick={() => { setRefresh(current => current + 1); if (viewing && selectedPhoto) void openPhoto(selectedPhoto); }}>Verificar disponibilidade</button>
         <p className="quiet">JPEG · catálogo local<br/>Miniaturas derivadas</p>
         {importing && <div className="import-progress" role="status" aria-live="polite"><p>{progress?.total ? `${progress.completed} de ${progress.total} arquivos` : 'Aguardando seleção…'}</p>
           {progress && progress.total > 0 && <><progress max={progress.total} value={progress.completed}/><p className="current-file">{progress.currentName}</p></>}
         </div>}
       </aside>
       <section className={viewing ? 'viewer' : 'gallery'} aria-label={viewing ? 'Visualização da foto' : 'Grade de fotos'} aria-busy={loading}>
-        {viewing ? <><button className="back" disabled={relocating} onClick={showGrid}>← Voltar à grade</button>{preview ? <figure><img src={preview.dataUrl} alt={preview.photo.name}/><figcaption>{preview.photo.name}</figcaption></figure> :
-          currentStatus && currentStatus.state !== 'available' ? <div className="original-notice" role="status"><h2>{selectedPhoto?.name}</h2><p>{currentStatus.message}</p>{currentStatus.canRelocate && <button disabled={relocating || importing} onClick={() => void relocatePhoto()} aria-label={`Localizar original de ${selectedPhoto?.name}`}>{relocating ? 'Localizando…' : 'Localizar original'}</button>}</div> : <p className="quiet">{message || 'Abrindo prévia…'}</p>}</> :
+        {viewing ? <><button className="back" disabled={relocating || classifying} onClick={showGrid}>← Voltar à grade</button>{preview ? <figure><img src={preview.dataUrl} alt={preview.photo.name}/><figcaption>{preview.photo.name}</figcaption></figure> :
+          currentStatus && currentStatus.state !== 'available' ? <div className="original-notice" role="status"><h2>{selectedPhoto?.name}</h2><p>{currentStatus.message}</p>{currentStatus.canRelocate && <button disabled={relocating || importing || classifying} onClick={() => void relocatePhoto()} aria-label={`Localizar original de ${selectedPhoto?.name}`}>{relocating ? 'Localizando…' : 'Localizar original'}</button>}</div> : <p className="quiet">{message || 'Abrindo prévia…'}</p>}{selectedPhoto && <ClassificationControls key={selectedPhoto.id} photo={selectedPhoto} onBusyChange={setClassifying} onMessage={setMessage}/>}</> :
           <>{failures.length > 0 && <details className="failures"><summary>{failures.length} arquivo(s) não importado(s)</summary><ul>{failures.map((item, index) => <li key={index}>{item.name}: {!item.result.ok && item.result.message}</li>)}</ul></details>}
             {photos.length ? <><div className="grid" role="list" aria-label="Fotos importadas">{visible.map(photo => <div role="listitem" key={photo.id}><button className="tile" onClick={() => void openPhoto(photo)} aria-label={`Abrir ${photo.name}`} aria-describedby={statuses[photo.id] && statuses[photo.id].state !== 'present' ? `original-${photo.id}` : undefined}>
               <span className="thumbnail">{thumbnails[photo.id] ? <img src={thumbnails[photo.id]} alt=""/> : <span title={thumbnailErrors[photo.id]}>{thumbnailErrors[photo.id] ? 'Miniatura indisponível' : 'Carregando…'}</span>}</span><span className="filename">{photo.name}</span>

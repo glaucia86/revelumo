@@ -1,9 +1,9 @@
 import { DatabaseSync } from 'node:sqlite';
 import { randomUUID } from 'node:crypto';
 import { basename } from 'node:path';
-import type { PhotoSummary } from '../shared/contracts.ts';
+import type { PhotoSummary, PhotoFlag } from '../shared/contracts.ts';
 
-export type PhotoReference = PhotoSummary & { path: string; sha256: string | null };
+export type PhotoReference = PhotoSummary & { path: string; sha256: string | null; rating: number | null; flag: PhotoFlag };
 
 export class Catalog {
   private db: DatabaseSync;
@@ -12,7 +12,7 @@ export class Catalog {
     this.db = new DatabaseSync(filename);
     try {
       const version = Number(this.db.prepare('PRAGMA user_version').get()?.user_version);
-      if (version > 3) throw new Error('Catalog uses a newer schema');
+      if (version > 4) throw new Error('Catalog uses a newer schema');
       if (version === 0) {
         this.db.exec(`BEGIN;
           CREATE TABLE photos (id TEXT PRIMARY KEY, path TEXT NOT NULL UNIQUE, name TEXT NOT NULL);
@@ -29,6 +29,13 @@ export class Catalog {
         this.db.exec(`BEGIN;
           ALTER TABLE photos ADD COLUMN sha256 TEXT;
           PRAGMA user_version = 3;
+          COMMIT;`);
+      }
+      if (version < 4) {
+        this.db.exec(`BEGIN;
+          ALTER TABLE photos ADD COLUMN rating INTEGER CHECK (rating IS NULL OR (typeof(rating) = 'integer' AND rating BETWEEN 1 AND 5));
+          ALTER TABLE photos ADD COLUMN flag TEXT NOT NULL DEFAULT 'neutral' CHECK (flag IN ('neutral', 'selected', 'rejected'));
+          PRAGMA user_version = 4;
           COMMIT;`);
       }
     } catch (error) {
@@ -59,17 +66,17 @@ export class Catalog {
   }
 
   list(): PhotoReference[] {
-    return this.db.prepare('SELECT id, path, name, sha256 FROM photos ORDER BY rowid').all()
+    return this.db.prepare('SELECT id, path, name, sha256, rating, flag FROM photos ORDER BY rowid').all()
       .map((row) => ({ ...row }) as PhotoReference);
   }
 
   find(id: string): PhotoReference | undefined {
-    const row = this.db.prepare('SELECT id, path, name, sha256 FROM photos WHERE id = ?').get(id);
+    const row = this.db.prepare('SELECT id, path, name, sha256, rating, flag FROM photos WHERE id = ?').get(id);
     return row ? { ...row } as PhotoReference : undefined;
   }
 
   findByPath(path: string): PhotoReference | undefined {
-    const row = this.db.prepare('SELECT id, path, name, sha256 FROM photos WHERE path = ?').get(path);
+    const row = this.db.prepare('SELECT id, path, name, sha256, rating, flag FROM photos WHERE path = ?').get(path);
     return row ? { ...row } as PhotoReference : undefined;
   }
 
@@ -78,6 +85,12 @@ export class Catalog {
     // refuses conflicts; the identity predicate protects the recorded hash.
     const result = this.db.prepare('UPDATE photos SET path = ? WHERE id = ? AND sha256 = ?').run(path, id, sha256);
     if (result.changes !== 1) throw new Error('Photo identity is unavailable or changed');
+    return this.find(id)!;
+  }
+
+  classify(id: string, rating: number | null, flag: PhotoFlag): PhotoReference {
+    const result = this.db.prepare('UPDATE photos SET rating = ?, flag = ? WHERE id = ?').run(rating, flag, id);
+    if (result.changes !== 1) throw new Error('Photo is unavailable');
     return this.find(id)!;
   }
 

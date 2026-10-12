@@ -1,6 +1,8 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import type { RevelumoApi } from './shared/contracts.ts';
 const api: RevelumoApi = {
+  classificationPhoto: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'classification', id }),
+  classifyPhoto: (id, rating, flag) => ipcRenderer.invoke('revelumo:invoke', { op: 'classify', id, rating, flag }),
   importJpeg: () => ipcRenderer.invoke('revelumo:invoke', { op: 'import' }),
   importProgress: () => ipcRenderer.invoke('revelumo:invoke', { op: 'progress' }),
   thumbnailPhoto: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'thumbnail', id }),

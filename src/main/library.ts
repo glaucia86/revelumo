@@ -4,6 +4,8 @@ import { basename } from 'node:path';
 import { createHash } from 'node:crypto';
 import { setImmediate } from 'node:timers/promises';
 import { Catalog } from './catalog.ts';
+import { parseRequest } from '../shared/requests.ts';
+import type { PhotoClassification, PhotoFlag } from '../shared/contracts.ts';
 import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcome, PhotoSummary, PhotoStatus, PhotoAvailability, Preview, Result } from '../shared/contracts.ts';
 
 const MAX_BYTES = 32 * 1024 * 1024;
@@ -78,6 +80,24 @@ export class Library {
   }
 
   list(): PhotoSummary[] { return this.catalog.list().map(summary); }
+
+  classification(id: string): Result<PhotoClassification> {
+    if (!parseRequest({ op: 'classification', id })) return failure('invalid-request', 'Solicitação inválida.');
+    try {
+      const photo = this.catalog.find(id);
+      if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
+      return { ok: true, value: { photo: summary(photo), rating: photo.rating, flag: photo.flag } };
+    } catch { return failure('catalog-error', 'Não foi possível ler a classificação.'); }
+  }
+
+  classify(id: string, rating: number | null, flag: PhotoFlag): Result<PhotoClassification> {
+    if (!parseRequest({ op: 'classify', id, rating, flag })) return failure('invalid-request', 'Solicitação inválida.');
+    try {
+      if (!this.catalog.find(id)) return failure('not-found', 'Foto não encontrada no catálogo.');
+      const photo = this.catalog.classify(id, rating, flag);
+      return { ok: true, value: { photo: summary(photo), rating: photo.rating, flag: photo.flag } };
+    } catch { return failure('catalog-error', 'Não foi possível salvar a classificação. O estado anterior foi preservado.'); }
+  }
 
   // Presence is a cheap snapshot, never proof of content identity. No JPEG
   // bytes are read, decoded or hashed, and legacy records are not enrolled.

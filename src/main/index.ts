@@ -87,6 +87,8 @@ if (ownsInstance) app.whenReady().then(async () => {
     try {
       if (request.op === 'list') return { ok: true, value: library.list() };
       if (request.op === 'progress') return { ok: true, value: progress };
+      if (request.op === 'classification') return library.classification(request.id);
+      if (request.op === 'classify') return library.classify(request.id, request.rating, request.flag);
       if (request.op === 'status') return await library.status(request.id);
       if (request.op === 'availability') return await library.availability(request.id);
       if (request.op === 'thumbnail') return await library.thumbnail(request.id);
