@@ -1,11 +1,11 @@
 import { open, realpath, stat } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { basename } from 'node:path';
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { setImmediate } from 'node:timers/promises';
 import { Catalog } from './catalog.ts';
 import { parseRequest } from '../shared/requests.ts';
-import type { PhotoClassification, PhotoFlag } from '../shared/contracts.ts';
+import type { PhotoClassification, PhotoFlag, PhotoRecipe, EditSession } from '../shared/contracts.ts';
 import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcome, PhotoSummary, PhotoStatus, PhotoAvailability, Preview, Result } from '../shared/contracts.ts';
 
 const MAX_BYTES = 32 * 1024 * 1024;
@@ -49,6 +49,7 @@ export class Library {
   private decoder: PreviewDecoder;
   private thumbnailDecoder?: PreviewDecoder;
   private pending: Promise<void> = Promise.resolve();
+  private editing: EditSession | null = null;
   constructor(catalog: Catalog, decoder: PreviewDecoder, thumbnailDecoder?: PreviewDecoder) {
     this.catalog = catalog; this.decoder = decoder; this.thumbnailDecoder = thumbnailDecoder;
   }
@@ -80,6 +81,56 @@ export class Library {
   }
 
   list(): PhotoSummary[] { return this.catalog.list().map(summary); }
+
+  recipe(id: string): Result<PhotoRecipe> {
+    if (!parseRequest({ op: 'recipe', id })) return failure('invalid-request', 'Solicitação inválida.');
+    try {
+      const photo = this.catalog.find(id);
+      if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
+      return { ok: true, value: { photo: summary(photo), ...this.catalog.recipe(id) } };
+    } catch { return failure('catalog-error', 'Não foi possível ler o ajuste salvo.'); }
+  }
+
+  beginEditing(id: string): Promise<Result<EditSession>> {
+    return this.serial(async () => {
+      const recipe = this.recipe(id);
+      if (!recipe.ok) return recipe;
+      this.editing = { ...recipe.value, sessionId: randomUUID(), revision: 0 };
+      return { ok: true, value: { ...this.editing } };
+    });
+  }
+
+  endEditing(id: string, sessionId: string): Promise<Result<null>> {
+    if (!parseRequest({ op: 'end-edit', id, sessionId })) return Promise.resolve(failure('invalid-request', 'Solicitação inválida.'));
+    return this.serial(async () => {
+      if (this.editing?.photo.id !== id || this.editing.sessionId !== sessionId) return failure('invalid-request', 'Sessão de edição encerrada.');
+      this.editing = null;
+      return { ok: true, value: null };
+    });
+  }
+
+  saveExposure(id: string, sessionId: string, revision: number, exposureTenths: number, processingVersion: number): Promise<Result<EditSession>> {
+    if (!parseRequest({ op: 'exposure', id, sessionId, revision, exposureTenths, processingVersion })) return Promise.resolve(failure('invalid-request', 'Solicitação inválida.'));
+    return this.serial(async () => {
+      try {
+        const photo = this.catalog.find(id);
+        if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
+        const session = this.editing;
+        if (!session || session.photo.id !== id || session.sessionId !== sessionId || revision < session.revision ||
+            (revision === session.revision && exposureTenths !== session.exposureTenths)) return failure('invalid-request', 'Revisão de edição obsoleta.');
+        if (!photo.sha256) return failure('identity-unverified', 'Abra o original disponível para comprovar sua identidade antes de salvar.');
+        const image = await readJpeg(photo.path);
+        if (!image.ok) return image;
+        if (digest(image.value) !== photo.sha256) return failure('identity-mismatch', 'O arquivo difere do original catalogado. O ajuste salvo foi preservado.');
+        // The same protected queue covers session retirement, relocation and
+        // identity read/commit; never admit an old revision after an await.
+        if (this.editing !== session) return failure('invalid-request', 'Sessão de edição encerrada.');
+        this.catalog.saveExposure(id, photo.sha256, exposureTenths);
+        this.editing = { ...session, revision, exposureTenths };
+        return { ok: true, value: { ...this.editing } };
+      } catch { return failure('catalog-error', 'Não foi possível salvar o ajuste. O último ajuste confirmado foi preservado. Tente novamente.'); }
+    });
+  }
 
   classification(id: string): Result<PhotoClassification> {
     if (!parseRequest({ op: 'classification', id })) return failure('invalid-request', 'Solicitação inválida.');

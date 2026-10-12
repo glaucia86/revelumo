@@ -41,10 +41,11 @@ A referência funcional é o fluxo de um editor como Lightroom Classic. O Revelu
 | :--- | :--- |
 | Catálogo SQLite | Testado em Node e no aplicativo Linux; referências persistem após encerrar e reabrir |
 | Importação JPEG | Seleção múltipla por referência, progresso e falhas por arquivo; mesmo caminho canônico reaproveita o registro |
-| Prévia | Bytes JPEG, EXIF e ICC preservados; exibição e orientação EXIF 6/8 verificadas com fixtures sintéticas no Electron Linux |
+| Prévia | API preserva bytes JPEG/EXIF/ICC; edição mostra derivação sRGB até 2048 px, validada com perfis sRGB/P3 e EXIF 1–8 no Electron Windows |
 | Interface desktop | Grade paginada com miniaturas derivadas; lote misto, prévia, reinício e interrupção testados no pacote Linux |
 | Original ausente e relocalização | Indicação na grade/prévia; localizar uma foto por SHA-256, preservando ID/dados; fluxo automatizado Windows, com limites nativos descritos abaixo |
-| Edição e exportação | Planejadas, ainda não implementadas |
+| Edição JPEG | Exposição ±3 EV em RGB linear, receita SQLite e autosave com flush/reabertura; [limites e evidências](evidence/issue-12/report.md) |
+| Exportação e RAW | Planejados, ainda não implementados |
 | Distribuição | Pacote de desenvolvimento Linux x64 testado; sem instaladores ou releases; Windows/macOS pendentes |
 
 **Evidência disponível:** 42 testes do núcleo passaram em Node, o typecheck TypeScript passou e o Forge gerou o pacote Linux. No aplicativo real foram verificados cancelamento, importação, reimportação sem duplicata, rejeição de JPEG inválido, original ausente e reabertura após encerrar o processo. Os hashes das fixtures permaneceram iguais. [Primeira fatia](evidence/e2e-linux/report.md) · [Lote, grade e interrupção no Linux](evidence/batch-jpeg/report.md).
@@ -71,7 +72,9 @@ flowchart TB
         LIB["Serviço de biblioteca · importar, listar, visualizar"]
         DB[("Catálogo SQLite")]
         DEC["Adaptador de prévia JPEG · Electron nativeImage"]
-        UI <-->|"importar / listar / visualizar por ID"| PRE
+        EDIT["Worker Chromium — prévia sRGB / exposição JPEG"]
+        UI <--> EDIT
+        UI <-->|"biblioteca / receita por ID"| PRE
         PRE <-->|"IPC restrito"| MAIN
         MAIN <--> LIB
         LIB <--> DB
@@ -82,7 +85,7 @@ flowchart TB
 
     subgraph future["Evolução proposta · não implementada"]
         WORKER["Worker de imagem · Rust ou C++ a decidir"]
-        PIPE["Pipeline de edição não destrutiva"]
+        PIPE["Pipeline RAW / outros ajustes futuros"]
         EXPORT["Novos arquivos · JPEG / TIFF"]
         WORKER --> PIPE --> EXPORT
     end
@@ -92,7 +95,7 @@ flowchart TB
 
     classDef current fill:#e8eee7,stroke:#466451,color:#14221e;
     classDef planned fill:#fff9e7,stroke:#9b7c36,color:#3c321d,stroke-dasharray:5 5;
-    class UI,PRE,MAIN,LIB,DB,DEC,FILES current;
+    class UI,PRE,MAIN,LIB,DB,DEC,FILES,EDIT current;
     class WORKER,PIPE,EXPORT planned;
 ```
 
@@ -101,8 +104,8 @@ flowchart TB
 - **Renderer:** apresenta a biblioteca e a prévia. Não recebe caminhos dos originais nem acesso direto a Node, filesystem ou SQLite.
 - **Preload:** expõe somente `importJpeg`, `importProgress`, `thumbnailPhoto`, `listPhotos`, `previewPhoto`, `originalStatus` e `relocatePhoto` pelo `contextBridge`. As operações IPC são `import`, `progress`, `thumbnail`, `list`, `preview`, `status` e `relocate`; consulta e relocalização exigem UUID, sem receber caminhos livres ou hashes do renderer.
 - **Main:** controla o diálogo nativo, valida as requisições e concentra o acesso ao catálogo e aos arquivos. A janela usa isolamento de contexto, sandbox e Node desabilitado no renderer.
-- **SQLite:** guarda o catálogo em `app.getPath('userData')/catalog.sqlite`, agora com schema v3 e hash do original. A migração preserva registros e cache; identidade do legado é obtida somente do original acessível, sob demanda. Fotos continuam no local original; o catálogo não é uma cópia de segurança delas. Versões anteriores que não conhecem v3 recusam abrir o banco atualizado, sem apagá-lo.
-- **Prévia atual:** usa o JPEG original em memória, sem re-encode ou redução de resolução. O cache persistente de miniaturas derivadas já está implementado no SQLite; processamento em worker permanece planejado.
+- **SQLite:** guarda o catálogo em `app.getPath('userData')/catalog.sqlite`, agora com schema v5, hash do original, classificação e receita de exposição. A migração preserva registros e cache; identidade do legado é obtida somente do original acessível, sob demanda. Fotos continuam no local original; o catálogo não é uma cópia de segurança delas. Versões anteriores que não conhecem v5 recusam abrir o banco atualizado, sem apagá-lo.
+- **Prévia de edição:** derivação sRGB até 2048 px com orientação EXIF, ganho de exposição em RGB linear e autosave da receita. A API `previewPhoto` ainda transmite o JPEG original uma vez; o canvas mostrado para edição é reduzido e quantizado, com limites de gamut e clipping. Veja [pipeline, persistência e limites](docs-agents/adr/0004-jpeg-exposure-autosave.md).
 
 **Decisões abertas:** o worker nativo poderá ser em Rust ou C++; o motor RAW ainda não foi escolhido. O motor do RawTherapee é um candidato a investigar, sujeito a avaliação técnica e de licença. Essas opções não são dependências da primeira fatia.
 
@@ -181,7 +184,7 @@ Os fluxos Linux da primeira e segunda fatias foram verificados; o alvo de 8 GB a
 | Etapa | Entrega pretendida | Situação |
 | :--- | :--- | :--- |
 | 01 · Encontrar suas fotos | Importação por referência, catálogo e prévia JPEG; reencontrar fotos ao reabrir | Validada no fluxo Linux x64 |
-| 02 · Organizar o olhar | Grade, relocalização de arquivos e classificação por estrelas | Grade e relocalização implementadas; estrelas planejadas |
+| 02 · Organizar o olhar | Grade, relocalização de arquivos e classificação por estrelas | Grade, relocalização e estrelas/flags implementadas |
 | 03 · Revelar | Edição não destrutiva e cópia de ajustes em lote | Planejada |
 | 04 · Compartilhar | Exportação de novos arquivos JPEG e TIFF | Planejada |
 

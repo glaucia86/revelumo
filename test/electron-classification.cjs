@@ -53,7 +53,7 @@ let win;
 const js = expression => win.webContents.executeJavaScript(expression);
 const api = (method, ...args) => js(`window.revelumo.${method}(${args.map(arg => JSON.stringify(arg)).join(',')})`);
 const button = name => `Array.from(document.querySelectorAll('button')).find(b=>b.getAttribute('aria-label')===${JSON.stringify(name)})`;
-const click = name => js(`${button(name)}.click()`);
+const click = async name => { await until(() => js(`Boolean(${button(name)} && !${button(name)}.disabled)`), 'button ready: ' + name); return js(`${button(name)}.click()`); };
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 async function until(work, label) {
   const end = Date.now() + 15000;
@@ -62,7 +62,7 @@ async function until(work, label) {
 }
 async function open() {
   await click('Abrir synthetic.jpg');
-  await until(() => js('Boolean(document.querySelector(".viewer img")?.naturalWidth)'), 'preview');
+  await until(() => js('Boolean(document.querySelector(".viewer canvas")?.dataset.revision)'), 'preview');
   assert.equal(await js(`Boolean(${button('5 estrelas')} && !${button('5 estrelas')}.disabled)`), true, 'classification controls ready');
 }
 async function state(rating, flag) {
@@ -124,8 +124,8 @@ finally { Module._load = load; }
     await state(4, 'Selecionada');
     win.webContents.debugger.detach();
     checks.push('clear independently, accessible button names/pressed states, Chromium Enter and Space');
-    await js('document.querySelector(".back").click()'); await open(); await state(4, 'Selecionada');
-    await js('document.querySelector(".back").click()');
+    await js('document.querySelector(".back").click()'); await until(() => js('Boolean(document.querySelector(".tile") && !document.querySelector(".viewer"))'), 'flushed grid'); await open(); await state(4, 'Selecionada');
+    await js('document.querySelector(".back").click()'); await until(() => js('Boolean(document.querySelector(".tile") && !document.querySelector(".viewer"))'), 'flushed grid');
     await js('document.querySelector("header button").click()');
     await until(() => js('document.querySelector("footer").textContent.includes("Seleção cancelada")'), 'cancel import');
     assert.deepEqual((await api('classificationPhoto', id)).value, { photo, rating: 4, flag: 'selected' });
@@ -136,12 +136,12 @@ finally { Module._load = load; }
     await until(() => js('Boolean(document.querySelector(".tile"))'), 'reload');
     await open(); await state(4, 'Selecionada');
     fs.writeFileSync(path.join(run, 'expected.json'), JSON.stringify({ thumbnail: (await api('thumbnailPhoto', id)).value.dataUrl }));
-    await js('document.querySelector(".back").click()');
+    await js('document.querySelector(".back").click()'); await until(() => js('Boolean(document.querySelector(".tile") && !document.querySelector(".viewer"))'), 'flushed grid');
     await click('Abrir other.jpg');
     await state(null, 'Sem flag');
     await click('1 estrela'); await state(1, 'Sem flag');
     await click('Rejeitada'); await state(1, 'Rejeitada');
-    await js('document.querySelector(".back").click()'); await open(); await state(4, 'Selecionada');
+    await js('document.querySelector(".back").click()'); await until(() => js('Boolean(document.querySelector(".tile") && !document.querySelector(".viewer"))'), 'flushed grid'); await open(); await state(4, 'Selecionada');
     assert.deepEqual((await api('classificationPhoto', other.id)).value, { photo: other, rating: 1, flag: 'rejected' });
     checks.push('grid/viewer navigation, import cancel, canonical reimport and renderer reload preserve classification');
     checks.push('navigating and classifying another UUID never overwrites the previous photo');

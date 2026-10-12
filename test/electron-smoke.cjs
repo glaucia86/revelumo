@@ -35,7 +35,7 @@ async function js(expression) { return win.webContents.executeJavaScript(express
 
 const timeout = setTimeout(() => { console.error('Electron smoke exceeded 60 seconds'); app.exit(1); }, 60000);
 app.on('browser-window-created', (_, window) => { window.on('ready-to-show', () => window.hide()); });
-require(path.join(archive, '.vite', 'build', 'index.cjs'));
+require('./hidden-electron.cjs')(path.join(archive, '.vite', 'build', 'index.cjs'));
 (async () => {
   await app.whenReady();
   win = await until(() => BrowserWindow.getAllWindows().find(window => window.webContents.getURL() === 'app://revelumo/index.html'), 'packaged window');
@@ -49,7 +49,7 @@ require(path.join(archive, '.vite', 'build', 'index.cjs'));
   check('packaged origin and limited bridge', () => assert.equal(win.webContents.getURL(), 'app://revelumo/index.html'));
   const exposed = await js('({keys:Object.keys(window.revelumo).sort(),node:typeof require})');
   check('renderer exposes only approved bridge operations', () => {
-    assert.deepEqual(exposed.keys, ['importJpeg','importProgress','listPhotos','previewPhoto','thumbnailPhoto','originalAvailability','originalStatus','relocatePhoto','classificationPhoto','classifyPhoto'].sort());
+    assert.deepEqual(exposed.keys, ['importJpeg','importProgress','listPhotos','previewPhoto','thumbnailPhoto','originalAvailability','originalStatus','relocatePhoto','classificationPhoto','classifyPhoto','recipePhoto','beginEditingPhoto','saveExposure','endEditingPhoto','onCloseRequested','confirmClose'].sort());
     assert.equal(exposed.node, 'undefined');
   });
   const listed = await js('window.revelumo.listPhotos()'); assert.equal(listed.ok, true);
@@ -87,10 +87,10 @@ require(path.join(archive, '.vite', 'build', 'index.cjs'));
     // depend on taking OS foreground focus from the user.
     await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', {type:'keyDown', key:'Enter', code:'Enter', windowsVirtualKeyCode:13, text:'\r'});
     await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', {type:'keyUp', key:'Enter', code:'Enter', windowsVirtualKeyCode:13});
-    await until(() => js('Boolean(document.querySelector(".viewer figure img"))'), 'keyboard preview');
+    await until(() => js('Boolean(document.querySelector(".viewer canvas")?.dataset.revision)'), 'keyboard preview');
     log.push('Enter activates a focused tile and opens the actual JPEG preview');
-    await until(() => js('document.querySelector(".viewer img").complete && document.querySelector(".viewer img").naturalWidth > 0'), 'preview image decoded');
-    const image = await js('({loaded:document.querySelector(".viewer img").complete,width:document.querySelector(".viewer img").naturalWidth})');
+    await until(() => js('Boolean(document.querySelector(".viewer canvas")?.dataset.revision)'), 'preview image decoded');
+    const image = await js('({loaded:Boolean(document.querySelector(".viewer canvas").dataset.revision),width:document.querySelector(".viewer canvas").width})');
     assert.equal(image.loaded,true); assert.ok(image.width > 0);
     await js('document.querySelector(".back").click()');
     await until(() => js('Boolean(document.querySelector(".pagination"))'), 'grid return');

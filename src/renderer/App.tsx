@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { BatchItem, ImportProgress, PhotoSummary, PhotoStatus, PhotoAvailability, Preview } from '../shared/contracts.ts';
 import { lastPage, pagePhotos } from './gallery.ts';
 import { ClassificationControls } from './ClassificationControls.tsx';
+import { ExposureEditor, type ExposureHandle } from './ExposureEditor.tsx';
 
 export function App() {
   const [photos, setPhotos] = useState<PhotoSummary[]>([]);
@@ -22,6 +23,30 @@ export function App() {
   const [thumbnails, setThumbnails] = useState<Record<string, string>>({});
   const [thumbnailErrors, setThumbnailErrors] = useState<Record<string, string>>({});
   const openSequence = useRef(0);
+  const editor = useRef<ExposureHandle>(null);
+  const transitioning = useRef(false), pendingExit = useRef<(() => void | Promise<void>) | null>(null);
+  const pendingClose = useRef(false);
+  const [exitFailed, setExitFailed] = useState(false), [exiting, setExiting] = useState(false);
+  const closeHandler = useRef<() => void>(() => {});
+  closeHandler.current = () => {
+    if (transitioning.current) { pendingClose.current = true; return; }
+    void leave(async () => { await window.revelumo.confirmClose(); });
+  };
+  useEffect(() => window.revelumo.onCloseRequested(() => closeHandler.current()), []);
+
+  async function leave(action: () => void | Promise<void>, discard = false) {
+    if (transitioning.current) return;
+    transitioning.current = true; pendingExit.current = action; setExiting(true);
+    try {
+      await editor.current?.leave(discard);
+      setExitFailed(false); pendingExit.current = null;
+      await action();
+    } catch { setExitFailed(true); }
+    finally {
+      transitioning.current = false; setExiting(false);
+      if (pendingClose.current) { pendingClose.current = false; closeHandler.current(); }
+    }
+  }
   const visible = useMemo(() => pagePhotos(photos, page), [photos, page]);
 
   useEffect(() => {
@@ -63,7 +88,9 @@ export function App() {
     const onFocus = () => {
       if (importing || relocating || classifying) return;
       setRefresh(current => current + 1);
-      if (viewing && selectedPhoto) void openPhoto(selectedPhoto);
+      // An editing session owns its draft/base until an explicit exit. Focus
+      // may refresh the cheap grid snapshots, never recreate that session.
+      if (viewing && selectedPhoto) void refreshSelectedStatus(selectedPhoto);
     };
     window.addEventListener('focus', onFocus);
     return () => window.removeEventListener('focus', onFocus);
@@ -83,6 +110,22 @@ export function App() {
   }, [importing]);
 
   async function openPhoto(photo: PhotoSummary) {
+    if (viewing && selectedPhoto?.id !== photo.id) { await leave(() => openPhotoAfterFlush(photo)); return; }
+    if (viewing && selectedPhoto?.id === photo.id && preview) return;
+    await openPhotoAfterFlush(photo);
+  }
+
+  async function refreshSelectedStatus(photo: PhotoSummary) {
+    const sequence = openSequence.current;
+    try {
+      const result = await window.revelumo.originalStatus(photo.id);
+      if (sequence !== openSequence.current) return;
+      if (result.ok) setCurrentStatus(result.value);
+      else setMessage(result.message);
+    } catch { if (sequence === openSequence.current) setMessage('Não foi possível verificar o original.'); }
+  }
+
+  async function openPhotoAfterFlush(photo: PhotoSummary) {
     const sequence = ++openSequence.current;
     setViewing(true); setSelectedPhoto(photo); setCurrentStatus(null); setMessage('Abrindo prévia…'); setPreview(null);
     try {
@@ -116,7 +159,7 @@ export function App() {
           if (status.value.state === 'available') await openPhoto(photo);
         }
       } else if (result.value.canceled) setMessage('Localização cancelada.');
-      else { setRefresh(current => current + 1); await openPhoto(result.value.photo); }
+      else { setRefresh(current => current + 1); if (preview) await refreshSelectedStatus(result.value.photo); else await openPhoto(result.value.photo); }
     } catch { setMessage('Não foi possível localizar o original. O registro anterior foi preservado.'); }
     finally { setRelocating(false); }
   }
@@ -137,23 +180,23 @@ export function App() {
     finally { setImporting(false); setProgress(null); }
   }
 
-  function showGrid() { ++openSequence.current; setViewing(false); setSelectedPhoto(null); setCurrentStatus(null); setPreview(null); setMessage(''); }
+  function resetViewer() { ++openSequence.current; setViewing(false); setSelectedPhoto(null); setCurrentStatus(null); setPreview(null); setMessage(''); }
+  function showGrid() { void leave(resetViewer); }
 
   return <main>
     <header><div><span className="eyebrow">SEU OLHAR, EM PRIMEIRO LUGAR</span><h1>Revelumo<span> / biblioteca</span></h1></div>
-      <button disabled={loading || importing || relocating || classifying} onClick={() => void importPhotos()}>Importar JPEGs</button></header>
+      <button disabled={loading || importing || relocating || classifying || exiting} onClick={() => { if (viewing) void leave(async () => { resetViewer(); await importPhotos(); }); else void importPhotos(); }}>Importar JPEGs</button></header>
     <div className="workspace">
       <aside><h2>Biblioteca <span>{photos.length}</span></h2><p className="quiet">Originais preservados</p>
-        <button className="photo" disabled={relocating || classifying} onClick={showGrid} aria-pressed={!viewing}>Todas as fotos</button>
-        <button className="photo" disabled={loading || importing || relocating || classifying} onClick={() => { setRefresh(current => current + 1); if (viewing && selectedPhoto) void openPhoto(selectedPhoto); }}>Verificar disponibilidade</button>
+        <button className="photo" disabled={relocating || classifying || exiting} onClick={showGrid} aria-pressed={!viewing}>Todas as fotos</button>
+        <button className="photo" disabled={loading || importing || relocating || classifying || exiting} onClick={() => { setRefresh(current => current + 1); if (viewing && selectedPhoto) void refreshSelectedStatus(selectedPhoto); }}>Verificar disponibilidade</button>
         <p className="quiet">JPEG · catálogo local<br/>Miniaturas derivadas</p>
         {importing && <div className="import-progress" role="status" aria-live="polite"><p>{progress?.total ? `${progress.completed} de ${progress.total} arquivos` : 'Aguardando seleção…'}</p>
           {progress && progress.total > 0 && <><progress max={progress.total} value={progress.completed}/><p className="current-file">{progress.currentName}</p></>}
         </div>}
       </aside>
       <section className={viewing ? 'viewer' : 'gallery'} aria-label={viewing ? 'Visualização da foto' : 'Grade de fotos'} aria-busy={loading}>
-        {viewing ? <><button className="back" disabled={relocating || classifying} onClick={showGrid}>← Voltar à grade</button>{preview ? <figure><img src={preview.dataUrl} alt={preview.photo.name}/><figcaption>{preview.photo.name}</figcaption></figure> :
-          currentStatus && currentStatus.state !== 'available' ? <div className="original-notice" role="status"><h2>{selectedPhoto?.name}</h2><p>{currentStatus.message}</p>{currentStatus.canRelocate && <button disabled={relocating || importing || classifying} onClick={() => void relocatePhoto()} aria-label={`Localizar original de ${selectedPhoto?.name}`}>{relocating ? 'Localizando…' : 'Localizar original'}</button>}</div> : <p className="quiet">{message || 'Abrindo prévia…'}</p>}{selectedPhoto && <ClassificationControls key={selectedPhoto.id} photo={selectedPhoto} onBusyChange={setClassifying} onMessage={setMessage}/>}</> :
+        {viewing ? <><button className="back" disabled={relocating || classifying || exiting} onClick={showGrid}>← Voltar à grade</button>{currentStatus && currentStatus.state !== 'available' ? <div className="original-notice" role="status"><h2>{selectedPhoto?.name}</h2><p>{currentStatus.message}</p>{preview && <p>A prévia existente e o rascunho foram mantidos; o original precisa estar disponível para salvar.</p>}{currentStatus.canRelocate && <button disabled={relocating || importing || classifying || exiting} onClick={() => void relocatePhoto()} aria-label={`Localizar original de ${selectedPhoto?.name}`}>{relocating ? 'Localizando…' : 'Localizar original'}</button>}</div> : !preview && <p className="quiet">{message || 'Abrindo prévia…'}</p>}{selectedPhoto && <><ExposureEditor key={`exposure-${selectedPhoto.id}`} ref={editor} photo={selectedPhoto} preview={preview}/><ClassificationControls key={selectedPhoto.id} photo={selectedPhoto} onBusyChange={setClassifying} onMessage={setMessage}/></>}</> :
           <>{failures.length > 0 && <details className="failures"><summary>{failures.length} arquivo(s) não importado(s)</summary><ul>{failures.map((item, index) => <li key={index}>{item.name}: {!item.result.ok && item.result.message}</li>)}</ul></details>}
             {photos.length ? <><div className="grid" role="list" aria-label="Fotos importadas">{visible.map(photo => <div role="listitem" key={photo.id}><button className="tile" onClick={() => void openPhoto(photo)} aria-label={`Abrir ${photo.name}`} aria-describedby={statuses[photo.id] && statuses[photo.id].state !== 'present' ? `original-${photo.id}` : undefined}>
               <span className="thumbnail">{thumbnails[photo.id] ? <img src={thumbnails[photo.id]} alt=""/> : <span title={thumbnailErrors[photo.id]}>{thumbnailErrors[photo.id] ? 'Miniatura indisponível' : 'Carregando…'}</span>}</span><span className="filename">{photo.name}</span>
@@ -163,6 +206,7 @@ export function App() {
           </>}
       </section>
     </div>
+    {exitFailed && <div className="exit-failure" role="alert"><p>Não foi possível salvar o último ajuste. A foto permanece aberta.</p><button disabled={exiting} onClick={() => { const action = pendingExit.current; if (action) void leave(action); }}>Tentar novamente e sair</button><button disabled={exiting} onClick={() => { pendingExit.current = null; setExitFailed(false); }}>Permanecer</button><button disabled={exiting} onClick={() => { const action = pendingExit.current; if (action) void leave(action, true); }}>Descartar ajuste não salvo e sair</button></div>}
     <footer><span role="status" aria-live="polite">{message || 'Catálogo local · sem alterar seus arquivos'}</span><span>PRÉVIA DE DESENVOLVIMENTO</span></footer>
   </main>;
 }
