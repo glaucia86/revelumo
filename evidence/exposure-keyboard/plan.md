@@ -12,7 +12,7 @@ Fronteiras públicas já aprovadas na issue: entrada/slider e estados visíveis 
 
 1. RED em Electron real: selecionar todo o campo e digitar `-` seguido de `1`; demonstrar falha da retenção de sinal antes de mudar produto.
 2. Preservar texto de edição separado do último EV válido, sem enviar estados incompletos/fora da faixa/passos inválidos ao preview ou autosave. Normalizar ao sair do campo; slider e reset atualizam texto e valor.
-3. Exercitar decimais por caracteres, inválidos e blur, valores-limite, slider/reset, pendência/confirmacão atrasada e flush; rodar regressões existentes.
+3. Exercitar decimais por caracteres, inválidos e blur, valores-limite, slider/reset, pendência/confirmação atrasada e flush; rodar regressões existentes.
 4. Revisões independentes Standards e Spec; QA visual Electron na máquina cloud, typecheck, suíte completa, pacote e integração/CI do SHA final antes de merge coordenado.
 
 Sem novo motor, biblioteca de inputs, ajuste fotográfico ou alteração da fronteira IPC. Windows/Ubuntu CI serão registrados separadamente do QA cloud Linux. A pendência nativa Windows da issue #4 não é encerrada por esta correção.
