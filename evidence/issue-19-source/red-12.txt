@@ -1,0 +1,55 @@
+✔ returns authenticated original bytes without changing source content or inode (11.73781ms)
+✔ rejects content that differs from the already recorded identity (2.666874ms)
+✔ does not enroll a missing or malformed recorded identity (1.523042ms)
+✔ requires an explicit positive safe-integer byte budget and rejects oversized source (3.52908ms)
+✔ rejects non-regular source paths instead of treating them as image bytes (1.761024ms)
+✔ cancellation before opening wins even when the original is absent (1.569772ms)
+✔ mid-read cancellation closes the descriptor and never returns bytes (1.531555ms)
+✔ changing the request during I/O cannot replace the identity being authenticated (1.836331ms)
+✔ reports an unavailable original without returning a partial snapshot (1.725517ms)
+✔ rejects growth or truncation during the read before exposing changed bytes (3.548924ms)
+✔ checks cancellation between bounded 64 KiB filesystem reads (1.932999ms)
+✔ source hardlink is a readonly alias, never an output (2.199363ms)
+✔ source symlink is a readonly alias, never an output (2.249136ms)
+✔ returned snapshot stays authentic even if the pathname changes later (1.925648ms)
+✔ a filesystem read failure closes the descriptor (1.50106ms)
+✖ cancellation during stat wins over size rejection before allocating the source (2.73841ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 15
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 170.08352
+
+✖ failing tests:
+
+test at test/export-source.test.ts:157:1
+✖ cancellation during stat wins over size rejection before allocating the source (2.73841ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    Comparison {
+  +   code: 'SOURCE_TOO_LARGE'
+  -   code: 'CANCELED'
+    }
+
+      at async TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/export-source.test.ts:168:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: ExportSourceError: Source exceeds the export byte budget.
+        at readVerifiedExportSource (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/src/main/export-source.ts:38:51)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/export-source.test.ts:168:3)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+      [cause]: undefined
+    },
+    expected: { code: 'CANCELED' },
+    operator: 'rejects',
+    diff: 'simple'
+  }
