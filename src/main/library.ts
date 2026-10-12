@@ -5,7 +5,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { setImmediate } from 'node:timers/promises';
 import { Catalog } from './catalog.ts';
 import { parseRequest } from '../shared/requests.ts';
-import type { PhotoClassification, PhotoFlag, PhotoRecipe, EditSession } from '../shared/contracts.ts';
+import type { PhotoClassification, PhotoFlag, PhotoRecipe, EditSession, LibraryFilters, LibraryResults } from '../shared/contracts.ts';
 import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcome, PhotoSummary, PhotoStatus, PhotoAvailability, Preview, Result } from '../shared/contracts.ts';
 
 const MAX_BYTES = 32 * 1024 * 1024;
@@ -130,6 +130,12 @@ export class Library {
         return { ok: true, value: { ...this.editing } };
       } catch { return failure('catalog-error', 'Não foi possível salvar o ajuste. O último ajuste confirmado foi preservado. Tente novamente.'); }
     });
+  }
+
+  query(filters: LibraryFilters): Result<LibraryResults> {
+    if (!parseRequest({ ...filters, op: 'query' })) return failure('invalid-request', 'Solicitação inválida.');
+    try { return { ok: true, value: this.catalog.query(filters) }; }
+    catch { return failure('catalog-error', 'Não foi possível consultar a biblioteca. Tente novamente.'); }
   }
 
   classification(id: string): Result<PhotoClassification> {

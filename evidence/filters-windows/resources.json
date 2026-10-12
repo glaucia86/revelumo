@@ -1,0 +1,1285 @@
+{
+  "ok": true,
+  "measuredAtUtc": "2026-10-12T05:42:58.230Z",
+  "versions": {
+    "node": "24.21.0",
+    "acorn": "8.18.0",
+    "ada": "4.0.0",
+    "amaro": "1.1.11",
+    "ares": "1.34.8",
+    "brotli": "1.2.0",
+    "cldr": "48.0",
+    "icu": "78.2",
+    "llhttp": "9.4.3",
+    "merve": "1.2.2",
+    "modules": "149",
+    "napi": "10",
+    "nbytes": "0.1.4",
+    "ncrypto": "0.0.1",
+    "nghttp2": "1.70.0",
+    "nghttp3": "",
+    "ngtcp2": "",
+    "openssl": "0.0.0",
+    "simdjson": "4.6.7",
+    "simdutf": "7.7.0",
+    "sqlite": "3.53.4",
+    "tz": "2026d",
+    "undici": "7.29.1",
+    "unicode": "17.0",
+    "uv": "1.52.1",
+    "uvwasi": "0.0.23",
+    "v8": "15.2.124.28-electron.0",
+    "zlib": "1.3.2.1-motley",
+    "zstd": "1.6.0",
+    "electron": "44.7.0",
+    "chrome": "152.0.7977.130"
+  },
+  "hardware": {
+    "platform": "win32",
+    "release": "10.0.26200",
+    "arch": "x64",
+    "cpuModel": "12th Gen Intel(R) Core(TM) i7-12700H",
+    "logicalCpus": 20,
+    "totalMemoryBytes": 33961971712
+  },
+  "package": {
+    "bytes": 385664321,
+    "files": 73,
+    "appAsarBytes": 260336,
+    "executableBytes": 246302208
+  },
+  "fixture": {
+    "width": 4000,
+    "height": 3000,
+    "copies": 48,
+    "jpegBytes": 774676,
+    "sha256": "2131c88e9cf41f63c7effa137a32d871d68880cb9fa9d4c10d2739c4a89e2153"
+  },
+  "method": "app.getAppMetrics MemoryInfo in KB per process; 3 steady samples/250ms, batch samples/100ms; hidden packaged renderer; preparation in separate process; no forced GC; no sum of working sets as unique memory",
+  "samples": [
+    {
+      "stage": "empty",
+      "elapsedMs": 306,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 132840,
+          "peakWorkingSetSize": 133128,
+          "privateBytes": 75932
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135640,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 95776,
+          "peakWorkingSetSize": 95816,
+          "privateBytes": 28080
+        }
+      ]
+    },
+    {
+      "stage": "empty",
+      "elapsedMs": 571,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 132928,
+          "peakWorkingSetSize": 133128,
+          "privateBytes": 76024
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135640,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 95780,
+          "peakWorkingSetSize": 95816,
+          "privateBytes": 28084
+        }
+      ]
+    },
+    {
+      "stage": "empty",
+      "elapsedMs": 822,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 132936,
+          "peakWorkingSetSize": 133128,
+          "privateBytes": 76024
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135640,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 95780,
+          "peakWorkingSetSize": 95816,
+          "privateBytes": 28084
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 1120,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 182552,
+          "peakWorkingSetSize": 182552,
+          "privateBytes": 125876
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135640,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96060,
+          "peakWorkingSetSize": 96060,
+          "privateBytes": 28396
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 1303,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 277948,
+          "peakWorkingSetSize": 277948,
+          "privateBytes": 221756
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135640,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96072,
+          "peakWorkingSetSize": 96072,
+          "privateBytes": 28408
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 1442,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 278192,
+          "peakWorkingSetSize": 278192,
+          "privateBytes": 222144
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96076,
+          "peakWorkingSetSize": 96076,
+          "privateBytes": 28412
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 1603,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 231096,
+          "peakWorkingSetSize": 326208,
+          "privateBytes": 174884
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96084,
+          "peakWorkingSetSize": 96084,
+          "privateBytes": 28416
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 1736,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 326604,
+          "peakWorkingSetSize": 326604,
+          "privateBytes": 270544
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96084,
+          "peakWorkingSetSize": 96084,
+          "privateBytes": 28416
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 1915,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 279148,
+          "peakWorkingSetSize": 374508,
+          "privateBytes": 222920
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96088,
+          "peakWorkingSetSize": 96088,
+          "privateBytes": 28420
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 2053,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 418696,
+          "peakWorkingSetSize": 422492,
+          "privateBytes": 362768
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96092,
+          "peakWorkingSetSize": 96092,
+          "privateBytes": 28424
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 2182,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 279676,
+          "peakWorkingSetSize": 422492,
+          "privateBytes": 223424
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96132,
+          "peakWorkingSetSize": 96132,
+          "privateBytes": 28432
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 2338,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 422736,
+          "peakWorkingSetSize": 422736,
+          "privateBytes": 366808
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96132,
+          "peakWorkingSetSize": 96132,
+          "privateBytes": 28432
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 2469,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 281048,
+          "peakWorkingSetSize": 470708,
+          "privateBytes": 224808
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96132,
+          "peakWorkingSetSize": 96132,
+          "privateBytes": 28432
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 2575,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 424108,
+          "peakWorkingSetSize": 470708,
+          "privateBytes": 368160
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96132,
+          "peakWorkingSetSize": 96132,
+          "privateBytes": 28432
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 2678,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 560728,
+          "peakWorkingSetSize": 566968,
+          "privateBytes": 505020
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96140,
+          "peakWorkingSetSize": 96140,
+          "privateBytes": 28436
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 2809,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 328736,
+          "peakWorkingSetSize": 566968,
+          "privateBytes": 272532
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96140,
+          "peakWorkingSetSize": 96140,
+          "privateBytes": 28436
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 2957,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 471812,
+          "peakWorkingSetSize": 566968,
+          "privateBytes": 415932
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96140,
+          "peakWorkingSetSize": 96140,
+          "privateBytes": 28436
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 3126,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 567236,
+          "peakWorkingSetSize": 567236,
+          "privateBytes": 511588
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96156,
+          "peakWorkingSetSize": 96156,
+          "privateBytes": 28436
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 3327,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 657664,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 602196
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96164,
+          "peakWorkingSetSize": 96164,
+          "privateBytes": 28436
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 3524,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 234928,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 178520
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96168,
+          "peakWorkingSetSize": 96168,
+          "privateBytes": 28436
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 3657,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 282620,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 226300
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96168,
+          "peakWorkingSetSize": 96168,
+          "privateBytes": 28436
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 3846,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 377252,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 321164
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96168,
+          "peakWorkingSetSize": 96168,
+          "privateBytes": 28436
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 4042,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 473436,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 417604
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96172,
+          "peakWorkingSetSize": 96172,
+          "privateBytes": 28440
+        }
+      ]
+    },
+    {
+      "stage": "batch-48",
+      "elapsedMs": 4144,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 520404,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 464648
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 96336,
+          "peakWorkingSetSize": 96336,
+          "privateBytes": 28556
+        }
+      ]
+    },
+    {
+      "stage": "grid-48",
+      "elapsedMs": 4504,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 140100,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 83108
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 101760,
+          "peakWorkingSetSize": 101760,
+          "privateBytes": 33528
+        }
+      ]
+    },
+    {
+      "stage": "grid-48",
+      "elapsedMs": 4756,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 140100,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 83108
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 101760,
+          "peakWorkingSetSize": 101760,
+          "privateBytes": 33528
+        }
+      ]
+    },
+    {
+      "stage": "grid-48",
+      "elapsedMs": 5010,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 140100,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 83108
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135632,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75552
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87944,
+          "peakWorkingSetSize": 87944,
+          "privateBytes": 12212
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 101760,
+          "peakWorkingSetSize": 101760,
+          "privateBytes": 33528
+        }
+      ]
+    },
+    {
+      "stage": "preview-12mp",
+      "elapsedMs": 5424,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 190552,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 133684
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135660,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75604
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87948,
+          "peakWorkingSetSize": 87948,
+          "privateBytes": 12216
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 104052,
+          "peakWorkingSetSize": 105516,
+          "privateBytes": 35732
+        }
+      ]
+    },
+    {
+      "stage": "preview-12mp",
+      "elapsedMs": 5677,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 190552,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 133684
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135660,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75604
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87948,
+          "peakWorkingSetSize": 87948,
+          "privateBytes": 12216
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 104052,
+          "peakWorkingSetSize": 105516,
+          "privateBytes": 35732
+        }
+      ]
+    },
+    {
+      "stage": "preview-12mp",
+      "elapsedMs": 5938,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 190552,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 133684
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135660,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75604
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87948,
+          "peakWorkingSetSize": 87948,
+          "privateBytes": 12216
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 104052,
+          "peakWorkingSetSize": 105516,
+          "privateBytes": 35732
+        }
+      ]
+    },
+    {
+      "stage": "after-preview-close",
+      "elapsedMs": 6257,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 190696,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 133940
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135660,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75604
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87948,
+          "peakWorkingSetSize": 87948,
+          "privateBytes": 12216
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 105368,
+          "peakWorkingSetSize": 105516,
+          "privateBytes": 36916
+        }
+      ]
+    },
+    {
+      "stage": "after-preview-close",
+      "elapsedMs": 6519,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 141340,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 84496
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135660,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75604
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87948,
+          "peakWorkingSetSize": 87948,
+          "privateBytes": 12216
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 108408,
+          "peakWorkingSetSize": 108408,
+          "privateBytes": 40060
+        }
+      ]
+    },
+    {
+      "stage": "after-preview-close",
+      "elapsedMs": 6781,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 141340,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 84496
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135660,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75604
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 87948,
+          "peakWorkingSetSize": 87948,
+          "privateBytes": 12216
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 108408,
+          "peakWorkingSetSize": 108408,
+          "privateBytes": 40060
+        }
+      ]
+    },
+    {
+      "stage": "after-preview-close-5s",
+      "elapsedMs": 12037,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 141368,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 84500
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135660,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75604
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 88036,
+          "peakWorkingSetSize": 88140,
+          "privateBytes": 12400
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 107160,
+          "peakWorkingSetSize": 108420,
+          "privateBytes": 38832
+        }
+      ]
+    },
+    {
+      "stage": "after-preview-close-5s",
+      "elapsedMs": 12291,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 141368,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 84500
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135660,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75604
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 88044,
+          "peakWorkingSetSize": 88140,
+          "privateBytes": 12408
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 107160,
+          "peakWorkingSetSize": 108420,
+          "privateBytes": 38832
+        }
+      ]
+    },
+    {
+      "stage": "after-preview-close-5s",
+      "elapsedMs": 12555,
+      "processes": [
+        {
+          "pid": 42952,
+          "type": "Browser",
+          "workingSetSize": 141368,
+          "peakWorkingSetSize": 663156,
+          "privateBytes": 84500
+        },
+        {
+          "pid": 54164,
+          "type": "GPU",
+          "workingSetSize": 135660,
+          "peakWorkingSetSize": 141856,
+          "privateBytes": 75604
+        },
+        {
+          "pid": 25404,
+          "type": "Utility",
+          "workingSetSize": 88044,
+          "peakWorkingSetSize": 88140,
+          "privateBytes": 12408
+        },
+        {
+          "pid": 50780,
+          "type": "Tab",
+          "workingSetSize": 107160,
+          "peakWorkingSetSize": 108420,
+          "privateBytes": 38832
+        }
+      ]
+    }
+  ]
+}

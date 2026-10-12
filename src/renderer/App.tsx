@@ -1,11 +1,18 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import type { BatchItem, ImportProgress, PhotoSummary, PhotoStatus, PhotoAvailability, Preview } from '../shared/contracts.ts';
+import type { BatchItem, ImportProgress, PhotoSummary, PhotoStatus, PhotoAvailability, Preview, LibraryFilters } from '../shared/contracts.ts';
 import { lastPage, pagePhotos } from './gallery.ts';
 import { ClassificationControls } from './ClassificationControls.tsx';
 import { ExposureEditor, type ExposureHandle } from './ExposureEditor.tsx';
 
 export function App() {
   const [photos, setPhotos] = useState<PhotoSummary[]>([]);
+  const [filters, setFilters] = useState<LibraryFilters>({ rating: 'all', flag: 'all' });
+  const [total, setTotal] = useState(0);
+  const [queryError, setQueryError] = useState('');
+  const [queryRefresh, setQueryRefresh] = useState(0);
+  const [importNotice, setImportNotice] = useState<{ message: string; ids: string[] } | null>(null);
+  const querySequence = useRef(0);
+  const filtered = filters.rating !== 'all' || filters.flag !== 'all';
   const [preview, setPreview] = useState<Preview | null>(null);
   const [loading, setLoading] = useState(true);
   const [importing, setImporting] = useState(false);
@@ -16,7 +23,7 @@ export function App() {
   const [statuses, setStatuses] = useState<Record<string, PhotoAvailability>>({});
   const [refresh, setRefresh] = useState(0);
   const [viewing, setViewing] = useState(false);
-  const [message, setMessage] = useState('Abrindo catálogo…');
+  const [message, setMessage] = useState('');
   const [progress, setProgress] = useState<ImportProgress | null>(null);
   const [failures, setFailures] = useState<BatchItem[]>([]);
   const [page, setPage] = useState(0);
@@ -50,15 +57,28 @@ export function App() {
   const visible = useMemo(() => pagePhotos(photos, page), [photos, page]);
 
   useEffect(() => {
+    if (viewing && !importNotice) return;
     let active = true;
-    window.revelumo.listPhotos().then((result) => {
-      if (!active) return;
-      if (result.ok) { setPhotos(result.value); setMessage(''); }
-      else setMessage(result.message);
-    }).catch(() => { if (active) setMessage('Não foi possível abrir o catálogo.'); })
-      .finally(() => { if (active) setLoading(false); });
+    const sequence = ++querySequence.current;
+    setLoading(true); setQueryError('');
+    window.revelumo.queryPhotos(filters).then((result) => {
+      if (!active || sequence !== querySequence.current) return;
+      if (result.ok) {
+        setPhotos(result.value.photos); setTotal(result.value.total);
+        setPage(current => Math.min(current, lastPage(result.value.photos.length)));
+        const visibleIds = new Set(result.value.photos.map(photo => photo.id));
+        const hidden = importNotice?.ids.filter(id => !visibleIds.has(id)).length ?? 0;
+        if (importNotice) setMessage(`${importNotice.message}${hidden ? ` ${hidden} foto(s) importada(s) oculta(s) pelos filtros. Os registros continuam no catálogo.` : ''}`);
+      } else { setPhotos([]); setQueryError(result.message); }
+    }).catch(() => { if (active && sequence === querySequence.current) { setPhotos([]); setQueryError('Não foi possível consultar a biblioteca. Tente novamente.'); } })
+      .finally(() => { if (active && sequence === querySequence.current) setLoading(false); });
     return () => { active = false; };
-  }, []);
+  }, [filters, queryRefresh, viewing, importNotice]);
+
+  function changeFilters(next: LibraryFilters) {
+    ++querySequence.current;
+    setFilters(next); setPage(0); setPhotos([]); setLoading(true); setQueryError(''); setMessage(''); setImportNotice(null);
+  }
 
   useEffect(() => {
     let active = true;
@@ -127,6 +147,7 @@ export function App() {
 
   async function openPhotoAfterFlush(photo: PhotoSummary) {
     const sequence = ++openSequence.current;
+    setImportNotice(null);
     setViewing(true); setSelectedPhoto(photo); setCurrentStatus(null); setMessage('Abrindo prévia…'); setPreview(null);
     try {
       const status = await window.revelumo.originalStatus(photo.id);
@@ -165,6 +186,7 @@ export function App() {
   }
 
   async function importPhotos() {
+    setImportNotice(null);
     setImporting(true); setProgress(null); setFailures([]); setMessage('Escolha um ou mais JPEGs na janela de arquivos.');
     try {
       const result = await window.revelumo.importJpeg();
@@ -173,24 +195,38 @@ export function App() {
       const items = result.value.items;
       const failed = items.filter(item => !item.result.ok);
       setFailures(failed);
-      const listed = await window.revelumo.listPhotos();
-      if (listed.ok) setPhotos(listed.value);
-      setMessage(`${items.length - failed.length} arquivo(s) válido(s), ${failed.length} falha(s).${result.value.stopped ? ' Importação interrompida.' : ''}${listed.ok ? '' : ' Não foi possível atualizar a biblioteca.'}`);
+      const ids = [...new Set(items.flatMap(item => item.result.ok ? [item.result.value.id] : []))];
+      setImportNotice({ message: `${items.length - failed.length} arquivo(s) válido(s), ${failed.length} falha(s).${result.value.stopped ? ' Importação interrompida.' : ''}`, ids });
+      setQueryRefresh(current => current + 1);
     } catch { setMessage('Não foi possível concluir a importação. As fotos já salvas permanecem no catálogo.'); }
     finally { setImporting(false); setProgress(null); }
   }
 
-  function resetViewer() { ++openSequence.current; setViewing(false); setSelectedPhoto(null); setCurrentStatus(null); setPreview(null); setMessage(''); }
+  function resetViewer() { ++openSequence.current; setLoading(true); setQueryRefresh(current => current + 1); setImportNotice(null); setViewing(false); setSelectedPhoto(null); setCurrentStatus(null); setPreview(null); setMessage(''); }
   function showGrid() { void leave(resetViewer); }
 
   return <main>
     <header><div><span className="eyebrow">SEU OLHAR, EM PRIMEIRO LUGAR</span><h1>Revelumo<span> / biblioteca</span></h1></div>
       <button disabled={loading || importing || relocating || classifying || exiting} onClick={() => { if (viewing) void leave(async () => { resetViewer(); await importPhotos(); }); else void importPhotos(); }}>Importar JPEGs</button></header>
     <div className="workspace">
-      <aside><h2>Biblioteca <span>{photos.length}</span></h2><p className="quiet">Originais preservados</p>
+      <aside><h2>Biblioteca <span>{total}</span></h2><p className="quiet">Originais preservados</p>
         <button className="photo" disabled={relocating || classifying || exiting} onClick={showGrid} aria-pressed={!viewing}>Todas as fotos</button>
         <button className="photo" disabled={loading || importing || relocating || classifying || exiting} onClick={() => { setRefresh(current => current + 1); if (viewing && selectedPhoto) void refreshSelectedStatus(selectedPhoto); }}>Verificar disponibilidade</button>
         <p className="quiet">JPEG · catálogo local<br/>Miniaturas derivadas</p>
+        <fieldset className="library-filters" disabled={viewing || importing || relocating || classifying || exiting}>
+          <legend>Filtrar biblioteca</legend>
+          <label htmlFor="filter-rating">Estrelas mínimas</label>
+          <select id="filter-rating" value={filters.rating} onChange={event => changeFilters({ ...filters, rating: event.target.value === 'all' || event.target.value === 'unrated' ? event.target.value : Number(event.target.value) as LibraryFilters['rating'] })}>
+            <option value="all">Todas as avaliações</option><option value="unrated">Sem avaliação</option>
+            {[1, 2, 3, 4, 5].map(rating => <option key={rating} value={rating}>{rating} {rating === 1 ? 'estrela ou mais' : 'estrelas ou mais'}</option>)}
+          </select>
+          <label htmlFor="filter-flag">Marcação</label>
+          <select id="filter-flag" value={filters.flag} onChange={event => changeFilters({ ...filters, flag: event.target.value as LibraryFilters['flag'] })}>
+            <option value="all">Todas as marcações</option><option value="neutral">Sem flag</option><option value="selected">Selecionada</option><option value="rejected">Rejeitada</option>
+          </select>
+          <button disabled={!filtered} onClick={() => changeFilters({ rating: 'all', flag: 'all' })}>Limpar filtros</button>
+          <p className="quiet">Filtros duram esta sessão. Estrelas e marcação se combinam.</p>
+        </fieldset>
         {importing && <div className="import-progress" role="status" aria-live="polite"><p>{progress?.total ? `${progress.completed} de ${progress.total} arquivos` : 'Aguardando seleção…'}</p>
           {progress && progress.total > 0 && <><progress max={progress.total} value={progress.completed}/><p className="current-file">{progress.currentName}</p></>}
         </div>}
@@ -198,11 +234,11 @@ export function App() {
       <section className={viewing ? 'viewer' : 'gallery'} aria-label={viewing ? 'Visualização da foto' : 'Grade de fotos'} aria-busy={loading}>
         {viewing ? <><button className="back" disabled={relocating || classifying || exiting} onClick={showGrid}>← Voltar à grade</button>{currentStatus && currentStatus.state !== 'available' ? <div className="original-notice" role="status"><h2>{selectedPhoto?.name}</h2><p>{currentStatus.message}</p>{preview && <p>A prévia existente e o rascunho foram mantidos; o original precisa estar disponível para salvar.</p>}{currentStatus.canRelocate && <button disabled={relocating || importing || classifying || exiting} onClick={() => void relocatePhoto()} aria-label={`Localizar original de ${selectedPhoto?.name}`}>{relocating ? 'Localizando…' : 'Localizar original'}</button>}</div> : !preview && <p className="quiet">{message || 'Abrindo prévia…'}</p>}{selectedPhoto && <><ExposureEditor key={`exposure-${selectedPhoto.id}`} ref={editor} photo={selectedPhoto} preview={preview}/><ClassificationControls key={selectedPhoto.id} photo={selectedPhoto} onBusyChange={setClassifying} onMessage={setMessage}/></>}</> :
           <>{failures.length > 0 && <details className="failures"><summary>{failures.length} arquivo(s) não importado(s)</summary><ul>{failures.map((item, index) => <li key={index}>{item.name}: {!item.result.ok && item.result.message}</li>)}</ul></details>}
-            {photos.length ? <><div className="grid" role="list" aria-label="Fotos importadas">{visible.map(photo => <div role="listitem" key={photo.id}><button className="tile" onClick={() => void openPhoto(photo)} aria-label={`Abrir ${photo.name}`} aria-describedby={statuses[photo.id] && statuses[photo.id].state !== 'present' ? `original-${photo.id}` : undefined}>
+            {loading ? <p role="status">Consultando biblioteca.</p> : queryError ? <div className="query-error" role="alert"><p>{queryError}</p><button onClick={() => setQueryRefresh(current => current + 1)}>Tentar novamente</button></div> : photos.length ? <><p className="quiet" role="status">{photos.length} de {total} fotos{filtered ? ' correspondem aos filtros' : ''}.</p><div className="grid" role="list" aria-label="Fotos importadas">{visible.map(photo => <div role="listitem" key={photo.id}><button className="tile" onClick={() => void openPhoto(photo)} aria-label={`Abrir ${photo.name}`} aria-describedby={statuses[photo.id] && statuses[photo.id].state !== 'present' ? `original-${photo.id}` : undefined}>
               <span className="thumbnail">{thumbnails[photo.id] ? <img src={thumbnails[photo.id]} alt=""/> : <span title={thumbnailErrors[photo.id]}>{thumbnailErrors[photo.id] ? 'Miniatura indisponível' : 'Carregando…'}</span>}</span><span className="filename">{photo.name}</span>
               {statuses[photo.id] && statuses[photo.id].state !== 'present' && <span className="original-status" id={`original-${photo.id}`}>{statuses[photo.id].state === 'missing' ? 'Original ausente' : 'Original indisponível'}</span>}
             </button></div>)}</div><nav className="pagination" aria-label="Páginas da biblioteca"><button disabled={page === 0} onClick={() => setPage(current => current - 1)}>Anterior</button><span>Página {page + 1} de {lastPage(photos.length) + 1}</span><button disabled={page >= lastPage(photos.length)} onClick={() => setPage(current => current + 1)}>Próxima</button></nav></> :
-              <div className="empty"><span className="mark">R</span><h2>Toda foto começa com um olhar.</h2><p>Importe JPEGs para começar. Os arquivos continuam onde estão.</p></div>}
+              total > 0 ? <div className="empty"><h2>Nenhuma foto corresponde aos filtros.</h2><p>As {total} fotos continuam no catálogo. Altere ou limpe os filtros para encontrá-las.</p><button onClick={() => changeFilters({ rating: 'all', flag: 'all' })}>Limpar filtros</button></div> : <div className="empty"><span className="mark">R</span><h2>Toda foto começa com um olhar.</h2><p>Importe JPEGs para começar. Os arquivos continuam onde estão.</p></div>}
           </>}
       </section>
     </div>

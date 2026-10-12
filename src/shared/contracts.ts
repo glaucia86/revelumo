@@ -1,5 +1,7 @@
 export type PhotoSummary = { id: string; name: string };
 export type PhotoFlag = 'neutral' | 'selected' | 'rejected';
+export type LibraryFilters = { rating: 'all' | 'unrated' | 1 | 2 | 3 | 4 | 5; flag: 'all' | PhotoFlag };
+export type LibraryResults = { photos: PhotoSummary[]; total: number };
 export type PhotoClassification = { photo: PhotoSummary; rating: number | null; flag: PhotoFlag };
 export type PhotoRecipe = { photo: PhotoSummary; exposureTenths: number; processingVersion: 1 };
 export type EditSession = PhotoRecipe & { sessionId: string; revision: number };
@@ -22,6 +24,7 @@ export interface RevelumoApi {
   importProgress(): Promise<Result<ImportProgress>>;
   thumbnailPhoto(id: string): Promise<Result<Preview>>;
   listPhotos(): Promise<Result<PhotoSummary[]>>;
+  queryPhotos(filters: LibraryFilters): Promise<Result<LibraryResults>>;
   previewPhoto(id: string): Promise<Result<Preview>>;
   originalStatus(id: string): Promise<Result<PhotoStatus>>;
   originalAvailability(id: string): Promise<Result<PhotoAvailability>>;
