@@ -1,0 +1,15 @@
+{
+  "os": {
+    "Caption": "Microsoft Windows 11 Pro for Workstations",
+    "Version": "10.0.26200",
+    "OSArchitecture": "64 bits"
+  },
+  "system": {
+    "TotalPhysicalMemory": 33961971712
+  },
+  "cpu": {
+    "Name": "12th Gen Intel(R) Core(TM) i7-12700H",
+    "NumberOfCores": 14,
+    "NumberOfLogicalProcessors": 20
+  }
+}

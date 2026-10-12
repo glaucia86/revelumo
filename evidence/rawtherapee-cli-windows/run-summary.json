@@ -1,0 +1,21 @@
+{
+  "run1": {
+    "ms": 1987,
+    "maxSamplePrivate": 475586560.0,
+    "peakWorkingSet": 493969408
+  },
+  "run2": {
+    "ms": 1807,
+    "maxSamplePrivate": 475717632.0,
+    "peakWorkingSet": 494030848
+  },
+  "sameOutputHash": false,
+  "bothOriginalUnchanged": true,
+  "output2": {
+    "bytes": 2418846,
+    "sha256": "014409f70fe3b7e730c4aa1ddf0bbb44ed1d05415ff833f51fb0bcabf41e7521"
+  },
+  "retentionCheckUtc": "2026-10-12T06:01:13.2663850Z",
+  "rawtherapeeProcessesRemaining": 0,
+  "cacheDirectoriesCreated": 0
+}

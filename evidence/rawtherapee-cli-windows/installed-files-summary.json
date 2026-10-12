@@ -1,0 +1,10 @@
+{
+  "fileCount": 1352,
+  "logicalBytes": 232224849.0,
+  "cliSha256": "9172a03896f0200daf621909b024f6cd65a24837cad56d0748730b2fa6d2fb6a",
+  "licenseSha256": "4c82e5d8d2d1330360115a36c67c215680bc5f139b45f90575fbacb5314de1dd",
+  "licenseSameAsOfficial": false,
+  "originalAfterInstall": "b0800a1166b952430b255600373573e1d528adf8de98857781e06a98472b3c35",
+  "embeddedPreviewSha256": "77ca65decdf4b5f698a6d0489b1e2833e910e836d4f258a26612aca74a6b9ab2",
+  "licenseEqualAfterNewlineNormalization": true
+}

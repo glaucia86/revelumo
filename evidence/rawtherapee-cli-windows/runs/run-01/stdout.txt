@@ -1,0 +1,3 @@
+RawTherapee, version 5.13, command line.
+Output is 8-bit integer.
+Processing: C:\Users\glauc\Documents\Codex\2026-10-12\task-5\experiment\raw14\nikon-d200.nef
