@@ -1,5 +1,11 @@
 # Estado da implementação
 
+## Issue #19: engine JPEG preparatória — 12/10/2026
+
+- Engine main-only recebe bytes privados do snapshot, rejeita versões/recorte desconhecidos e produz JPEG sRGB em resolução original com exposição/WB v2 e qualidade Canvas 0,90. Renderer descartável isolado, sem Node, serializado e com cancelamento/encerramento observado.
+- Ainda não conectada à aplicação: metadados selecionados, gravação sem sobrescrever, diálogo e UI seguem o circuito seguinte. Exportação não está disponível; issue #19 permanece aberta.
+- [Evidências, recursos medidos e limites](../evidence/issue-19-engine/report.md). Nenhuma dependência nova, release ou alteração no crop.
+
 ## Issue #32: tradução do editor existente — 12/10/2026
 
 - Fatia parcial: exposição, WB relativo, Undo/Redo, comparação 0 EV, classificação, disponibilidade/relocalização e recuperação/saída usam o contexto PT-BR/EN/ES existente. Recorte (#18) e exportação não foram inventados; a issue continua aberta para seu escopo restante.

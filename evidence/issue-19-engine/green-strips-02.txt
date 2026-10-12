@@ -1,0 +1,10 @@
+✔ applies the existing scalar WB oracle to every full-resolution canvas pixel (1.944065ms)
+✔ caps strip readback at 1 MiB and includes the final partial rows without seams (26.823822ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 140.593499

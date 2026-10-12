@@ -1,0 +1,12 @@
+✔ applies the existing scalar WB oracle to every full-resolution canvas pixel (2.101588ms)
+✔ caps strip readback at 1 MiB and includes the final partial rows without seams (26.784403ms)
+✔ rejects invalid geometry instead of looping or silently processing nothing (0.593528ms)
+✔ one wide row is preserved even when wider than the target strip budget (10.367052ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 156.342139

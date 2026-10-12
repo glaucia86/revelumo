@@ -1,0 +1,4215 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "manifestPath": "/workspace/scratch/827b15a15839/revelumo-export-snapshot/.test-temp/jpeg-engine-corpus/engine23-final-corpus-174582-R1Z9X7/manifest.json",
+  "pillowVersion": "12.3.0",
+  "littleCmsVersion": "2.19",
+  "neutralChannelTolerance": 6,
+  "combinedChannelTolerance": 8,
+  "measurementNotes": [
+    "Electron app.getAppMetrics memory values are KiB; samples are requested every 25 ms, not guaranteed peak measurements.",
+    "Working-set sums can double-count shared pages. GPU/global Chromium cache reclamation and 8 GB device support are not established.",
+    "The corpus includes four-quadrant 40 MP, deterministic repeated-noise-tile 40 MP, and uniform elongated 10000x4 JPEGs. It does not establish 8 GB machine support.",
+    "High-frequency noise has no pixel-color assertion because chroma subsampling and JPEG generations require a separate error model; dimensions, ICC, hashes, memory and lifecycle are checked.",
+    "Python generation precedes Electron measurements; independent oracle verification is run separately after capture."
+  ],
+  "cases": [
+    {
+      "id": "srgb-neutral",
+      "status": "passed",
+      "dimensions": [
+        80,
+        40
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 6,
+      "maximumChannelError": 0,
+      "sourceSha256": "496f279e6f7077bef18a1603fcc96e4e8c0c01e61527b23856bfea64661ee194",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            20,
+            10
+          ],
+          "box": [
+            18,
+            8,
+            23,
+            13
+          ],
+          "expectedCenter": [
+            128,
+            63,
+            31
+          ],
+          "actualCenter": [
+            128,
+            63,
+            31
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            60,
+            10
+          ],
+          "box": [
+            58,
+            8,
+            63,
+            13
+          ],
+          "expectedCenter": [
+            128,
+            63,
+            31
+          ],
+          "actualCenter": [
+            128,
+            63,
+            31
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            20,
+            30
+          ],
+          "box": [
+            18,
+            28,
+            23,
+            33
+          ],
+          "expectedCenter": [
+            128,
+            63,
+            31
+          ],
+          "actualCenter": [
+            128,
+            63,
+            31
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            60,
+            30
+          ],
+          "box": [
+            58,
+            28,
+            63,
+            33
+          ],
+          "expectedCenter": [
+            128,
+            63,
+            31
+          ],
+          "actualCenter": [
+            128,
+            63,
+            31
+          ],
+          "maximumChannelError": 0
+        }
+      ],
+      "encodeDurationMs": 73.17109299999993,
+      "sampledPeakAggregateWorkingSetKiB": 502808,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 159020,
+          "atElapsedMs": 42.16919300000063
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98696,
+          "atElapsedMs": 42.16919300000063
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 77448,
+          "atElapsedMs": 27.106155999999828
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82464,
+          "atElapsedMs": 0.538246000000072
+        },
+        {
+          "pid": 174920,
+          "type": "Tab",
+          "workingSetSizeKiB": 85180,
+          "atElapsedMs": 42.16919300000063
+        }
+      ]
+    },
+    {
+      "id": "srgb-wb-ev",
+      "status": "passed",
+      "dimensions": [
+        80,
+        40
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 8,
+      "maximumChannelError": 0,
+      "sourceSha256": "496f279e6f7077bef18a1603fcc96e4e8c0c01e61527b23856bfea64661ee194",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            20,
+            10
+          ],
+          "box": [
+            18,
+            8,
+            23,
+            13
+          ],
+          "expectedCenter": [
+            117,
+            39,
+            17
+          ],
+          "actualCenter": [
+            117,
+            39,
+            17
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            60,
+            10
+          ],
+          "box": [
+            58,
+            8,
+            63,
+            13
+          ],
+          "expectedCenter": [
+            117,
+            39,
+            17
+          ],
+          "actualCenter": [
+            117,
+            39,
+            17
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            20,
+            30
+          ],
+          "box": [
+            18,
+            28,
+            23,
+            33
+          ],
+          "expectedCenter": [
+            117,
+            39,
+            17
+          ],
+          "actualCenter": [
+            117,
+            39,
+            17
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            60,
+            30
+          ],
+          "box": [
+            58,
+            28,
+            63,
+            33
+          ],
+          "expectedCenter": [
+            117,
+            39,
+            17
+          ],
+          "actualCenter": [
+            117,
+            39,
+            17
+          ],
+          "maximumChannelError": 0
+        }
+      ],
+      "encodeDurationMs": 78.76100700000006,
+      "sampledPeakAggregateWorkingSetKiB": 512036,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 159588,
+          "atElapsedMs": 51.46542000000045
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98764,
+          "atElapsedMs": 51.46542000000045
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 77628,
+          "atElapsedMs": 25.66261200000008
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82464,
+          "atElapsedMs": 0.37935099999958766
+        },
+        {
+          "pid": 174928,
+          "type": "Tab",
+          "workingSetSizeKiB": 93592,
+          "atElapsedMs": 51.46542000000045
+        }
+      ]
+    },
+    {
+      "id": "p3-neutral",
+      "status": "passed",
+      "dimensions": [
+        80,
+        40
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 6,
+      "maximumChannelError": 1,
+      "sourceSha256": "16b3f800a464e65cf8ad35c9a4c60573c531567b350e8331fe36f9929b96212a",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            20,
+            10
+          ],
+          "box": [
+            18,
+            8,
+            23,
+            13
+          ],
+          "expectedCenter": [
+            138,
+            58,
+            20
+          ],
+          "actualCenter": [
+            138,
+            58,
+            21
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            60,
+            10
+          ],
+          "box": [
+            58,
+            8,
+            63,
+            13
+          ],
+          "expectedCenter": [
+            138,
+            58,
+            20
+          ],
+          "actualCenter": [
+            138,
+            58,
+            21
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            20,
+            30
+          ],
+          "box": [
+            18,
+            28,
+            23,
+            33
+          ],
+          "expectedCenter": [
+            138,
+            58,
+            20
+          ],
+          "actualCenter": [
+            138,
+            58,
+            21
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            60,
+            30
+          ],
+          "box": [
+            58,
+            28,
+            63,
+            33
+          ],
+          "expectedCenter": [
+            138,
+            58,
+            20
+          ],
+          "actualCenter": [
+            138,
+            58,
+            21
+          ],
+          "maximumChannelError": 1
+        }
+      ],
+      "encodeDurationMs": 79.5329299999994,
+      "sampledPeakAggregateWorkingSetKiB": 511480,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 161720,
+          "atElapsedMs": 51.16517599999952
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98772,
+          "atElapsedMs": 40.12155499999972
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 77832,
+          "atElapsedMs": 101.32262199999968
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82468,
+          "atElapsedMs": 101.32262199999968
+        },
+        {
+          "pid": 174939,
+          "type": "Tab",
+          "workingSetSizeKiB": 90696,
+          "atElapsedMs": 51.16517599999952
+        }
+      ]
+    },
+    {
+      "id": "p3-wb-ev",
+      "status": "passed",
+      "dimensions": [
+        80,
+        40
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 8,
+      "maximumChannelError": 0,
+      "sourceSha256": "16b3f800a464e65cf8ad35c9a4c60573c531567b350e8331fe36f9929b96212a",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            20,
+            10
+          ],
+          "box": [
+            18,
+            8,
+            23,
+            13
+          ],
+          "expectedCenter": [
+            126,
+            36,
+            10
+          ],
+          "actualCenter": [
+            126,
+            36,
+            10
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            60,
+            10
+          ],
+          "box": [
+            58,
+            8,
+            63,
+            13
+          ],
+          "expectedCenter": [
+            126,
+            36,
+            10
+          ],
+          "actualCenter": [
+            126,
+            36,
+            10
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            20,
+            30
+          ],
+          "box": [
+            18,
+            28,
+            23,
+            33
+          ],
+          "expectedCenter": [
+            126,
+            36,
+            10
+          ],
+          "actualCenter": [
+            126,
+            36,
+            10
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            60,
+            30
+          ],
+          "box": [
+            58,
+            28,
+            63,
+            33
+          ],
+          "expectedCenter": [
+            126,
+            36,
+            10
+          ],
+          "actualCenter": [
+            126,
+            36,
+            10
+          ],
+          "maximumChannelError": 0
+        }
+      ],
+      "encodeDurationMs": 81.30735800000002,
+      "sampledPeakAggregateWorkingSetKiB": 514648,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 162280,
+          "atElapsedMs": 26.032178000000386
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98772,
+          "atElapsedMs": 38.872441000000435
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 78012,
+          "atElapsedMs": 26.032178000000386
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82472,
+          "atElapsedMs": 101.89060100000006
+        },
+        {
+          "pid": 174950,
+          "type": "Tab",
+          "workingSetSizeKiB": 93160,
+          "atElapsedMs": 51.6089920000004
+        }
+      ]
+    },
+    {
+      "id": "orientation-1-neutral",
+      "status": "passed",
+      "dimensions": [
+        80,
+        40
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 6,
+      "maximumChannelError": 3,
+      "sourceSha256": "14e0ecf6093bd324ce2cc5cfa35045789295adebc4fcdae86d471348e1fac8c1",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            20,
+            10
+          ],
+          "box": [
+            18,
+            8,
+            23,
+            13
+          ],
+          "expectedCenter": [
+            254,
+            0,
+            0
+          ],
+          "actualCenter": [
+            254,
+            0,
+            0
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            60,
+            10
+          ],
+          "box": [
+            58,
+            8,
+            63,
+            13
+          ],
+          "expectedCenter": [
+            0,
+            255,
+            1
+          ],
+          "actualCenter": [
+            0,
+            255,
+            1
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            20,
+            30
+          ],
+          "box": [
+            18,
+            28,
+            23,
+            33
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            254
+          ],
+          "actualCenter": [
+            0,
+            1,
+            252
+          ],
+          "maximumChannelError": 3
+        },
+        {
+          "center": [
+            60,
+            30
+          ],
+          "box": [
+            58,
+            28,
+            63,
+            33
+          ],
+          "expectedCenter": [
+            255,
+            255,
+            0
+          ],
+          "actualCenter": [
+            255,
+            254,
+            1
+          ],
+          "maximumChannelError": 3
+        }
+      ],
+      "encodeDurationMs": 76.6177459999999,
+      "sampledPeakAggregateWorkingSetKiB": 513632,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 163064,
+          "atElapsedMs": 50.70046900000034
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98772,
+          "atElapsedMs": 39.61051800000041
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 78212,
+          "atElapsedMs": 25.657564000000093
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82476,
+          "atElapsedMs": 102.13254899999993
+        },
+        {
+          "pid": 174959,
+          "type": "Tab",
+          "workingSetSizeKiB": 91112,
+          "atElapsedMs": 50.70046900000034
+        }
+      ]
+    },
+    {
+      "id": "orientation-1-wb-ev",
+      "status": "passed",
+      "dimensions": [
+        80,
+        40
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 8,
+      "maximumChannelError": 3,
+      "sourceSha256": "14e0ecf6093bd324ce2cc5cfa35045789295adebc4fcdae86d471348e1fac8c1",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            20,
+            10
+          ],
+          "box": [
+            18,
+            8,
+            23,
+            13
+          ],
+          "expectedCenter": [
+            233,
+            0,
+            0
+          ],
+          "actualCenter": [
+            233,
+            1,
+            1
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            60,
+            10
+          ],
+          "box": [
+            58,
+            8,
+            63,
+            13
+          ],
+          "expectedCenter": [
+            0,
+            172,
+            0
+          ],
+          "actualCenter": [
+            0,
+            172,
+            0
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            20,
+            30
+          ],
+          "box": [
+            18,
+            28,
+            23,
+            33
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            171
+          ],
+          "actualCenter": [
+            0,
+            0,
+            168
+          ],
+          "maximumChannelError": 3
+        },
+        {
+          "center": [
+            60,
+            30
+          ],
+          "box": [
+            58,
+            28,
+            63,
+            33
+          ],
+          "expectedCenter": [
+            234,
+            172,
+            0
+          ],
+          "actualCenter": [
+            234,
+            172,
+            1
+          ],
+          "maximumChannelError": 3
+        }
+      ],
+      "encodeDurationMs": 81.94358499999998,
+      "sampledPeakAggregateWorkingSetKiB": 516580,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 163624,
+          "atElapsedMs": 51.09292900000037
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98772,
+          "atElapsedMs": 43.5706710000004
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 78388,
+          "atElapsedMs": 153.4162699999997
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82476,
+          "atElapsedMs": 0.35801900000024034
+        },
+        {
+          "pid": 174969,
+          "type": "Tab",
+          "workingSetSizeKiB": 93328,
+          "atElapsedMs": 51.09292900000037
+        }
+      ]
+    },
+    {
+      "id": "orientation-2-neutral",
+      "status": "passed",
+      "dimensions": [
+        80,
+        40
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 6,
+      "maximumChannelError": 3,
+      "sourceSha256": "b61cd5db621686925bde55fc8bc3c02ae422096045f25c3fedc073f554018ffa",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            20,
+            10
+          ],
+          "box": [
+            18,
+            8,
+            23,
+            13
+          ],
+          "expectedCenter": [
+            0,
+            255,
+            1
+          ],
+          "actualCenter": [
+            0,
+            255,
+            1
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            60,
+            10
+          ],
+          "box": [
+            58,
+            8,
+            63,
+            13
+          ],
+          "expectedCenter": [
+            254,
+            0,
+            0
+          ],
+          "actualCenter": [
+            254,
+            0,
+            0
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            20,
+            30
+          ],
+          "box": [
+            18,
+            28,
+            23,
+            33
+          ],
+          "expectedCenter": [
+            255,
+            255,
+            0
+          ],
+          "actualCenter": [
+            255,
+            254,
+            1
+          ],
+          "maximumChannelError": 3
+        },
+        {
+          "center": [
+            60,
+            30
+          ],
+          "box": [
+            58,
+            28,
+            63,
+            33
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            254
+          ],
+          "actualCenter": [
+            0,
+            1,
+            252
+          ],
+          "maximumChannelError": 3
+        }
+      ],
+      "encodeDurationMs": 77.68545499999982,
+      "sampledPeakAggregateWorkingSetKiB": 509156,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 164024,
+          "atElapsedMs": 43.99216499999966
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98772,
+          "atElapsedMs": 43.99216499999966
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 78584,
+          "atElapsedMs": 43.99216499999966
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82476,
+          "atElapsedMs": 0.3863519999995333
+        },
+        {
+          "pid": 174978,
+          "type": "Tab",
+          "workingSetSizeKiB": 85300,
+          "atElapsedMs": 43.99216499999966
+        }
+      ]
+    },
+    {
+      "id": "orientation-2-wb-ev",
+      "status": "passed",
+      "dimensions": [
+        80,
+        40
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 8,
+      "maximumChannelError": 3,
+      "sourceSha256": "b61cd5db621686925bde55fc8bc3c02ae422096045f25c3fedc073f554018ffa",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            20,
+            10
+          ],
+          "box": [
+            18,
+            8,
+            23,
+            13
+          ],
+          "expectedCenter": [
+            0,
+            172,
+            0
+          ],
+          "actualCenter": [
+            0,
+            172,
+            0
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            60,
+            10
+          ],
+          "box": [
+            58,
+            8,
+            63,
+            13
+          ],
+          "expectedCenter": [
+            233,
+            0,
+            0
+          ],
+          "actualCenter": [
+            233,
+            1,
+            1
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            20,
+            30
+          ],
+          "box": [
+            18,
+            28,
+            23,
+            33
+          ],
+          "expectedCenter": [
+            234,
+            172,
+            0
+          ],
+          "actualCenter": [
+            234,
+            172,
+            1
+          ],
+          "maximumChannelError": 3
+        },
+        {
+          "center": [
+            60,
+            30
+          ],
+          "box": [
+            58,
+            28,
+            63,
+            33
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            171
+          ],
+          "actualCenter": [
+            0,
+            0,
+            168
+          ],
+          "maximumChannelError": 3
+        }
+      ],
+      "encodeDurationMs": 80.09697500000038,
+      "sampledPeakAggregateWorkingSetKiB": 517060,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 164628,
+          "atElapsedMs": 40.555333000000246
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98716,
+          "atElapsedMs": 40.555333000000246
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 78784,
+          "atElapsedMs": 40.555333000000246
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82480,
+          "atElapsedMs": 101.58484999999928
+        },
+        {
+          "pid": 174988,
+          "type": "Tab",
+          "workingSetSizeKiB": 92472,
+          "atElapsedMs": 51.041965000000346
+        }
+      ]
+    },
+    {
+      "id": "orientation-3-neutral",
+      "status": "passed",
+      "dimensions": [
+        80,
+        40
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 6,
+      "maximumChannelError": 3,
+      "sourceSha256": "72635685fa9cd5907cbca923d5a209186f73dc357c6cc3cf7189e056f2b6c7e9",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            20,
+            10
+          ],
+          "box": [
+            18,
+            8,
+            23,
+            13
+          ],
+          "expectedCenter": [
+            255,
+            255,
+            0
+          ],
+          "actualCenter": [
+            255,
+            255,
+            0
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            60,
+            10
+          ],
+          "box": [
+            58,
+            8,
+            63,
+            13
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            254
+          ],
+          "actualCenter": [
+            0,
+            0,
+            254
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            20,
+            30
+          ],
+          "box": [
+            18,
+            28,
+            23,
+            33
+          ],
+          "expectedCenter": [
+            0,
+            255,
+            1
+          ],
+          "actualCenter": [
+            0,
+            255,
+            1
+          ],
+          "maximumChannelError": 2
+        },
+        {
+          "center": [
+            60,
+            30
+          ],
+          "box": [
+            58,
+            28,
+            63,
+            33
+          ],
+          "expectedCenter": [
+            254,
+            0,
+            0
+          ],
+          "actualCenter": [
+            254,
+            0,
+            0
+          ],
+          "maximumChannelError": 3
+        }
+      ],
+      "encodeDurationMs": 78.62387499999932,
+      "sampledPeakAggregateWorkingSetKiB": 516544,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 165156,
+          "atElapsedMs": 51.3881650000003
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98780,
+          "atElapsedMs": 40.440466000000015
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 78952,
+          "atElapsedMs": 101.44570500000009
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82480,
+          "atElapsedMs": 0.2873650000001362
+        },
+        {
+          "pid": 174999,
+          "type": "Tab",
+          "workingSetSizeKiB": 91180,
+          "atElapsedMs": 51.3881650000003
+        }
+      ]
+    },
+    {
+      "id": "orientation-3-wb-ev",
+      "status": "passed",
+      "dimensions": [
+        80,
+        40
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 8,
+      "maximumChannelError": 3,
+      "sourceSha256": "72635685fa9cd5907cbca923d5a209186f73dc357c6cc3cf7189e056f2b6c7e9",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            20,
+            10
+          ],
+          "box": [
+            18,
+            8,
+            23,
+            13
+          ],
+          "expectedCenter": [
+            234,
+            172,
+            0
+          ],
+          "actualCenter": [
+            234,
+            172,
+            1
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            60,
+            10
+          ],
+          "box": [
+            58,
+            8,
+            63,
+            13
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            171
+          ],
+          "actualCenter": [
+            0,
+            0,
+            170
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            20,
+            30
+          ],
+          "box": [
+            18,
+            28,
+            23,
+            33
+          ],
+          "expectedCenter": [
+            0,
+            172,
+            0
+          ],
+          "actualCenter": [
+            0,
+            172,
+            0
+          ],
+          "maximumChannelError": 2
+        },
+        {
+          "center": [
+            60,
+            30
+          ],
+          "box": [
+            58,
+            28,
+            63,
+            33
+          ],
+          "expectedCenter": [
+            233,
+            0,
+            0
+          ],
+          "actualCenter": [
+            233,
+            0,
+            3
+          ],
+          "maximumChannelError": 3
+        }
+      ],
+      "encodeDurationMs": 83.91078599999855,
+      "sampledPeakAggregateWorkingSetKiB": 519864,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 166020,
+          "atElapsedMs": 51.48612099999991
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98788,
+          "atElapsedMs": 45.80552799999896
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 79128,
+          "atElapsedMs": 101.85451999999896
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82484,
+          "atElapsedMs": 101.85451999999896
+        },
+        {
+          "pid": 175007,
+          "type": "Tab",
+          "workingSetSizeKiB": 93452,
+          "atElapsedMs": 51.48612099999991
+        }
+      ]
+    },
+    {
+      "id": "orientation-4-neutral",
+      "status": "passed",
+      "dimensions": [
+        80,
+        40
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 6,
+      "maximumChannelError": 3,
+      "sourceSha256": "0911e3135a4b4b0d1f18e468f75564c9676639b56a0e1fc96751c94ef4231ac2",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            20,
+            10
+          ],
+          "box": [
+            18,
+            8,
+            23,
+            13
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            254
+          ],
+          "actualCenter": [
+            0,
+            0,
+            254
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            60,
+            10
+          ],
+          "box": [
+            58,
+            8,
+            63,
+            13
+          ],
+          "expectedCenter": [
+            255,
+            255,
+            0
+          ],
+          "actualCenter": [
+            255,
+            255,
+            0
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            20,
+            30
+          ],
+          "box": [
+            18,
+            28,
+            23,
+            33
+          ],
+          "expectedCenter": [
+            254,
+            0,
+            0
+          ],
+          "actualCenter": [
+            254,
+            0,
+            0
+          ],
+          "maximumChannelError": 3
+        },
+        {
+          "center": [
+            60,
+            30
+          ],
+          "box": [
+            58,
+            28,
+            63,
+            33
+          ],
+          "expectedCenter": [
+            0,
+            255,
+            1
+          ],
+          "actualCenter": [
+            0,
+            255,
+            1
+          ],
+          "maximumChannelError": 2
+        }
+      ],
+      "encodeDurationMs": 75.52606399999968,
+      "sampledPeakAggregateWorkingSetKiB": 512872,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 167064,
+          "atElapsedMs": 26.630074000000604
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98792,
+          "atElapsedMs": 40.13184600000022
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 79380,
+          "atElapsedMs": 78.32836900000075
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82488,
+          "atElapsedMs": 78.32836900000075
+        },
+        {
+          "pid": 175018,
+          "type": "Tab",
+          "workingSetSizeKiB": 85352,
+          "atElapsedMs": 40.13184600000022
+        }
+      ]
+    },
+    {
+      "id": "orientation-4-wb-ev",
+      "status": "passed",
+      "dimensions": [
+        80,
+        40
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 8,
+      "maximumChannelError": 3,
+      "sourceSha256": "0911e3135a4b4b0d1f18e468f75564c9676639b56a0e1fc96751c94ef4231ac2",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            20,
+            10
+          ],
+          "box": [
+            18,
+            8,
+            23,
+            13
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            171
+          ],
+          "actualCenter": [
+            0,
+            0,
+            170
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            60,
+            10
+          ],
+          "box": [
+            58,
+            8,
+            63,
+            13
+          ],
+          "expectedCenter": [
+            234,
+            172,
+            0
+          ],
+          "actualCenter": [
+            234,
+            172,
+            1
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            20,
+            30
+          ],
+          "box": [
+            18,
+            28,
+            23,
+            33
+          ],
+          "expectedCenter": [
+            233,
+            0,
+            0
+          ],
+          "actualCenter": [
+            233,
+            0,
+            3
+          ],
+          "maximumChannelError": 3
+        },
+        {
+          "center": [
+            60,
+            30
+          ],
+          "box": [
+            58,
+            28,
+            63,
+            33
+          ],
+          "expectedCenter": [
+            0,
+            172,
+            0
+          ],
+          "actualCenter": [
+            0,
+            172,
+            0
+          ],
+          "maximumChannelError": 2
+        }
+      ],
+      "encodeDurationMs": 80.25176400000055,
+      "sampledPeakAggregateWorkingSetKiB": 522128,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 167800,
+          "atElapsedMs": 51.28582600000118
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98792,
+          "atElapsedMs": 42.2183729999997
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 79584,
+          "atElapsedMs": 101.84065100000043
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82488,
+          "atElapsedMs": 0.31477600000107486
+        },
+        {
+          "pid": 175029,
+          "type": "Tab",
+          "workingSetSizeKiB": 93468,
+          "atElapsedMs": 51.28582600000118
+        }
+      ]
+    },
+    {
+      "id": "orientation-5-neutral",
+      "status": "passed",
+      "dimensions": [
+        40,
+        80
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 6,
+      "maximumChannelError": 3,
+      "sourceSha256": "d9e01d524d634fcf9f7212f54a30af74efe03fef4c1a228112120e6f0b0eaf6b",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            10,
+            20
+          ],
+          "box": [
+            8,
+            18,
+            13,
+            23
+          ],
+          "expectedCenter": [
+            254,
+            0,
+            0
+          ],
+          "actualCenter": [
+            254,
+            0,
+            0
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            30,
+            20
+          ],
+          "box": [
+            28,
+            18,
+            33,
+            23
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            254
+          ],
+          "actualCenter": [
+            0,
+            1,
+            252
+          ],
+          "maximumChannelError": 3
+        },
+        {
+          "center": [
+            10,
+            60
+          ],
+          "box": [
+            8,
+            58,
+            13,
+            63
+          ],
+          "expectedCenter": [
+            0,
+            255,
+            1
+          ],
+          "actualCenter": [
+            0,
+            255,
+            1
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            30,
+            60
+          ],
+          "box": [
+            28,
+            58,
+            33,
+            63
+          ],
+          "expectedCenter": [
+            255,
+            255,
+            0
+          ],
+          "actualCenter": [
+            255,
+            254,
+            1
+          ],
+          "maximumChannelError": 3
+        }
+      ],
+      "encodeDurationMs": 79.4803639999991,
+      "sampledPeakAggregateWorkingSetKiB": 520720,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 168780,
+          "atElapsedMs": 43.88324499999908
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98792,
+          "atElapsedMs": 43.88324499999908
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 79756,
+          "atElapsedMs": 24.94636200000059
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82496,
+          "atElapsedMs": 100.09958000000006
+        },
+        {
+          "pid": 175038,
+          "type": "Tab",
+          "workingSetSizeKiB": 90912,
+          "atElapsedMs": 50.4295089999996
+        }
+      ]
+    },
+    {
+      "id": "orientation-5-wb-ev",
+      "status": "passed",
+      "dimensions": [
+        40,
+        80
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 8,
+      "maximumChannelError": 3,
+      "sourceSha256": "d9e01d524d634fcf9f7212f54a30af74efe03fef4c1a228112120e6f0b0eaf6b",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            10,
+            20
+          ],
+          "box": [
+            8,
+            18,
+            13,
+            23
+          ],
+          "expectedCenter": [
+            233,
+            0,
+            0
+          ],
+          "actualCenter": [
+            233,
+            1,
+            1
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            30,
+            20
+          ],
+          "box": [
+            28,
+            18,
+            33,
+            23
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            171
+          ],
+          "actualCenter": [
+            0,
+            0,
+            168
+          ],
+          "maximumChannelError": 3
+        },
+        {
+          "center": [
+            10,
+            60
+          ],
+          "box": [
+            8,
+            58,
+            13,
+            63
+          ],
+          "expectedCenter": [
+            0,
+            172,
+            0
+          ],
+          "actualCenter": [
+            0,
+            172,
+            0
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            30,
+            60
+          ],
+          "box": [
+            28,
+            58,
+            33,
+            63
+          ],
+          "expectedCenter": [
+            234,
+            172,
+            0
+          ],
+          "actualCenter": [
+            234,
+            172,
+            1
+          ],
+          "maximumChannelError": 3
+        }
+      ],
+      "encodeDurationMs": 79.39695500000016,
+      "sampledPeakAggregateWorkingSetKiB": 524376,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 169744,
+          "atElapsedMs": 25.393153999999413
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98800,
+          "atElapsedMs": 42.645894999999655
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 79984,
+          "atElapsedMs": 25.393153999999413
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82500,
+          "atElapsedMs": 102.38595199999872
+        },
+        {
+          "pid": 175048,
+          "type": "Tab",
+          "workingSetSizeKiB": 93376,
+          "atElapsedMs": 50.91412599999967
+        }
+      ]
+    },
+    {
+      "id": "orientation-6-neutral",
+      "status": "passed",
+      "dimensions": [
+        40,
+        80
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 6,
+      "maximumChannelError": 3,
+      "sourceSha256": "8a36ae018c56209f1c736706983e2f4caf57c85a8fa548d5200f0ad01d15bf2a",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            10,
+            20
+          ],
+          "box": [
+            8,
+            18,
+            13,
+            23
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            254
+          ],
+          "actualCenter": [
+            0,
+            0,
+            254
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            30,
+            20
+          ],
+          "box": [
+            28,
+            18,
+            33,
+            23
+          ],
+          "expectedCenter": [
+            254,
+            0,
+            0
+          ],
+          "actualCenter": [
+            254,
+            0,
+            0
+          ],
+          "maximumChannelError": 3
+        },
+        {
+          "center": [
+            10,
+            60
+          ],
+          "box": [
+            8,
+            58,
+            13,
+            63
+          ],
+          "expectedCenter": [
+            255,
+            255,
+            0
+          ],
+          "actualCenter": [
+            255,
+            255,
+            0
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            30,
+            60
+          ],
+          "box": [
+            28,
+            58,
+            33,
+            63
+          ],
+          "expectedCenter": [
+            0,
+            255,
+            1
+          ],
+          "actualCenter": [
+            0,
+            255,
+            1
+          ],
+          "maximumChannelError": 2
+        }
+      ],
+      "encodeDurationMs": 71.9152269999995,
+      "sampledPeakAggregateWorkingSetKiB": 517532,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 170748,
+          "atElapsedMs": 36.737528999999995
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98844,
+          "atElapsedMs": 36.737528999999995
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 80156,
+          "atElapsedMs": 103.55345900000066
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82500,
+          "atElapsedMs": 0.4721380000009958
+        },
+        {
+          "pid": 175057,
+          "type": "Tab",
+          "workingSetSizeKiB": 85288,
+          "atElapsedMs": 36.737528999999995
+        }
+      ]
+    },
+    {
+      "id": "orientation-6-wb-ev",
+      "status": "passed",
+      "dimensions": [
+        40,
+        80
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 8,
+      "maximumChannelError": 3,
+      "sourceSha256": "8a36ae018c56209f1c736706983e2f4caf57c85a8fa548d5200f0ad01d15bf2a",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            10,
+            20
+          ],
+          "box": [
+            8,
+            18,
+            13,
+            23
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            171
+          ],
+          "actualCenter": [
+            0,
+            0,
+            170
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            30,
+            20
+          ],
+          "box": [
+            28,
+            18,
+            33,
+            23
+          ],
+          "expectedCenter": [
+            233,
+            0,
+            0
+          ],
+          "actualCenter": [
+            233,
+            0,
+            3
+          ],
+          "maximumChannelError": 3
+        },
+        {
+          "center": [
+            10,
+            60
+          ],
+          "box": [
+            8,
+            58,
+            13,
+            63
+          ],
+          "expectedCenter": [
+            234,
+            172,
+            0
+          ],
+          "actualCenter": [
+            234,
+            172,
+            1
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            30,
+            60
+          ],
+          "box": [
+            28,
+            58,
+            33,
+            63
+          ],
+          "expectedCenter": [
+            0,
+            172,
+            0
+          ],
+          "actualCenter": [
+            0,
+            172,
+            0
+          ],
+          "maximumChannelError": 2
+        }
+      ],
+      "encodeDurationMs": 113.25880099999995,
+      "sampledPeakAggregateWorkingSetKiB": 527128,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 171708,
+          "atElapsedMs": 61.88693699999931
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98800,
+          "atElapsedMs": 61.88693699999931
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 80340,
+          "atElapsedMs": 26.333144000000175
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82500,
+          "atElapsedMs": 0.31866099999933795
+        },
+        {
+          "pid": 175068,
+          "type": "Tab",
+          "workingSetSizeKiB": 93788,
+          "atElapsedMs": 78.21685900000011
+        }
+      ]
+    },
+    {
+      "id": "orientation-7-neutral",
+      "status": "passed",
+      "dimensions": [
+        40,
+        80
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 6,
+      "maximumChannelError": 3,
+      "sourceSha256": "8bdc277a6b5bc44d9068bf9671753af7b9ae350e872e05708e738722aea57487",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            10,
+            20
+          ],
+          "box": [
+            8,
+            18,
+            13,
+            23
+          ],
+          "expectedCenter": [
+            255,
+            255,
+            0
+          ],
+          "actualCenter": [
+            255,
+            255,
+            0
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            30,
+            20
+          ],
+          "box": [
+            28,
+            18,
+            33,
+            23
+          ],
+          "expectedCenter": [
+            0,
+            255,
+            1
+          ],
+          "actualCenter": [
+            0,
+            255,
+            1
+          ],
+          "maximumChannelError": 2
+        },
+        {
+          "center": [
+            10,
+            60
+          ],
+          "box": [
+            8,
+            58,
+            13,
+            63
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            254
+          ],
+          "actualCenter": [
+            0,
+            0,
+            254
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            30,
+            60
+          ],
+          "box": [
+            28,
+            58,
+            33,
+            63
+          ],
+          "expectedCenter": [
+            254,
+            0,
+            0
+          ],
+          "actualCenter": [
+            254,
+            0,
+            0
+          ],
+          "maximumChannelError": 3
+        }
+      ],
+      "encodeDurationMs": 87.53074200000083,
+      "sampledPeakAggregateWorkingSetKiB": 525340,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 172676,
+          "atElapsedMs": 47.72213400000146
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98800,
+          "atElapsedMs": 47.72213400000146
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 80552,
+          "atElapsedMs": 76.92590900000141
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82504,
+          "atElapsedMs": 101.39158600000155
+        },
+        {
+          "pid": 175080,
+          "type": "Tab",
+          "workingSetSizeKiB": 90872,
+          "atElapsedMs": 51.30555500000082
+        }
+      ]
+    },
+    {
+      "id": "orientation-7-wb-ev",
+      "status": "passed",
+      "dimensions": [
+        40,
+        80
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 8,
+      "maximumChannelError": 3,
+      "sourceSha256": "8bdc277a6b5bc44d9068bf9671753af7b9ae350e872e05708e738722aea57487",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            10,
+            20
+          ],
+          "box": [
+            8,
+            18,
+            13,
+            23
+          ],
+          "expectedCenter": [
+            234,
+            172,
+            0
+          ],
+          "actualCenter": [
+            234,
+            172,
+            1
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            30,
+            20
+          ],
+          "box": [
+            28,
+            18,
+            33,
+            23
+          ],
+          "expectedCenter": [
+            0,
+            172,
+            0
+          ],
+          "actualCenter": [
+            0,
+            172,
+            0
+          ],
+          "maximumChannelError": 2
+        },
+        {
+          "center": [
+            10,
+            60
+          ],
+          "box": [
+            8,
+            58,
+            13,
+            63
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            171
+          ],
+          "actualCenter": [
+            0,
+            0,
+            170
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            30,
+            60
+          ],
+          "box": [
+            28,
+            58,
+            33,
+            63
+          ],
+          "expectedCenter": [
+            233,
+            0,
+            0
+          ],
+          "actualCenter": [
+            233,
+            0,
+            3
+          ],
+          "maximumChannelError": 3
+        }
+      ],
+      "encodeDurationMs": 85.48766499999874,
+      "sampledPeakAggregateWorkingSetKiB": 521540,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 173820,
+          "atElapsedMs": 0.285331999999471
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98804,
+          "atElapsedMs": 50.702448000000004
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 80724,
+          "atElapsedMs": 50.702448000000004
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82504,
+          "atElapsedMs": 0.285331999999471
+        },
+        {
+          "pid": 175088,
+          "type": "Tab",
+          "workingSetSizeKiB": 85708,
+          "atElapsedMs": 51.95629299999928
+        }
+      ]
+    },
+    {
+      "id": "orientation-8-neutral",
+      "status": "passed",
+      "dimensions": [
+        40,
+        80
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 6,
+      "maximumChannelError": 3,
+      "sourceSha256": "d40d2211ebad07d6824c70057cfd2a54a70e78359a234c963b236c035b1865c7",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            10,
+            20
+          ],
+          "box": [
+            8,
+            18,
+            13,
+            23
+          ],
+          "expectedCenter": [
+            0,
+            255,
+            1
+          ],
+          "actualCenter": [
+            0,
+            255,
+            1
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            30,
+            20
+          ],
+          "box": [
+            28,
+            18,
+            33,
+            23
+          ],
+          "expectedCenter": [
+            255,
+            255,
+            0
+          ],
+          "actualCenter": [
+            255,
+            254,
+            1
+          ],
+          "maximumChannelError": 3
+        },
+        {
+          "center": [
+            10,
+            60
+          ],
+          "box": [
+            8,
+            58,
+            13,
+            63
+          ],
+          "expectedCenter": [
+            254,
+            0,
+            0
+          ],
+          "actualCenter": [
+            254,
+            0,
+            0
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            30,
+            60
+          ],
+          "box": [
+            28,
+            58,
+            33,
+            63
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            254
+          ],
+          "actualCenter": [
+            0,
+            1,
+            252
+          ],
+          "maximumChannelError": 3
+        }
+      ],
+      "encodeDurationMs": 73.54080299999987,
+      "sampledPeakAggregateWorkingSetKiB": 522232,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 174948,
+          "atElapsedMs": 42.80692900000031
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98744,
+          "atElapsedMs": 42.80692900000031
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 80916,
+          "atElapsedMs": 26.11422599999969
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82504,
+          "atElapsedMs": 0.34261700000024575
+        },
+        {
+          "pid": 175100,
+          "type": "Tab",
+          "workingSetSizeKiB": 85120,
+          "atElapsedMs": 42.80692900000031
+        }
+      ]
+    },
+    {
+      "id": "orientation-8-wb-ev",
+      "status": "passed",
+      "dimensions": [
+        40,
+        80
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 8,
+      "maximumChannelError": 3,
+      "sourceSha256": "d40d2211ebad07d6824c70057cfd2a54a70e78359a234c963b236c035b1865c7",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            10,
+            20
+          ],
+          "box": [
+            8,
+            18,
+            13,
+            23
+          ],
+          "expectedCenter": [
+            0,
+            172,
+            0
+          ],
+          "actualCenter": [
+            0,
+            172,
+            0
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            30,
+            20
+          ],
+          "box": [
+            28,
+            18,
+            33,
+            23
+          ],
+          "expectedCenter": [
+            234,
+            172,
+            0
+          ],
+          "actualCenter": [
+            234,
+            172,
+            1
+          ],
+          "maximumChannelError": 3
+        },
+        {
+          "center": [
+            10,
+            60
+          ],
+          "box": [
+            8,
+            58,
+            13,
+            63
+          ],
+          "expectedCenter": [
+            233,
+            0,
+            0
+          ],
+          "actualCenter": [
+            233,
+            1,
+            1
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            30,
+            60
+          ],
+          "box": [
+            28,
+            58,
+            33,
+            63
+          ],
+          "expectedCenter": [
+            0,
+            0,
+            171
+          ],
+          "actualCenter": [
+            0,
+            0,
+            168
+          ],
+          "maximumChannelError": 3
+        }
+      ],
+      "encodeDurationMs": 76.53330800000003,
+      "sampledPeakAggregateWorkingSetKiB": 523480,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 176044,
+          "atElapsedMs": 0.29200200000013865
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98812,
+          "atElapsedMs": 40.84009300000071
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 81108,
+          "atElapsedMs": 26.64466899999934
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82504,
+          "atElapsedMs": 0.29200200000013865
+        },
+        {
+          "pid": 175108,
+          "type": "Tab",
+          "workingSetSizeKiB": 85036,
+          "atElapsedMs": 40.84009300000071
+        }
+      ]
+    },
+    {
+      "id": "40mp-neutral",
+      "status": "passed",
+      "dimensions": [
+        8000,
+        5000
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 6,
+      "maximumChannelError": 0,
+      "sourceSha256": "8ca59da075de195fd850901c45773ef68a9d3002ad1b8d1c6b2c236c728154d4",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            2000,
+            1250
+          ],
+          "box": [
+            1998,
+            1248,
+            2003,
+            1253
+          ],
+          "expectedCenter": [
+            128,
+            63,
+            31
+          ],
+          "actualCenter": [
+            128,
+            63,
+            31
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            6000,
+            1250
+          ],
+          "box": [
+            5998,
+            1248,
+            6003,
+            1253
+          ],
+          "expectedCenter": [
+            49,
+            140,
+            73
+          ],
+          "actualCenter": [
+            49,
+            140,
+            73
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            2000,
+            3750
+          ],
+          "box": [
+            1998,
+            3748,
+            2003,
+            3753
+          ],
+          "expectedCenter": [
+            56,
+            80,
+            168
+          ],
+          "actualCenter": [
+            56,
+            80,
+            168
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            6000,
+            3750
+          ],
+          "box": [
+            5998,
+            3748,
+            6003,
+            3753
+          ],
+          "expectedCenter": [
+            196,
+            164,
+            77
+          ],
+          "actualCenter": [
+            196,
+            164,
+            77
+          ],
+          "maximumChannelError": 0
+        }
+      ],
+      "encodeDurationMs": 553.454592,
+      "sampledPeakAggregateWorkingSetKiB": 981192,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 182156,
+          "atElapsedMs": 567.8885630000004
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98856,
+          "atElapsedMs": 49.35334700000021
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 81292,
+          "atElapsedMs": 517.081556000001
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82508,
+          "atElapsedMs": 567.8885630000004
+        },
+        {
+          "pid": 175119,
+          "type": "Tab",
+          "workingSetSizeKiB": 537908,
+          "atElapsedMs": 491.2677100000001
+        }
+      ]
+    },
+    {
+      "id": "40mp-wb-ev",
+      "status": "passed",
+      "dimensions": [
+        8000,
+        5000
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 100,
+      "tolerance": 8,
+      "maximumChannelError": 1,
+      "sourceSha256": "8ca59da075de195fd850901c45773ef68a9d3002ad1b8d1c6b2c236c728154d4",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            2000,
+            1250
+          ],
+          "box": [
+            1998,
+            1248,
+            2003,
+            1253
+          ],
+          "expectedCenter": [
+            117,
+            39,
+            17
+          ],
+          "actualCenter": [
+            117,
+            39,
+            17
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            6000,
+            1250
+          ],
+          "box": [
+            5998,
+            1248,
+            6003,
+            1253
+          ],
+          "expectedCenter": [
+            44,
+            92,
+            46
+          ],
+          "actualCenter": [
+            44,
+            91,
+            45
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            2000,
+            3750
+          ],
+          "box": [
+            1998,
+            3748,
+            2003,
+            3753
+          ],
+          "expectedCenter": [
+            51,
+            51,
+            112
+          ],
+          "actualCenter": [
+            51,
+            51,
+            111
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            6000,
+            3750
+          ],
+          "box": [
+            5998,
+            3748,
+            6003,
+            3753
+          ],
+          "expectedCenter": [
+            180,
+            109,
+            49
+          ],
+          "actualCenter": [
+            179,
+            109,
+            49
+          ],
+          "maximumChannelError": 1
+        }
+      ],
+      "encodeDurationMs": 681.0005079999992,
+      "sampledPeakAggregateWorkingSetKiB": 999420,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 188376,
+          "atElapsedMs": 698.7999229999987
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98816,
+          "atElapsedMs": 42.31811099999868
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 81480,
+          "atElapsedMs": 283.88904099999854
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82512,
+          "atElapsedMs": 698.7999229999987
+        },
+        {
+          "pid": 175137,
+          "type": "Tab",
+          "workingSetSizeKiB": 549976,
+          "atElapsedMs": 621.6549699999996
+        }
+      ]
+    },
+    {
+      "id": "noise40mp-neutral",
+      "status": "passed",
+      "dimensions": [
+        8000,
+        5000
+      ],
+      "pixelValidation": "not-asserted-high-frequency-jpeg",
+      "pixelsChecked": 0,
+      "tolerance": null,
+      "maximumChannelError": null,
+      "sourceSha256": "3919138073b092a74fed8e86bc64b0f854d34be320048c6c990855cd33960c28",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [],
+      "encodeDurationMs": 1045.0757549999998,
+      "sampledPeakAggregateWorkingSetKiB": 1091784,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 266396,
+          "atElapsedMs": 1118.9027450000012
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98816,
+          "atElapsedMs": 46.8354130000007
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 81688,
+          "atElapsedMs": 595.7031290000014
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82512,
+          "atElapsedMs": 0.3680340000009892
+        },
+        {
+          "pid": 175157,
+          "type": "Tab",
+          "workingSetSizeKiB": 601968,
+          "atElapsedMs": 931.6853740000006
+        }
+      ]
+    },
+    {
+      "id": "noise40mp-wb-ev",
+      "status": "passed",
+      "dimensions": [
+        8000,
+        5000
+      ],
+      "pixelValidation": "not-asserted-high-frequency-jpeg",
+      "pixelsChecked": 0,
+      "tolerance": null,
+      "maximumChannelError": null,
+      "sourceSha256": "3919138073b092a74fed8e86bc64b0f854d34be320048c6c990855cd33960c28",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [],
+      "encodeDurationMs": 1223.3914060000006,
+      "sampledPeakAggregateWorkingSetKiB": 1100648,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 287300,
+          "atElapsedMs": 1273.7914789999995
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98760,
+          "atElapsedMs": 75.14589100000012
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 81716,
+          "atElapsedMs": 279.19790900000044
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82512,
+          "atElapsedMs": 1273.7914789999995
+        },
+        {
+          "pid": 175179,
+          "type": "Tab",
+          "workingSetSizeKiB": 588236,
+          "atElapsedMs": 1102.1704539999992
+        }
+      ]
+    },
+    {
+      "id": "elongated-neutral",
+      "status": "passed",
+      "dimensions": [
+        10000,
+        4
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 40,
+      "tolerance": 6,
+      "maximumChannelError": 0,
+      "sourceSha256": "45cad387e22fef650b58cc7f852b3857cc1a43658da35702f363e4694ba5fa22",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            2500,
+            1
+          ],
+          "box": [
+            2498,
+            0,
+            2503,
+            3
+          ],
+          "expectedCenter": [
+            71,
+            117,
+            169
+          ],
+          "actualCenter": [
+            71,
+            117,
+            169
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            7500,
+            1
+          ],
+          "box": [
+            7498,
+            0,
+            7503,
+            3
+          ],
+          "expectedCenter": [
+            71,
+            117,
+            169
+          ],
+          "actualCenter": [
+            71,
+            117,
+            169
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            2500,
+            3
+          ],
+          "box": [
+            2498,
+            3,
+            2503,
+            4
+          ],
+          "expectedCenter": [
+            71,
+            117,
+            169
+          ],
+          "actualCenter": [
+            71,
+            117,
+            169
+          ],
+          "maximumChannelError": 0
+        },
+        {
+          "center": [
+            7500,
+            3
+          ],
+          "box": [
+            7498,
+            3,
+            7503,
+            4
+          ],
+          "expectedCenter": [
+            71,
+            117,
+            169
+          ],
+          "actualCenter": [
+            71,
+            117,
+            169
+          ],
+          "maximumChannelError": 0
+        }
+      ],
+      "encodeDurationMs": 79.68071100000088,
+      "sampledPeakAggregateWorkingSetKiB": 549124,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 270996,
+          "atElapsedMs": 0.36214599999948405
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98752,
+          "atElapsedMs": 40.50939800000015
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 81880,
+          "atElapsedMs": 25.87229599999955
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82516,
+          "atElapsedMs": 102.18316699999923
+        },
+        {
+          "pid": 175203,
+          "type": "Tab",
+          "workingSetSizeKiB": 91760,
+          "atElapsedMs": 51.47089199999937
+        }
+      ]
+    },
+    {
+      "id": "elongated-wb-ev",
+      "status": "passed",
+      "dimensions": [
+        10000,
+        4
+      ],
+      "pixelValidation": "independent-scalar-color-oracle",
+      "pixelsChecked": 40,
+      "tolerance": 8,
+      "maximumChannelError": 1,
+      "sourceSha256": "45cad387e22fef650b58cc7f852b3857cc1a43658da35702f363e4694ba5fa22",
+      "outputProfile": {
+        "bytes": 456,
+        "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+        "description": "sRGB",
+        "identityProbeMaximumError": 1
+      },
+      "patches": [
+        {
+          "center": [
+            2500,
+            1
+          ],
+          "box": [
+            2498,
+            0,
+            2503,
+            3
+          ],
+          "expectedCenter": [
+            64,
+            77,
+            113
+          ],
+          "actualCenter": [
+            64,
+            77,
+            112
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            7500,
+            1
+          ],
+          "box": [
+            7498,
+            0,
+            7503,
+            3
+          ],
+          "expectedCenter": [
+            64,
+            77,
+            113
+          ],
+          "actualCenter": [
+            64,
+            77,
+            112
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            2500,
+            3
+          ],
+          "box": [
+            2498,
+            3,
+            2503,
+            4
+          ],
+          "expectedCenter": [
+            64,
+            77,
+            113
+          ],
+          "actualCenter": [
+            64,
+            77,
+            112
+          ],
+          "maximumChannelError": 1
+        },
+        {
+          "center": [
+            7500,
+            3
+          ],
+          "box": [
+            7498,
+            3,
+            7503,
+            4
+          ],
+          "expectedCenter": [
+            64,
+            77,
+            113
+          ],
+          "actualCenter": [
+            64,
+            77,
+            112
+          ],
+          "maximumChannelError": 1
+        }
+      ],
+      "encodeDurationMs": 79.11791300000004,
+      "sampledPeakAggregateWorkingSetKiB": 555068,
+      "sampledPeakWorkingSets": [
+        {
+          "pid": 174582,
+          "type": "Browser",
+          "workingSetSizeKiB": 195996,
+          "atElapsedMs": 26.075981999998476
+        },
+        {
+          "pid": 174613,
+          "type": "GPU",
+          "workingSetSizeKiB": 98752,
+          "atElapsedMs": 37.36006300000008
+        },
+        {
+          "pid": 174615,
+          "type": "Utility",
+          "workingSetSizeKiB": 82040,
+          "atElapsedMs": 103.04730899999959
+        },
+        {
+          "pid": 174624,
+          "type": "Tab",
+          "workingSetSizeKiB": 82524,
+          "atElapsedMs": 103.04730899999959
+        },
+        {
+          "pid": 175211,
+          "type": "Tab",
+          "workingSetSizeKiB": 95940,
+          "atElapsedMs": 51.54420500000015
+        }
+      ]
+    }
+  ],
+  "cancellation": {
+    "id": "40mp-cancel-after-load",
+    "status": "passed",
+    "sourcePath": "/workspace/scratch/827b15a15839/revelumo-export-snapshot/.test-temp/jpeg-engine-corpus/40mp.jpg",
+    "sourceBytes": 1134981,
+    "sourceSha256Before": "8ca59da075de195fd850901c45773ef68a9d3002ad1b8d1c6b2c236c728154d4",
+    "recipe": {
+      "processingVersion": 2,
+      "exposureTenths": -10,
+      "temperature": 100,
+      "tint": 100
+    },
+    "abortDelayAfterLoadMs": 50,
+    "samples": [
+      {
+        "elapsedMs": 0.9799590000002354,
+        "phase": "before",
+        "processes": [
+          {
+            "pid": 174582,
+            "type": "Browser",
+            "memory": {
+              "workingSetSize": 199100,
+              "peakWorkingSetSize": 323048
+            }
+          },
+          {
+            "pid": 174613,
+            "type": "GPU",
+            "memory": {
+              "workingSetSize": 96728,
+              "peakWorkingSetSize": 101900
+            }
+          },
+          {
+            "pid": 174615,
+            "type": "Utility",
+            "memory": {
+              "workingSetSize": 82040,
+              "peakWorkingSetSize": 82040
+            }
+          },
+          {
+            "pid": 174624,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 82524,
+              "peakWorkingSetSize": 82524
+            }
+          }
+        ]
+      },
+      {
+        "elapsedMs": 26.59094399999958,
+        "phase": "interval",
+        "processes": [
+          {
+            "pid": 174582,
+            "type": "Browser",
+            "memory": {
+              "workingSetSize": 199952,
+              "peakWorkingSetSize": 323048
+            }
+          },
+          {
+            "pid": 174613,
+            "type": "GPU",
+            "memory": {
+              "workingSetSize": 98620,
+              "peakWorkingSetSize": 101900
+            }
+          },
+          {
+            "pid": 174615,
+            "type": "Utility",
+            "memory": {
+              "workingSetSize": 82220,
+              "peakWorkingSetSize": 82220
+            }
+          },
+          {
+            "pid": 174624,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 82524,
+              "peakWorkingSetSize": 82524
+            }
+          },
+          {
+            "pid": 175222,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 64608,
+              "peakWorkingSetSize": 64608
+            }
+          }
+        ]
+      },
+      {
+        "elapsedMs": 43.23997099999906,
+        "phase": "renderer-loaded",
+        "processes": [
+          {
+            "pid": 174582,
+            "type": "Browser",
+            "memory": {
+              "workingSetSize": 199752,
+              "peakWorkingSetSize": 323048
+            }
+          },
+          {
+            "pid": 174613,
+            "type": "GPU",
+            "memory": {
+              "workingSetSize": 98756,
+              "peakWorkingSetSize": 101900
+            }
+          },
+          {
+            "pid": 174615,
+            "type": "Utility",
+            "memory": {
+              "workingSetSize": 82220,
+              "peakWorkingSetSize": 82220
+            }
+          },
+          {
+            "pid": 174624,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 82524,
+              "peakWorkingSetSize": 82524
+            }
+          },
+          {
+            "pid": 175222,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 85296,
+              "peakWorkingSetSize": 85296
+            }
+          }
+        ]
+      },
+      {
+        "elapsedMs": 51.12300200000027,
+        "phase": "interval",
+        "processes": [
+          {
+            "pid": 174582,
+            "type": "Browser",
+            "memory": {
+              "workingSetSize": 202016,
+              "peakWorkingSetSize": 323048
+            }
+          },
+          {
+            "pid": 174613,
+            "type": "GPU",
+            "memory": {
+              "workingSetSize": 98756,
+              "peakWorkingSetSize": 101900
+            }
+          },
+          {
+            "pid": 174615,
+            "type": "Utility",
+            "memory": {
+              "workingSetSize": 82220,
+              "peakWorkingSetSize": 82220
+            }
+          },
+          {
+            "pid": 174624,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 82524,
+              "peakWorkingSetSize": 82524
+            }
+          },
+          {
+            "pid": 175222,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 91292,
+              "peakWorkingSetSize": 91296
+            }
+          }
+        ]
+      },
+      {
+        "elapsedMs": 76.57266700000037,
+        "phase": "interval",
+        "processes": [
+          {
+            "pid": 174582,
+            "type": "Browser",
+            "memory": {
+              "workingSetSize": 202016,
+              "peakWorkingSetSize": 323048
+            }
+          },
+          {
+            "pid": 174613,
+            "type": "GPU",
+            "memory": {
+              "workingSetSize": 98756,
+              "peakWorkingSetSize": 101900
+            }
+          },
+          {
+            "pid": 174615,
+            "type": "Utility",
+            "memory": {
+              "workingSetSize": 82220,
+              "peakWorkingSetSize": 82220
+            }
+          },
+          {
+            "pid": 174624,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 82524,
+              "peakWorkingSetSize": 82524
+            }
+          },
+          {
+            "pid": 175222,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 189040,
+              "peakWorkingSetSize": 189040
+            }
+          }
+        ]
+      },
+      {
+        "elapsedMs": 94.25864899999942,
+        "phase": "abort-requested",
+        "processes": [
+          {
+            "pid": 174582,
+            "type": "Browser",
+            "memory": {
+              "workingSetSize": 202016,
+              "peakWorkingSetSize": 323048
+            }
+          },
+          {
+            "pid": 174613,
+            "type": "GPU",
+            "memory": {
+              "workingSetSize": 98756,
+              "peakWorkingSetSize": 101900
+            }
+          },
+          {
+            "pid": 174615,
+            "type": "Utility",
+            "memory": {
+              "workingSetSize": 82220,
+              "peakWorkingSetSize": 82220
+            }
+          },
+          {
+            "pid": 174624,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 82524,
+              "peakWorkingSetSize": 82524
+            }
+          },
+          {
+            "pid": 175222,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 247992,
+              "peakWorkingSetSize": 247992
+            }
+          }
+        ]
+      },
+      {
+        "elapsedMs": 102.56682899999942,
+        "phase": "interval",
+        "processes": [
+          {
+            "pid": 174582,
+            "type": "Browser",
+            "memory": {
+              "workingSetSize": 201932,
+              "peakWorkingSetSize": 323048
+            }
+          },
+          {
+            "pid": 174613,
+            "type": "GPU",
+            "memory": {
+              "workingSetSize": 96872,
+              "peakWorkingSetSize": 101900
+            }
+          },
+          {
+            "pid": 174615,
+            "type": "Utility",
+            "memory": {
+              "workingSetSize": 82300,
+              "peakWorkingSetSize": 82300
+            }
+          },
+          {
+            "pid": 174624,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 82524,
+              "peakWorkingSetSize": 82524
+            }
+          }
+        ]
+      },
+      {
+        "elapsedMs": 121.50668500000029,
+        "phase": "settled",
+        "processes": [
+          {
+            "pid": 174582,
+            "type": "Browser",
+            "memory": {
+              "workingSetSize": 200388,
+              "peakWorkingSetSize": 323048
+            }
+          },
+          {
+            "pid": 174613,
+            "type": "GPU",
+            "memory": {
+              "workingSetSize": 96736,
+              "peakWorkingSetSize": 101900
+            }
+          },
+          {
+            "pid": 174615,
+            "type": "Utility",
+            "memory": {
+              "workingSetSize": 82300,
+              "peakWorkingSetSize": 82300
+            }
+          },
+          {
+            "pid": 174624,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 82524,
+              "peakWorkingSetSize": 82524
+            }
+          }
+        ]
+      },
+      {
+        "elapsedMs": 128.69306499999948,
+        "phase": "interval",
+        "processes": [
+          {
+            "pid": 174582,
+            "type": "Browser",
+            "memory": {
+              "workingSetSize": 201452,
+              "peakWorkingSetSize": 323048
+            }
+          },
+          {
+            "pid": 174613,
+            "type": "GPU",
+            "memory": {
+              "workingSetSize": 96736,
+              "peakWorkingSetSize": 101900
+            }
+          },
+          {
+            "pid": 174615,
+            "type": "Utility",
+            "memory": {
+              "workingSetSize": 82300,
+              "peakWorkingSetSize": 82300
+            }
+          },
+          {
+            "pid": 174624,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 82528,
+              "peakWorkingSetSize": 82528
+            }
+          }
+        ]
+      },
+      {
+        "elapsedMs": 154.2998319999988,
+        "phase": "interval",
+        "processes": [
+          {
+            "pid": 174582,
+            "type": "Browser",
+            "memory": {
+              "workingSetSize": 201452,
+              "peakWorkingSetSize": 323048
+            }
+          },
+          {
+            "pid": 174613,
+            "type": "GPU",
+            "memory": {
+              "workingSetSize": 96736,
+              "peakWorkingSetSize": 101900
+            }
+          },
+          {
+            "pid": 174615,
+            "type": "Utility",
+            "memory": {
+              "workingSetSize": 82300,
+              "peakWorkingSetSize": 82300
+            }
+          },
+          {
+            "pid": 174624,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 82528,
+              "peakWorkingSetSize": 82528
+            }
+          }
+        ]
+      },
+      {
+        "elapsedMs": 179.8306080000002,
+        "phase": "interval",
+        "processes": [
+          {
+            "pid": 174582,
+            "type": "Browser",
+            "memory": {
+              "workingSetSize": 201452,
+              "peakWorkingSetSize": 323048
+            }
+          },
+          {
+            "pid": 174613,
+            "type": "GPU",
+            "memory": {
+              "workingSetSize": 96736,
+              "peakWorkingSetSize": 101900
+            }
+          },
+          {
+            "pid": 174615,
+            "type": "Utility",
+            "memory": {
+              "workingSetSize": 82300,
+              "peakWorkingSetSize": 82300
+            }
+          },
+          {
+            "pid": 174624,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 82528,
+              "peakWorkingSetSize": 82528
+            }
+          }
+        ]
+      },
+      {
+        "elapsedMs": 205.37139899999966,
+        "phase": "interval",
+        "processes": [
+          {
+            "pid": 174582,
+            "type": "Browser",
+            "memory": {
+              "workingSetSize": 201452,
+              "peakWorkingSetSize": 323048
+            }
+          },
+          {
+            "pid": 174613,
+            "type": "GPU",
+            "memory": {
+              "workingSetSize": 96736,
+              "peakWorkingSetSize": 101900
+            }
+          },
+          {
+            "pid": 174615,
+            "type": "Utility",
+            "memory": {
+              "workingSetSize": 82300,
+              "peakWorkingSetSize": 82300
+            }
+          },
+          {
+            "pid": 174624,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 82528,
+              "peakWorkingSetSize": 82528
+            }
+          }
+        ]
+      },
+      {
+        "elapsedMs": 225.02220699999998,
+        "phase": "post-job-baseline",
+        "processes": [
+          {
+            "pid": 174582,
+            "type": "Browser",
+            "memory": {
+              "workingSetSize": 201452,
+              "peakWorkingSetSize": 323048
+            }
+          },
+          {
+            "pid": 174613,
+            "type": "GPU",
+            "memory": {
+              "workingSetSize": 96736,
+              "peakWorkingSetSize": 101900
+            }
+          },
+          {
+            "pid": 174615,
+            "type": "Utility",
+            "memory": {
+              "workingSetSize": 82300,
+              "peakWorkingSetSize": 82300
+            }
+          },
+          {
+            "pid": 174624,
+            "type": "Tab",
+            "memory": {
+              "workingSetSize": 82528,
+              "peakWorkingSetSize": 82528
+            }
+          }
+        ]
+      }
+    ],
+    "limitation": "Abort is scheduled 50 ms after did-finish-load. This is post-load/dispatch timing, not direct evidence that decoding already completed.",
+    "rendererPid": 175222,
+    "didFinishLoadElapsedMs": 43.23311099999955,
+    "abortRequestedElapsedMs": 94.24420800000007,
+    "observedCode": "CANCELED",
+    "durationMs": 121.49965399999928,
+    "rendererDestroyed": true,
+    "rendererAbsentAtSettlement": true,
+    "sourceSha256After": "8ca59da075de195fd850901c45773ef68a9d3002ad1b8d1c6b2c236c728154d4",
+    "sourceBufferSha256After": "8ca59da075de195fd850901c45773ef68a9d3002ad1b8d1c6b2c236c728154d4",
+    "sentinelValue": 42
+  }
+}

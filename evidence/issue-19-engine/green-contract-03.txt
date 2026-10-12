@@ -1,0 +1,11 @@
+✔ accepts and detaches the complete current JPEG recipe (1.17694ms)
+✔ rejects unknown recipe versions, crop, missing and extra keys without discarding edits (0.247375ms)
+✔ rejects coercion, fractions and controls beyond their existing canonical ranges (0.268046ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 118.443202

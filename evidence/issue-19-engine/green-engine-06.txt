@@ -1,0 +1,10 @@
+[156907:1012/162519.300036:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[156907:1012/162519.368191:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[156907:1012/162519.368229:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+PASS basic full-resolution encoding
+PASS single-flight rejects overlap
+PASS cancel before launch creates no window
+PASS active cancellation preserves editor and permits next job
+PASS distinct auxiliary PIDs disappear before settlement
+PASS invalid recipes/crop, sources and budgets rejected before launch
+ENGINE PASS {"width":80,"height":40,"bytes":783}

@@ -1,0 +1,20 @@
+[170066:1012/164014.146559:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[170066:1012/164014.216022:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[170066:1012/164014.216045:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+PASS basic full-resolution encoding
+PASS single-flight rejects overlap
+PASS cancel before launch creates no window
+PASS active cancellation preserves editor and permits next job
+PASS distinct auxiliary PIDs disappear before settlement
+PASS invalid recipes/crop, sources and budgets rejected before launch
+PASS async job owns its bytes, recipe and output budget snapshot
+PASS constructor failure with no PID cannot latch the engine busy
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
++ Comparison {}
+- Comparison {
+-   code: 'WINDOW_FAILED'
+- }
+
+    at async /workspace/scratch/827b15a15839/revelumo-export-snapshot/test/electron-jpeg-engine.cjs:143:3

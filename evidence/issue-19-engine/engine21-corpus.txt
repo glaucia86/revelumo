@@ -1,0 +1,51 @@
+[172353:1012/164247.620876:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[172353:1012/164247.855990:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[172353:1012/164247.856057:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[172396:1012/164248.062392:ERROR:gpu/ipc/client/command_buffer_proxy_impl.cc:285] ContextResult::kTransientFailure: Failed to send GpuControl.CreateCommandBuffer.
+PASS basic full-resolution encoding
+PASS single-flight rejects overlap
+PASS cancel before launch creates no window
+PASS active cancellation preserves editor and permits next job
+PASS distinct auxiliary PIDs disappear before settlement
+PASS invalid recipes/crop, sources and budgets rejected before launch
+PASS async job owns its bytes, recipe and output budget snapshot
+PASS constructor failure with no PID cannot latch the engine busy
+PASS security setup failure destroys owned window and releases gate
+PASS load failure before PID cleans up and permits retry
+PASS failure after renderer creation observes cleanup before rejection
+PASS closed loading window cannot bypass observed renderer cleanup
+[172527:1012/164248.832766:FATAL:content/child/child_thread_impl.cc:380] Crashing because hung
+PASS renderer crash settles without touching the editor
+PASS timeout destroys the stalled renderer and releases the gate
+PASS sandboxed engine cannot open popup or access Node
+PASS wrong sender/frame/job cannot settle the current job
+PASS codec failure and explicit output quota are distinguishable
+PASS completed session releases callbacks and compressed source references
+PASS unconfirmed cleanup quarantines work and recovers only after observed exit
+40 MP fixture already exists: /workspace/scratch/827b15a15839/revelumo-export-snapshot/.test-temp/jpeg-engine-corpus/40mp.jpg (1134981 bytes)
+JPEG CORPUS manifest: /workspace/scratch/827b15a15839/revelumo-export-snapshot/.test-temp/jpeg-engine-corpus/engine21-corpus-172353-cStnke/manifest.json
+PASS JPEG CORPUS srgb-neutral: 80x40, 783 bytes, 71.4 ms
+PASS JPEG CORPUS srgb-wb-ev: 80x40, 783 bytes, 80.0 ms
+PASS JPEG CORPUS p3-neutral: 80x40, 783 bytes, 70.0 ms
+PASS JPEG CORPUS p3-wb-ev: 80x40, 783 bytes, 78.5 ms
+PASS JPEG CORPUS orientation-1-neutral: 80x40, 1055 bytes, 75.2 ms
+PASS JPEG CORPUS orientation-1-wb-ev: 80x40, 1040 bytes, 81.2 ms
+PASS JPEG CORPUS orientation-2-neutral: 80x40, 1054 bytes, 81.6 ms
+PASS JPEG CORPUS orientation-2-wb-ev: 80x40, 1040 bytes, 78.1 ms
+PASS JPEG CORPUS orientation-3-neutral: 80x40, 1057 bytes, 80.5 ms
+PASS JPEG CORPUS orientation-3-wb-ev: 80x40, 1042 bytes, 95.5 ms
+PASS JPEG CORPUS orientation-4-neutral: 80x40, 1057 bytes, 81.0 ms
+PASS JPEG CORPUS orientation-4-wb-ev: 80x40, 1041 bytes, 76.3 ms
+PASS JPEG CORPUS orientation-5-neutral: 40x80, 1076 bytes, 77.1 ms
+PASS JPEG CORPUS orientation-5-wb-ev: 40x80, 1061 bytes, 78.3 ms
+PASS JPEG CORPUS orientation-6-neutral: 40x80, 1077 bytes, 79.4 ms
+PASS JPEG CORPUS orientation-6-wb-ev: 40x80, 1065 bytes, 80.7 ms
+PASS JPEG CORPUS orientation-7-neutral: 40x80, 1078 bytes, 78.2 ms
+PASS JPEG CORPUS orientation-7-wb-ev: 40x80, 1064 bytes, 79.1 ms
+PASS JPEG CORPUS orientation-8-neutral: 40x80, 1076 bytes, 87.0 ms
+PASS JPEG CORPUS orientation-8-wb-ev: 40x80, 1062 bytes, 80.2 ms
+PASS JPEG CORPUS 40mp-neutral: 8000x5000, 247605 bytes, 612.4 ms
+PASS JPEG CORPUS 40mp-wb-ev: 8000x5000, 247362 bytes, 729.4 ms
+PASS JPEG CORPUS 40mp-cancel-after-load: CANCELED at 92.0 ms, owned PID 172896 gone
+JPEG CORPUS capture complete; run independent oracle: python3 test/verify-jpeg-engine-corpus.py /workspace/scratch/827b15a15839/revelumo-export-snapshot/.test-temp/jpeg-engine-corpus/engine21-corpus-172353-cStnke/manifest.json
+ENGINE PASS {"width":80,"height":40,"bytes":783}

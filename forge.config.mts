@@ -11,9 +11,11 @@ const config: ForgeConfig = {
   plugins: [new VitePlugin({
     build: [
       { entry: 'src/main/index.ts', config: 'vite.main.config.mts', target: 'main' },
+      { entry: 'src/main/jpeg-export-engine.ts', config: 'vite.main.config.mts', target: 'main' },
+      { entry: 'src/export-preload.ts', config: 'vite.preload.config.mts', target: 'preload' },
       { entry: 'src/preload.ts', config: 'vite.preload.config.mts', target: 'preload' },
     ],
-    renderer: [{ name: 'main_window', config: 'vite.renderer.config.mts' }],
+    renderer: [{ name: 'main_window', config: 'vite.renderer.config.mts' }, { name: 'jpeg_export', config: 'vite.export.config.mts' }],
   })],
 };
 export default config;

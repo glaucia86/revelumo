@@ -1,0 +1,8 @@
+{
+  stage: 'after_completed_job',
+  sourceStillAlive: false,
+  sessions: 1,
+  liveWindows: 0,
+  ipcListeners: 0
+}
+{ stage: 'after_callbacks_removed', sourceStillAlive: false }

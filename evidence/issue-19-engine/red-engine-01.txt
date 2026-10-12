@@ -1,0 +1,6 @@
+[152231:1012/161937.304572:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[152231:1012/161937.374806:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[152231:1012/161937.374839:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+Error: JPEG engine not implemented.
+    at Module.e [as encodeJpegSnapshot] (/workspace/scratch/827b15a15839/revelumo-export-snapshot/.vite/build/jpeg-export-engine.cjs:1:96)
+    at /workspace/scratch/827b15a15839/revelumo-export-snapshot/test/electron-jpeg-engine.cjs:17:31

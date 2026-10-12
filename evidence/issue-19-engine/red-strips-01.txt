@@ -1,0 +1,39 @@
+✖ applies the existing scalar WB oracle to every full-resolution canvas pixel (2.46749ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 121.722269
+
+✖ failing tests:
+
+test at test/jpeg-export-strips.test.ts:19:1
+✖ applies the existing scalar WB oracle to every full-resolution canvas pixel (2.46749ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   128,
+  +   128,
+  +   128,
+  -   146,
+  -   124,
+  -   106,
+      255
+    ]
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/jpeg-export-strips.test.ts:21:53)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 128, 128, 128, 255 ],
+    expected: [ 146, 124, 106, 255 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

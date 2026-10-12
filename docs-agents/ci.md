@@ -99,3 +99,9 @@ A fronteira de idioma do SO é substituída intencionalmente; os smokes antigos 
 ## Idioma do editor existente (#32, fatia parcial)
 
 `npm run test:editor-language -- <perfil novo>` executa o editor empacotado em PT-BR/EN/ES. Verifica drafts de teclado `-`/`1.`, save e Undo em voo, Redo/novo ramo, WB preservado, preview antigo, classificação, erro visível/retry, ausência/relocalização, permanecer/descartar e fechamento nativo durante save. Captura layouts com fixture sintética. CI Windows adiciona este gate de três minutos dentro do job existente; Ubuntu mantém core/typecheck/package. Não adiciona dependência, permission, upload, cache ou release. [Evidência Linux e limites](../evidence/editor-language/report.md).
+
+## Engine JPEG preparatória (#19)
+
+`npm run test:jpeg-engine -- <diretório novo> full` carrega a engine e assets do `app.asar` empacotado. Exercita Canvas/IPC/sandbox reais, PID separado do sentinel, single-flight, falhas/cancelamento, resposta inválida/tardia, restrições de sessão e término observado. Fronteiras Electron são substituídas somente para falhas determinísticas; o relatório diferencia essas sondas de execução nativa.
+
+CI Windows executa esse cenário dentro do job existente (três minutos), sem novas permissões, upload, dependências ou cache. Ubuntu mantém núcleo/typecheck/package. O modo manual `corpus` exige Python/Pillow/LittleCMS já disponíveis e acrescenta oráculos independentes, 40 MP e amostragem de memória; não adiciona tais ferramentas ao produto/CI. [Comandos, evidências e limites](../evidence/issue-19-engine/report.md).

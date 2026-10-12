@@ -1,0 +1,9 @@
+✔ accepts a bounded JPEG response for the owning job without copying it (1.321915ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 121.206746

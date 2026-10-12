@@ -40,6 +40,8 @@ Estado conferido em 12/10/2026 no commit `d3a56d94042f7011ec1b157771c4eb9055fbd3
 
 ### Verificação
 
+- Preparação da exportação: engine JPEG full-frame sRGB com exposição/WB v2, renderer isolado e testes de recursos/lifecycle. Ainda sem ação de exportar no aplicativo; metadados/gravação/UI continuam pendentes. [Issue #19](https://github.com/glaucia86/revelumo/issues/19), [evidências](evidence/issue-19-engine/report.md).
+
 - CI reproduzível de testes, tipos e pacote em Windows/Ubuntu, com regressão Electron e reabertura automatizadas no Windows. [PR #9](https://github.com/glaucia86/revelumo/pull/9), [run histórico de integração do PR #9](https://github.com/glaucia86/revelumo/actions/runs/38202224197). CI é verificação de desenvolvimento, não publicação nem garantia de suporte em toda máquina.
 
 - Gates Electron de exposição, histórico e balanço de branco integrados no workflow existente, além das verificações locais de documentação. Relatórios e limites: [CI](docs-agents/ci.md), [exposição](evidence/issue-12/report.md), [histórico](evidence/issue-16/report.md), [WB](evidence/issue-17/report.md). Resultados de um snapshot não validam uma candidata futura.

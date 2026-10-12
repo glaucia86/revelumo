@@ -1,0 +1,7 @@
+[154856:1012/162301.660970:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[154856:1012/162301.733791:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[154856:1012/162301.733834:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+PASS basic full-resolution encoding
+PASS single-flight rejects overlap
+PASS cancel before launch creates no window
+ENGINE PASS {"width":80,"height":40,"bytes":783}

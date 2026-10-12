@@ -1,0 +1,22 @@
+[169454:1012/163934.733771:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[169454:1012/163934.805490:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[169454:1012/163934.805521:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+PASS basic full-resolution encoding
+PASS single-flight rejects overlap
+PASS cancel before launch creates no window
+PASS active cancellation preserves editor and permits next job
+PASS distinct auxiliary PIDs disappear before settlement
+PASS invalid recipes/crop, sources and budgets rejected before launch
+PASS async job owns its bytes, recipe and output budget snapshot
+PASS constructor failure with no PID cannot latch the engine busy
+PASS load failure before PID cleans up and permits retry
+PASS failure after renderer creation observes cleanup before rejection
+[169611:1012/163935.416442:FATAL:content/child/child_thread_impl.cc:380] Crashing because hung
+PASS renderer crash settles without touching the editor
+PASS timeout destroys the stalled renderer and releases the gate
+PASS sandboxed engine cannot open popup or access Node
+PASS wrong sender/frame/job cannot settle the current job
+PASS codec failure and explicit output quota are distinguishable
+PASS completed session releases callbacks and compressed source references
+PASS unconfirmed cleanup quarantines work and recovers only after observed exit
+ENGINE PASS {"width":80,"height":40,"bytes":783}
