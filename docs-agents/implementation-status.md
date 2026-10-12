@@ -1,5 +1,10 @@
 # Estado da implementação
 
+## Issue #19: circuito técnico de publicação — 12/10/2026
+
+- Serviço main-only une snapshot autenticado, engine full-frame v2, créditos EXIF/XMP/IPTC selecionados sem GPS e novo arquivo exclusivo. Mantém originais/aliases e resultado real após o ponto de publicação, com cleanupPending explícito.
+- [Reabertura independente, testes e custo de memória](../evidence/issue-19-circuit/report.md). Ainda sem UI, diálogo, integração de autosave ou suporte a crop; exportação não está disponível e issue #19 permanece aberta.
+
 ## Issue #19: engine JPEG preparatória — 12/10/2026
 
 - Engine main-only recebe bytes privados do snapshot, rejeita versões/recorte desconhecidos e produz JPEG sRGB em resolução original com exposição/WB v2 e qualidade Canvas 0,90. Renderer descartável isolado, sem Node, serializado e com cancelamento/encerramento observado.

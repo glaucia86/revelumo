@@ -3,7 +3,7 @@
   "productName": "Revelumo",
   "version": "0.0.1",
   "private": true,
-  "description": "Editor fotogr\u00e1fico local \u2014 primeira fatia JPEG em desenvolvimento",
+  "description": "Editor fotográfico local — primeira fatia JPEG em desenvolvimento",
   "type": "module",
   "main": ".vite/build/index.cjs",
   "engines": {
@@ -27,9 +27,11 @@
     "check:docs": "node scripts/check-docs.mjs",
     "test:language": "electron test/electron-language-catalog.cjs",
     "test:editor-language": "electron test/electron-language-editor.cjs",
-    "test:jpeg-engine": "electron test/electron-jpeg-engine.cjs"
+    "test:jpeg-engine": "electron test/electron-jpeg-engine.cjs",
+    "test:jpeg-export-circuit": "electron test/electron-jpeg-export-circuit.cjs"
   },
   "dependencies": {
+    "@xmldom/xmldom": "0.9.12",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },

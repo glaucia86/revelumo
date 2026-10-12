@@ -105,3 +105,9 @@ A fronteira de idioma do SO é substituída intencionalmente; os smokes antigos 
 `npm run test:jpeg-engine -- <diretório novo> full` carrega a engine e assets do `app.asar` empacotado. Exercita Canvas/IPC/sandbox reais, PID separado do sentinel, single-flight, falhas/cancelamento, resposta inválida/tardia, restrições de sessão e término observado. Fronteiras Electron são substituídas somente para falhas determinísticas; o relatório diferencia essas sondas de execução nativa.
 
 CI Windows executa esse cenário dentro do job existente (três minutos), sem novas permissões, upload, dependências ou cache. Ubuntu mantém núcleo/typecheck/package. O modo manual `corpus` exige Python/Pillow/LittleCMS já disponíveis e acrescenta oráculos independentes, 40 MP e amostragem de memória; não adiciona tais ferramentas ao produto/CI. [Comandos, evidências e limites](../evidence/issue-19-engine/report.md).
+
+## Circuito de publicação JPEG (#19)
+
+`npm run test:jpeg-export-circuit -- <diretório novo> full` verifica o serviço empacotado: snapshot autenticado, engine real, créditos Unicode selecionados, writer exclusivo, aliases/colisões, falhas de autenticação/crop/cancelamento, encerramento do renderer e presença da licença MIT de xmldom no app.asar. A fixture sintética é versionada; não exige Python no CI Windows. Mantém o job/permissões/custos existentes.
+
+Reabertura independente com Pillow/LittleCMS e medição completa de40 MP ficam no gate manual documentado em [evidências](../evidence/issue-19-circuit/report.md). Testes de symlink de arquivo só pulam no Windows quando EPERM/EACCES impede sua criação; hardlinks continuam obrigatórios. Nenhum instalador, release ou suporte universal a filesystems é inferido.

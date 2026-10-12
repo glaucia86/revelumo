@@ -17,6 +17,7 @@ The [package manifest](package.json) and [lockfile](package-lock.json) identify 
 | Package | Declared license |
 | --- | --- |
 | React and React DOM | MIT |
+| `@xmldom/xmldom` 0.9.12 | MIT; [original notice](public/licenses/xmldom-MIT.txt), included in the packaged app |
 | Electron and Electron Forge packages | MIT |
 | Vite | MIT |
 | TypeScript | Apache-2.0 |
