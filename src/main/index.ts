@@ -16,6 +16,8 @@ const ownsInstance = app.requestSingleInstanceLock();
 if (!ownsInstance) app.quit();
 let catalog: Catalog | undefined;
 let window: BrowserWindow | null = null;
+let closeRequested = false;
+let closeAllowed = false;
 let selectingFiles = false;
 let progress: ImportProgress = { running: false, total: 0, completed: 0, succeeded: 0, failed: 0, currentName: null };
 const developmentUrl = MAIN_WINDOW_VITE_DEV_SERVER_URL;
@@ -40,6 +42,7 @@ async function thumbnail(bytes: Buffer): Promise<string> {
 }
 
 async function createWindow() {
+  closeRequested = false; closeAllowed = false;
   window = new BrowserWindow({
     width: 1160, height: 780, minWidth: 760, minHeight: 540,
     backgroundColor: '#151715', title: 'Revelumo',
@@ -47,6 +50,11 @@ async function createWindow() {
   });
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   window.webContents.on('will-navigate', (event) => event.preventDefault());
+  window.on('close', (event) => {
+    if (closeAllowed) return;
+    event.preventDefault(); closeRequested = true;
+    window?.webContents.send('revelumo:close-request');
+  });
   window.on('closed', () => { window = null; });
   await window.loadURL(entryUrl);
 }
@@ -87,6 +95,17 @@ if (ownsInstance) app.whenReady().then(async () => {
     try {
       if (request.op === 'list') return { ok: true, value: library.list() };
       if (request.op === 'progress') return { ok: true, value: progress };
+      if (request.op === 'recipe') return library.recipe(request.id);
+      if (request.op === 'begin-edit') return await library.beginEditing(request.id);
+      if (request.op === 'exposure') return await library.saveExposure(request.id, request.sessionId, request.revision, request.exposureTenths, request.processingVersion);
+      if (request.op === 'end-edit') return await library.endEditing(request.id, request.sessionId);
+      if (request.op === 'close-ready') {
+        if (!closeRequested) return fail('invalid-request', 'Nenhum fechamento solicitado.');
+        closeAllowed = true;
+        // Reply before closing the bridge's owning renderer.
+        setImmediate(() => { if (window === owner && !owner.isDestroyed()) owner.close(); });
+        return { ok: true, value: null };
+      }
       if (request.op === 'classification') return library.classification(request.id);
       if (request.op === 'classify') return library.classify(request.id, request.rating, request.flag);
       if (request.op === 'status') return await library.status(request.id);

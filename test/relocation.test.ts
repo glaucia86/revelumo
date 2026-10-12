@@ -35,7 +35,7 @@ async function legacy(t: any, version: 1 | 2) {
   const thumbnail = await decoder(await readFile(fixture.file));
   fixture.catalog.close();
   const db = new DatabaseSync(fixture.db);
-  db.exec(`DROP TABLE thumbnails; DROP TABLE photos;
+  db.exec(`DROP TABLE recipes; DROP TABLE thumbnails; DROP TABLE photos;
     CREATE TABLE photos (id TEXT PRIMARY KEY, path TEXT NOT NULL UNIQUE, name TEXT NOT NULL);
     PRAGMA user_version = ${version};`);
   db.prepare('INSERT INTO photos VALUES (?, ?, ?)').run(id, fixture.file, 'legacy-name.jpg');

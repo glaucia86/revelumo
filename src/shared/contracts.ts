@@ -1,6 +1,8 @@
 export type PhotoSummary = { id: string; name: string };
 export type PhotoFlag = 'neutral' | 'selected' | 'rejected';
 export type PhotoClassification = { photo: PhotoSummary; rating: number | null; flag: PhotoFlag };
+export type PhotoRecipe = { photo: PhotoSummary; exposureTenths: number; processingVersion: 1 };
+export type EditSession = PhotoRecipe & { sessionId: string; revision: number };
 export type FailureCode = 'invalid-request' | 'invalid-jpeg' | 'too-large' | 'unreadable' | 'not-found' | 'catalog-error' | 'busy' | 'identity-mismatch' | 'identity-unverified' | 'path-conflict';
 export type Result<T> = { ok: true; value: T } | { ok: false; code: FailureCode; message: string };
 export type ImportOutcome = { canceled: true } | { canceled: false; photo: PhotoSummary };
@@ -8,6 +10,12 @@ export type Preview = { photo: PhotoSummary; dataUrl: string };
 export type PhotoStatus = { photo: PhotoSummary; state: 'available' | 'missing' | 'unreadable' | 'changed'; canRelocate: boolean; message: string };
 export type PhotoAvailability = { photo: PhotoSummary; state: 'present' | 'missing' | 'unreadable'; identityRecorded: boolean; contentVerified: false; message: string };
 export interface RevelumoApi {
+  recipePhoto(id: string): Promise<Result<PhotoRecipe>>;
+  beginEditingPhoto(id: string): Promise<Result<EditSession>>;
+  saveExposure(id: string, sessionId: string, revision: number, exposureTenths: number, processingVersion: number): Promise<Result<EditSession>>;
+  endEditingPhoto(id: string, sessionId: string): Promise<Result<null>>;
+  onCloseRequested(callback: () => void): () => void;
+  confirmClose(): Promise<Result<null>>;
   classificationPhoto(id: string): Promise<Result<PhotoClassification>>;
   classifyPhoto(id: string, rating: number | null, flag: PhotoFlag): Promise<Result<PhotoClassification>>;
   importJpeg(): Promise<Result<BatchOutcome>>;

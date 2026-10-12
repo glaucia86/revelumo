@@ -1,0 +1,31 @@
+{
+  "generator": "Pillow 12.3.0 / LittleCMS 2.19",
+  "profiles": {
+    "srgb": {
+      "source": [
+        128,
+        63,
+        31
+      ],
+      "srgb": [
+        128,
+        63,
+        31
+      ],
+      "tolerance": 3
+    },
+    "p3": {
+      "source": [
+        128,
+        63,
+        31
+      ],
+      "srgb": [
+        138,
+        58,
+        20
+      ],
+      "tolerance": 3
+    }
+  }
+}

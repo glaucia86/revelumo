@@ -44,14 +44,14 @@ const js = expression => win.webContents.executeJavaScript(expression);
 const api = (method, ...args) => js(`window.revelumo.${method}(${args.map(arg=>JSON.stringify(arg)).join(',')})`);
 const tile = name => `document.querySelector(${JSON.stringify(`button[aria-label="Abrir ${name}"]`)})`;
 const locate = name => `document.querySelector(${JSON.stringify(`button[aria-label="Localizar original de ${name}"]`)})`;
-async function click(expression) { await js(`${expression}.click()`); }
+async function click(expression) { await until(() => js(`Boolean(${expression} && !${expression}.disabled)`), 'button ready'); await js(`${expression}.click()`); }
 async function importFiles(filenames, count) {
   selection = { canceled:false, filePaths:filenames };
   await click('document.querySelector("header button")');
   await until(() => js(`!document.querySelector('header button').disabled && document.querySelectorAll('.tile').length === ${count}`), 'import rendered');
 }
 const timeout = setTimeout(() => { console.error('Relocation integration exceeded 60 seconds'); app.exit(1); }, 60000);
-require(path.join(archive, '.vite', 'build', 'index.cjs'));
+require('./hidden-electron.cjs')(path.join(archive, '.vite', 'build', 'index.cjs'));
 (async () => {
   await app.whenReady();
   win = await until(() => BrowserWindow.getAllWindows().find(window=>window.webContents.getURL()==='app://revelumo/index.html'), 'packaged origin');
@@ -106,11 +106,11 @@ require(path.join(archive, '.vite', 'build', 'index.cjs'));
     assert.deepEqual((await api('listPhotos')).value,photos);
     checks.push('cancel, different native-decodable JPEG of equal name/length, and occupied path leave all records unchanged');
     selection = { canceled:false,filePaths:[files.relocated] }; await click(locate('original.jpg'));
-    await until(() => js('Boolean(document.querySelector(".viewer img")?.complete && document.querySelector(".viewer img").naturalWidth > 0)'), 'relocated preview decoded');
+    await until(() => js('Boolean(document.querySelector(".viewer canvas")?.dataset.revision)'), 'relocated preview decoded');
     assert.deepEqual((await api('listPhotos')).value,photos);
     assert.equal((await api('originalStatus',original.id)).value.state,'available');
     assert.deepEqual(await api('thumbnailPhoto',original.id),cache);
-    assert.equal(await js('document.querySelector("figcaption").textContent'),'original.jpg');
+    assert.match(await js('document.querySelector("figcaption").textContent'),/^original\.jpg/);
     for (const options of dialogs.filter(options=>options.title==='Localizar original')) assert.deepEqual(options.properties,['openFile']);
     checks.push('single-file dialogue adapter relinks equal SHA-256 and restores actual preview without changing ID, name or cache');
     // A grid probe no longer enrolls legacy rows. Explicitly preview this one

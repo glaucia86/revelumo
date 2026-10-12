@@ -69,7 +69,7 @@ function assertLight(label) {
   assert.equal(io.decodes, 0, `${label}: cached grid must not decode originals in main`);
 }
 const timeout = setTimeout(() => app.exit(1), 60000);
-require(path.join(repo, 'out', `Revelumo-${process.platform}-${process.arch}`, 'resources', 'app.asar', '.vite', 'build', 'index.cjs'));
+require('./hidden-electron.cjs')(path.join(repo, 'out', `Revelumo-${process.platform}-${process.arch}`, 'resources', 'app.asar', '.vite', 'build', 'index.cjs'));
 (async () => {
   await app.whenReady();
   await until(() => { win = BrowserWindow.getAllWindows().find(w => w.webContents.getURL() === 'app://revelumo/index.html'); return Boolean(win); }, 'packaged origin');
