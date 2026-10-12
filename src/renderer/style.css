@@ -6,3 +6,16 @@
 
 .classification{position:absolute;bottom:12px;left:24px;right:24px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;font-size:11px;color:#bfc5b7}.classification [role="group"]{display:flex;flex-wrap:wrap;gap:4px}.classification button{padding:7px 9px;background:#1c201a;color:#bfc5b7;border-color:#424a3b}.classification button[aria-pressed="true"]{background:#c9d7ac;color:#242b20;border-color:#c9d7ac}.classification [role="status"]{flex-basis:100%;text-align:center}.viewer{padding-bottom:130px}
 .editing{height:100%;min-height:0;max-width:100%;display:flex;flex-direction:column;align-items:center;gap:14px}.editing figure{flex:1;min-height:0}.editing canvas{max-height:calc(100% - 30px);max-width:100%;object-fit:contain}.exposure{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;font-size:12px}.exposure label{display:flex;align-items:center;gap:8px}.exposure input[type="number"]{width:78px;padding:7px;background:#1c201a;color:#e5e6df;border:1px solid #424a3b}.exposure button{padding:7px 9px}.save-status{flex-basis:100%;text-align:center}.exit-failure{padding:16px;background:#33271f;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.exit-failure p{margin:0;font-size:13px}
+
+.white-balance { margin-top: 16px; padding: 16px; border: 1px solid #394454; border-radius: 8px; }
+.white-balance h3 { margin: 0 0 12px; }
+.white-balance small { font-size: .8rem; font-weight: normal; color: #b9c3d0; }
+.balance-control { display: flex; gap: 12px; align-items: center; margin-top: 10px; }
+.balance-control label { display: flex; align-items: center; gap: 12px; flex: 1; }
+.balance-control input[type=range] { flex: 1; }
+.balance-control input[type=number] { width: 6rem; }
+
+/* Keep the growing adjustment panel reachable at the supported small window. */
+.editing{width:100%;overflow-y:auto;padding:3px}
+.editing figure{min-height:90px;flex-shrink:0}
+.exposure,.white-balance{flex-shrink:0}

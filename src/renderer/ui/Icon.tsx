@@ -2,6 +2,7 @@ import React from 'react';
 
 // Small, locally authored outline glyphs. All uses have a visible text label.
 const paths = {
+  arrow: <path d="M5 12h14m-5-5 5 5-5 5"/>,
   import: <><path d="M12 15V3m-4 4 4-4 4 4M4 14v6h16v-6"/></>,
   grid: <><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18M12 3v18"/></>,
   refresh: <><path d="M20 5v6h-6M4 19v-6h6M5 8a8 8 0 0 1 13-3l2 3M4 16l2 3a8 8 0 0 0 13-3"/></>,

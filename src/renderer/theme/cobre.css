@@ -38,7 +38,7 @@
 .catalog-sidebar .photo[aria-pressed="true"] { background: #35312e; border-color: #57514d; color: var(--fg); }
 .catalog-sidebar .photo[aria-pressed="true"]::before { content: ''; position: absolute; left: -1px; top: 11px; bottom: 11px; width: 3px; border-radius: 2px; background: var(--accent); }
 .catalog-sidebar .photo[aria-pressed="true"] .catalog-icon { color: var(--accent); }
-.catalog-count { margin-left: auto; padding: 2px 6px; background: var(--bg); border-radius: 5px; font-variant-numeric: tabular-nums; }
+.catalog-count { flex: none; min-width: 24px; white-space: nowrap; text-align: center; margin-left: auto; padding: 2px 6px; background: var(--bg); border-radius: 5px; font-variant-numeric: tabular-nums; }
 .catalog-sidebar .library-filters { border: 0; border-top: 1px solid #414141; border-radius: 0; padding: 22px 12px 0; margin: 24px 0; color: var(--fg-2); }
 .catalog-sidebar .library-filters legend { padding: 0 5px; font-size: 12px; color: var(--muted); }
 .catalog-sidebar .library-filters label { font-size: 13px; margin: 0 0 9px; }
@@ -73,6 +73,8 @@
 .catalog-shell .thumbnail { height: 150px; background: #181818; border-radius: 6px; color: var(--muted); font-size: 12px; overflow: hidden; }
 .catalog-shell .filename { margin: 12px 5px 0; font-size: 12px; color: var(--fg-2); }
 .catalog-shell .tile-meta { display: flex; justify-content: space-between; gap: 10px; margin: 9px 5px 4px; color: var(--muted); font-size: 12px; }
+.catalog-shell .tile-meta > span { display: inline-flex; align-items: center; gap: 5px; }
+.catalog-shell .tile-meta .catalog-icon { width: 14px; height: 14px; }
 .catalog-shell .original-status { margin: 8px 5px 4px; font-size: 12px; color: var(--danger); }
 .catalog-shell .gallery .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-color: var(--accent); }
 .catalog-shell .pagination { font-size: 12px; color: var(--muted); gap: 18px; }

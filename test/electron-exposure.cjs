@@ -13,7 +13,7 @@ const hidden = { ...electron, ipcMain: { handle(channel, handler) {
   invokeHandler = handler;
   electron.ipcMain.handle(channel, async (event, input) => {
     if (input?.op === 'end-edit' && heldEnd) { const result = await handler(event, input); heldEnd.entered = true; await heldEnd.promise; return result; }
-    if (input?.op !== 'exposure') return handler(event, input);
+    if (input?.op !== 'exposure' && input?.op !== 'adjustments') return handler(event, input);
     saveCount++; activeSaves++; peakSaves = Math.max(peakSaves, activeSaves);
     try { const result = await handler(event, input); if (held) { held.entered = true; await held.promise; } return result; }
     finally { activeSaves--; }
@@ -181,7 +181,7 @@ try { require(path.join(repo, 'out', `Revelumo-${process.platform}-${process.arc
     const event = { sender: win.webContents, senderFrame: win.webContents.mainFrame };
     assert.equal((await invokeHandler({ ...event, sender: null }, { op: 'recipe', id })).code, 'invalid-request');
     assert.equal((await invokeHandler(event, { op: 'recipe', id, path: file })).code, 'invalid-request');
-    assert.equal((await api('saveExposure', id, 'bad', 1, 10, 1)).code, 'invalid-request');
+    assert.equal((await api('saveExposure', id, 'bad', 1, 10, 2)).code, 'invalid-request');
     assert.equal((await api('recipePhoto', '16e6d303-bb64-4a09-85a5-915e883db827')).code, 'not-found');
     checks.push('limited real bridge and owner/frame handler reject invalid origin, extra fields, invalid session and unknown UUID');
     await grid();

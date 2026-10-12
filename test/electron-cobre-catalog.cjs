@@ -5,17 +5,17 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
-const { DatabaseSync } = require('node:sqlite');
 const Module = require('node:module');
 function fatal(error) { console.error(error?.stack || String(error)); app.exit(1); }
 process.on('uncaughtException', fatal); process.on('unhandledRejection', fatal);
 dialog.showErrorBox = (title, message) => fatal(new Error(`${title}: ${message}`));
 const run = path.resolve(process.argv[2]);
-const mode = process.argv[3] || 'first';
-assert.ok(['first', 'reopen'].includes(mode));
 const repo = path.resolve(__dirname, '..');
 for (const dir of ['user-data', 'session-data', 'crash-dumps']) fs.mkdirSync(path.join(run, dir), { recursive: true });
 app.setPath('userData', path.join(run, 'user-data')); app.setPath('sessionData', path.join(run, 'session-data')); app.setPath('crashDumps', path.join(run, 'crash-dumps'));
+const packagedLicense = path.join(repo, 'out', `Revelumo-${process.platform}-${process.arch}`, 'resources', 'app.asar', '.vite', 'renderer', 'main_window', 'licenses', 'Geist-OFL.txt');
+assert.ok(fs.existsSync(packagedLicense), 'the full Geist copyright and SIL OFL license must accompany the packaged font');
+assert.equal(fs.readFileSync(packagedLicense, 'utf8'), fs.readFileSync(path.join(repo, 'public', 'licenses', 'Geist-OFL.txt'), 'utf8'));
 let selection = { canceled: true, filePaths: [] };
 dialog.showOpenDialog = async () => selection;
 const load = Module._load;
@@ -23,10 +23,9 @@ const hiddenElectron = { ...electron, BrowserWindow: class extends RealWindow {
   constructor(options) { super({ ...options, show: false }); }
 } };
 // Delay/fail only public IPC responses, preserving production preload and renderer.
-let heldQuery, holdNext = false, failNext = false, failImport = false;
+let heldQuery, holdNext = false, failNext = false;
 const handle = ipcMain.handle.bind(ipcMain);
 ipcMain.handle = (channel, listener) => handle(channel, async (event, request) => {
-  if (request?.op === 'import' && failImport) { failImport = false; return { ok: false, code: 'catalog-error', message: 'Importação temporariamente indisponível.' }; }
   if (request?.op === 'query' && failNext) { failNext = false; return { ok: false, code: 'catalog-error', message: 'Consulta temporariamente indisponível.' }; }
   const result = await listener(event, request);
   if (request?.op === 'query' && holdNext) { holdNext = false; return new Promise(resolve => { heldQuery = () => resolve(result); }); }
@@ -49,8 +48,10 @@ async function until(work, label) {
 async function filter(id, value) {
   await js(`(()=>{const s=document.getElementById(${JSON.stringify(id)});const set=Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set;set.call(s,${JSON.stringify(value)});s.dispatchEvent(new Event('change',{bubbles:true}));})()`);
 }
-async function exposure(value) {
-  await js(`(()=>{const s=document.querySelector('.exposure input[type="number"]');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(s,${JSON.stringify(String(value))});s.dispatchEvent(new Event('input',{bubbles:true}));})()`);
+async function enter() {
+  await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', {type: 'rawKeyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13});
+  await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', {type: 'char', text: '\r', key: 'Enter'});
+  await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', {type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13});
 }
 async function grid(count, pageText) {
   await until(() => js(`document.querySelector('.gallery')?.getAttribute('aria-busy')==='false' && document.querySelectorAll('.tile').length===${count}`), 'grid count ' + count);
@@ -59,7 +60,7 @@ async function grid(count, pageText) {
 const checks = [];
 const sample = fs.readFileSync(path.join(repo, 'test', 'fixtures', 'sample.jpg'));
 const hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
-const timeout = setTimeout(() => fatal(new Error('filter integration exceeded 120 seconds')), 120000);
+const timeout = setTimeout(() => fatal(new Error('Cobre catalog integration exceeded 120 seconds')), 120000);
 (async () => {
   await app.whenReady();
   win = await until(() => RealWindow.getAllWindows().find(w => w.webContents.getURL() === 'app://revelumo/index.html'), 'packaged origin');
@@ -75,7 +76,7 @@ const timeout = setTimeout(() => fatal(new Error('filter integration exceeded 12
   await grid(0);
   assert.equal(await js('document.querySelector(".gallery h1")?.textContent'), 'Todas as fotos', 'catalog has a meaningful page heading');
   assert.equal(await js('getComputedStyle(document.querySelector(".gallery")).backgroundColor'), 'rgb(21, 21, 21)');
-  assert.equal(await js('getComputedStyle(document.querySelector("header button:last-child")).backgroundColor'), 'rgb(239, 178, 138)');
+  assert.equal(await js(`getComputedStyle(${button('Importar JPEGs')}).backgroundColor`), 'rgb(239, 178, 138)');
   assert.equal(await js('document.querySelector("header").getBoundingClientRect().height'), 70);
   assert.doesNotMatch(await js('document.body.textContent'), /SEU OLHAR|Toda foto começa|simulação/);
   assert.equal(await js('document.querySelector(".empty h2").textContent'), 'Seu catálogo está vazio');
@@ -85,14 +86,10 @@ const timeout = setTimeout(() => fatal(new Error('filter integration exceeded 12
   await click('Importar JPEGs'); await grid(1, 'Página 1 de 1');
   await until(() => js('Boolean(document.querySelector(".thumbnail img")?.complete)'), 'thumbnail rendered');
   await js('document.querySelector(".tile").focus()');
-  await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', {type: 'rawKeyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13});
-  await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', {type: 'char', text: '\r', key: 'Enter'});
-  await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', {type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13});
-  await until(() => js('Boolean(document.querySelector(".viewer canvas")?.dataset.revision)'), 'keyboard opens real editor');
+  await enter();
+  await until(() => js(`Boolean(document.querySelector('[role="img"][aria-label="Prévia de edição de photo-00.jpg"]') && document.querySelector('[aria-label="Exposição em EV"]') && !document.querySelector('[aria-label="Exposição em EV"]').disabled)`), 'keyboard opens the named preview with ready editing controls');
   await js(button('Catálogo') + '.focus()');
-  await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', {type: 'rawKeyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13});
-  await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', {type: 'char', text: '\r', key: 'Enter'});
-  await win.webContents.debugger.sendCommand('Input.dispatchKeyEvent', {type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13});
+  await enter();
   await grid(1);
   await until(() => js('document.activeElement?.getAttribute("aria-label") === "Abrir photo-00.jpg"'), 'return restores focus to the same photo');
   assert.equal(await js('getComputedStyle(document.querySelector(".tile")).backgroundColor'), 'rgb(32, 32, 32)');
@@ -142,6 +139,7 @@ const timeout = setTimeout(() => fatal(new Error('filter integration exceeded 12
         sidebarScrollable: ['auto','scroll'].includes(getComputedStyle(document.querySelector('aside')).overflowY),
         galleryScrollable: ['auto','scroll'].includes(getComputedStyle(section).overflowY),
         textSizes: [...document.querySelectorAll('header button, aside label, aside select, .filename, .tile-meta, .gallery .quiet, footer span')].map(e => parseFloat(getComputedStyle(e).fontSize)),
+        countHeight: document.querySelector('.catalog-count').getBoundingClientRect().height,
         cols: getComputedStyle(document.querySelector('.grid')).gridTemplateColumns.split(' ').length
       };
     })()`);
@@ -150,6 +148,7 @@ const timeout = setTimeout(() => fatal(new Error('filter integration exceeded 12
     assert.equal(layout.sidebarScrollable && layout.galleryScrollable, true);
     assert.ok(layout.textSizes.every(size => size >= 12), `${width}: readable labels`);
     assert.ok(layout.cols >= 2);
+    assert.ok(layout.countHeight <= 24, `${width}: photo count remains a single line`);
     const screenshot = await win.webContents.capturePage();
     fs.writeFileSync(path.join(run, `catalog-${width}x${height}.png`), screenshot.toPNG());
   }

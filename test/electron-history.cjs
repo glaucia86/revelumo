@@ -11,7 +11,7 @@ dialog.showErrorBox = (title, message) => fatal(new Error(`${title}: ${message}`
 let invokeHandler, heldHistory = null, failHistoryAck = false, failExposureAck = false;
 const hidden = { ...electron, ipcMain: { handle(channel, handler) { invokeHandler = handler; electron.ipcMain.handle(channel, async (event, input) => {
   const result = await handler(event, input);
-  if (input?.op === 'exposure' && failExposureAck) { failExposureAck = false; throw new Error('Test: response lost after committed exposure'); }
+  if ((input?.op === 'exposure' || input?.op === 'adjustments') && failExposureAck) { failExposureAck = false; throw new Error('Test: response lost after committed exposure'); }
   if (input?.op === 'exposure-history') {
     if (heldHistory) { heldHistory.entered = true; await heldHistory.promise; }
     if (failHistoryAck) { failHistoryAck = false; throw new Error('Test: response lost after committed history'); }
@@ -172,7 +172,7 @@ try { require(path.join(repo, 'out', `Revelumo-${process.platform}-${process.arc
     const editing = await api('beginEditingPhoto', id); assert.ok(editing.ok);
     let state;
     for (let revision = 1; revision <= 101; revision++) {
-      const result = await api('saveExposure', id, editing.value.sessionId, revision, revision % 2 ? 5 : 10, 1);
+      const result = await api('saveExposure', id, editing.value.sessionId, revision, revision % 2 ? 5 : 10, 2);
       assert.ok(result.ok); state = result.value;
     }
     assert.equal(state.undoSteps, 100, 'the real bridge caps completed history at 100 steps');

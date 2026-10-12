@@ -1,0 +1,8 @@
+{
+  "checks": [
+    "empty catalog is presented as a working catalog, without marketing copy",
+    "keyboard opens the real photo; returning restores its focus; neutral stage and readable catalog tile preserve the original",
+    "49 real imported photos keep 48-item pagination; partial import, missing originals, loading, filter-empty and query retry remain distinct",
+    "760×540, 1180×757 and 1440×900 retain reachable scroll regions, 12px labels, reduced motion and unchanged original bytes"
+  ]
+}

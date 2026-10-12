@@ -131,7 +131,7 @@ finally { Module._load = load; }
     checks.push('clear independently, accessible button names/pressed states, Chromium Enter and Space');
     await back(); await open(); await state(4, 'Selecionada');
     await back();
-    await js('document.querySelector("header button").click()');
+    await js('Array.from(document.querySelectorAll("header button")).find(b=>b.textContent==="Importar JPEGs").click()');
     await until(() => js('document.querySelector("footer").textContent.includes("Seleção cancelada")'), 'cancel import');
     assert.deepEqual((await api('classificationPhoto', id)).value, { photo, rating: 4, flag: 'selected' });
     selection = { canceled: false, filePaths: [file] };
