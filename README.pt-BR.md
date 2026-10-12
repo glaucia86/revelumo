@@ -7,8 +7,8 @@
 <p>Editor fotográfico desktop independente para amadores e entusiastas.<br>Uma biblioteca local para organizar e editar JPEGs, com os originais preservados.</p>
 <p><strong>Local · Sem assinatura · Sem funcionalidades de IA no produto</strong></p>
 
-<img src="evidence/batch-jpeg/22-large-grid-reopened.png" alt="Biblioteca real do Revelumo em um pacote Linux, com imagens sintéticas de teste." width="1120" />
-<p><sub>Captura real de uma etapa anterior de desenvolvimento no Linux, antes do redesenho Cobre escolhido. A captura atualizada da tela principal virá após sua integração; ainda não há instalador público.</sub></p>
+<img src="docs/assets/screenshots/revelumo-cobre-catalog.png" alt="Catálogo Cobre real do Revelumo no aplicativo Linux empacotado, com oito fotografias de demonstração licenciadas." width="1120" />
+<p><sub>Catálogo Cobre real no aplicativo Linux empacotado, com JPEGs importados pelo próprio programa. Build de desenvolvimento, sem instalador público. <a href="docs/assets/screenshots/README.md">Detalhes da captura e créditos das fotos</a>.</sub></p>
 
 <p>
 <a href="https://github.com/glaucia86/revelumo/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/glaucia86/revelumo/actions/workflows/ci.yml/badge.svg?branch=main" /></a>
@@ -52,20 +52,15 @@ Lightroom Classic é uma referência funcional para o fluxo de biblioteca e edi�
 
 O aplicativo abre em uma janela Electron com interface React. A biblioteca permite importar JPEGs, navegar pelas miniaturas, classificar fotos e filtrar a seleção. Ao abrir uma foto, você pode ajustar exposição e balanço de branco relativo, comparar com 0 EV mantendo o balanço de branco e desfazer ou refazer alterações de exposição.
 
-### Biblioteca em execução
+### O catálogo atual
 
-A imagem principal no topo é uma captura real da etapa de importação JPEG em lote. Ela é anterior aos controles atuais de classificação, filtros e edição. [Relatório dessa etapa](evidence/batch-jpeg/report.md).
+A imagem principal acima mostra o catálogo **A · Cobre** implementado: ambiente escuro neutro, detalhes em cobre, JPEGs locais e filtros da biblioteca. As imagens foram realmente importadas no aplicativo empacotado. [Implementação e verificação](evidence/cobre-catalog/report.md).
 
-<details>
-<summary>Ver a prévia de uma foto nessa mesma etapa</summary>
+### Editando uma foto
 
-<img src="evidence/batch-jpeg/24-page-two-preview.png" alt="Captura real da prévia de um JPEG sintético no Revelumo, com botão para voltar à grade." width="100%" />
+<img src="docs/assets/screenshots/revelumo-editor.png" alt="Editor real do Revelumo com uma paisagem licenciada, exposição, temperatura e matiz relativos e status de salvamento." width="1120" />
 
-A captura documenta a navegação entre grade e prévia antes da inclusão do editor de exposição. Os controles atuais e suas verificações estão descritos nos relatórios de [exposição](evidence/issue-12/report.md) e [histórico persistente](evidence/issue-16/report.md).
-
-</details>
-
-**Direção visual escolhida: A · Cobre.** Um ambiente escuro neutro, com detalhes em cobre nos controles e nas seleções, foi escolhido para o redesenho. A aprovação é da direção visual; o protótipo ainda não foi integrado ao aplicativo. As capturas acima documentam a implementação existente.
+O editor já oferece exposição, balanço de branco relativo, autosave e histórico de exposição. Esta é sua interface funcional atual; o redesenho completo do editor em Cobre continua planejado. [Detalhes da captura e créditos das fotos](docs/assets/screenshots/README.md).
 
 **Idiomas:** a interface atual do aplicativo está em português. Este README está disponível em inglês, português do Brasil e espanhol; a seleção de idioma dentro do aplicativo está planejada e ainda não está disponível.
 
@@ -217,8 +212,9 @@ O [workflow de CI](.github/workflows/ci.yml) verifica PRs, pushes em `main` e ex
 - [Exposição, autosave, cor e recursos medidos](evidence/issue-12/report.md)
 - [Histórico persistente, retenção e QA visual Linux](evidence/issue-16/report.md)
 - [Balanço de branco relativo, persistência da receita e verificações de cor](evidence/issue-17/report.md)
+- [Catálogo Cobre, verificações de interação empacotada e limites visuais](evidence/cobre-catalog/report.md)
 
-Os relatórios registram a revisão e o ambiente de cada etapa; referências a publicação ou CI pendentes nesses registros são históricas. O estado remoto deve ser consultado nos PRs e no Actions. Os testes automatizados usam imagens sintéticas e substituem o diálogo nativo na fronteira de seleção de arquivos. Não equivalem a validação com fotografias reais, leitor de tela, hardware de 8 GB ou macOS.
+Os relatórios registram a revisão e o ambiente de cada etapa; referências a publicação ou CI pendentes nesses registros são históricas. O estado remoto deve ser consultado nos PRs e no Actions. Os testes automatizados de regressão usam imagens sintéticas e substituem o diálogo nativo na fronteira de seleção de arquivos. Fotografias licenciadas também foram importadas para as capturas da interface; essa conferência visual limitada não comprova ampla compatibilidade com arquivos de câmeras nem validação com leitores de tela, hardware de 8 GB ou macOS.
 
 O CI mantém os resultados nos logs e no resumo dos jobs, sem upload de pacotes ou cache persistente. A matriz de CI não é uma declaração de suporte ao usuário final.
 
@@ -274,7 +270,7 @@ As primeiras etapas aprovadas usam `node:sqlite` no Electron Main para o catálo
 | Balanço de branco relativo | Temperatura, matiz, redefinição e autosave implementados; histórico exclusivo de exposição preservado |
 | Recorte | Em desenvolvimento; ainda não disponível na versão integrada |
 | Exportação JPEG | Em desenvolvimento; geração de novos arquivos ainda não disponível |
-| Redesenho visual | Direção A · Cobre escolhida; implementação pendente |
+| Redesenho visual | Catálogo Cobre implementado; redesenho completo do editor ainda planejado |
 | Idiomas do aplicativo: português, inglês e espanhol | Planejados; seleção de idioma ainda não implementada |
 | RAW, leitura HEIC, exportação TIFF e ajustes em lote | Planejados; dependem das próximas decisões e validações |
 | Distribuição | Instaladores, releases e validação ampliada por sistema ainda pendentes |
@@ -310,7 +306,7 @@ Dependências, skills de engenharia, imagens, retratos, fontes e marcas de terce
 
 <h3>Glaucia Lemos</h3>
 <p><strong>Principal Software Engineer · Microsoft MVP · Codex Ambassador</strong></p>
-<p>Ex-Microsoft. Compartilho conhecimento prático sobre JavaScript, TypeScript<br>e desenvolvimento de software em conteúdos técnicos, palestras e live coding.<br>Sou a criadora do Revelumo.</p>
+<p>Trabalho com IA e engenharia de software, desenvolvendo <a href="https://github.com/glaucia86/repocheckai">aplicações</a> e explorando<br><a href="https://github.com/glaucia86/palestra-sdd">agentes de programação com IA</a> com JavaScript e TypeScript. Ex-Microsoft, compartilho<br>conhecimento prático em projetos open source, palestras e conteúdos técnicos.<br>Sou a criadora do Revelumo.</p>
 
 <p>
 <a href="https://www.youtube.com/user/l32759"><img alt="YouTube" src="https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white" /></a>
