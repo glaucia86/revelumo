@@ -1,12 +1,16 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import type { EditSession, PhotoSummary, Preview } from '../shared/contracts.ts';
+import { MAX_EXPOSURE_CHECKPOINT_GESTURES } from '../shared/contracts.ts';
+import type { EditSession, PhotoSummary, Preview, ExposureGesture } from '../shared/contracts.ts';
 
 export type ExposureHandle = { leave(discard?: boolean): Promise<void> };
+type GestureKind = 'number' | 'slider-pointer' | 'slider-key' | 'reset';
+type PendingGesture = ExposureGesture & { revision: number };
 type Draft = { revision: number; exposureTenths: number };
 
 export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; preview: Preview | null }>(function ExposureEditor({ photo, preview }, ref) {
   const session = useRef<EditSession | null>(null), draft = useRef<Draft>({ revision: 0, exposureTenths: 0 });
   const confirmed = useRef<Draft>({ revision: 0, exposureTenths: 0 });
+  const saveRequest = useRef<(Draft & { gestures: ExposureGesture[] }) | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null), inFlight = useRef<Promise<boolean> | null>(null);
   const alive = useRef(true), ending = useRef(false), initialization = useRef<Promise<void>>(Promise.resolve());
   const worker = useRef<Worker | null>(null), ready = useRef(false), rendering = useRef(false), waiting = useRef<Draft | null>(null);
@@ -16,6 +20,89 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
   const [status, setStatus] = useState('Lendo ajuste salvo.'), [error, setError] = useState(''), [previewError, setPreviewError] = useState('');
   const [leaving, setLeaving] = useState(false), [compare, setCompare] = useState(false);
   const comparison = useRef(false);
+  const pendingGestures = useRef<PendingGesture[]>([]);
+  const activeGesture = useRef<{ id: number; kind: GestureKind; changed: boolean } | null>(null);
+  const nextGesture = useRef(0);
+  const sliderKeys = useRef(new Set<string>());
+  const isSliderKey = (key: string) => ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(key);
+
+  function beginGesture(kind: GestureKind) {
+    if (activeGesture.current?.kind === kind) return;
+    finishGesture();
+    activeGesture.current = { id: ++nextGesture.current, kind, changed: false };
+  }
+  function rememberGesture(complete: boolean) {
+    const gesture = activeGesture.current;
+    if (!gesture?.changed) return;
+    const next = { id: gesture.id, exposureTenths: draft.current.exposureTenths, complete, revision: draft.current.revision };
+    const index = pendingGestures.current.findIndex(item => item.id === gesture.id);
+    if (index < 0) pendingGestures.current.push(next); else pendingGestures.current[index] = next;
+  }
+  function finishGesture(kind?: GestureKind) {
+    const gesture = activeGesture.current;
+    if (!gesture || (kind && gesture.kind !== kind)) return;
+    if (gesture.changed) {
+      draft.current = { ...draft.current, revision: draft.current.revision + 1 };
+      rememberGesture(true); setStatus('Alteração pendente');
+      render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths }); schedule();
+    }
+    activeGesture.current = null;
+  }
+  function finishSliderGesture() {
+    sliderKeys.current.clear();
+    finishGesture('slider-pointer'); finishGesture('slider-key');
+  }
+  useEffect(() => {
+    window.addEventListener('blur', finishSliderGesture);
+    return () => window.removeEventListener('blur', finishSliderGesture);
+  }, [photo.id]);
+  const [history, setHistory] = useState({ undoSteps: 0, redoSteps: 0 });
+  const [moving, setMoving] = useState(false);
+  const movingNow = useRef(false);
+  const historyFlight = useRef<Promise<void> | null>(null);
+  const historyRequest = useRef<{ revision: number; direction: 'undo' | 'redo' } | null>(null);
+  const [historyFailure, setHistoryFailure] = useState(false);
+
+  function confirms(result: EditSession, current: EditSession, requested: { revision: number; exposureTenths?: number }): boolean {
+    return result.photo.id === photo.id && result.sessionId === current.sessionId && result.revision === requested.revision &&
+      (requested.exposureTenths === undefined || result.exposureTenths === requested.exposureTenths);
+  }
+
+  function moveHistory(direction: 'undo' | 'redo'): Promise<void> {
+    if (historyFlight.current) return historyFlight.current;
+    const operation = performHistoryMove(direction);
+    historyFlight.current = operation;
+    void operation.finally(() => { if (historyFlight.current === operation) historyFlight.current = null; });
+    return operation;
+  }
+
+  async function performHistoryMove(direction: 'undo' | 'redo') {
+    if (movingNow.current || ending.current || !session.current) return;
+    finishGesture(); movingNow.current = true; setMoving(true); cancelDelay();
+    try {
+      while (confirmed.current.revision !== draft.current.revision) {
+        if (!await save()) return;
+        cancelDelay();
+      }
+      const current = session.current;
+      const requested = historyRequest.current ?? { revision: draft.current.revision + 1, direction };
+      historyRequest.current = requested;
+      const { revision } = requested;
+      setStatus('Salvando…');
+      const result = await window.revelumo.moveExposureHistory(photo.id, current.sessionId, revision, requested.direction);
+      if (!alive.current) return;
+      if (!result.ok) { setHistoryFailure(true); setError(result.message); setStatus('Não salvo'); return; }
+      if (!confirms(result.value, current, requested)) {
+        setHistoryFailure(true); setError('Confirmação de histórico inválida. Tente novamente.'); setStatus('Não salvo'); return;
+      }
+      historyRequest.current = null; setHistoryFailure(false);
+      draft.current = confirmed.current = { revision, exposureTenths: result.value.exposureTenths };
+      setHistory(result.value); setValue(result.value.exposureTenths); setNumericText((result.value.exposureTenths / 10).toFixed(1));
+      setError(''); setStatus('Salvo');
+      render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths });
+    } catch { if (alive.current) { setHistoryFailure(true); setError('Não foi possível alterar o histórico. Tente novamente.'); setStatus('Não salvo'); } }
+    finally { movingNow.current = false; if (alive.current) setMoving(false); }
+  }
 
   function cancelDelay() { if (timer.current !== null) clearTimeout(timer.current); timer.current = null; }
   function schedule(ms = 300) { cancelDelay(); timer.current = setTimeout(() => { timer.current = null; void save(); }, ms); }
@@ -30,18 +117,23 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
     const current = session.current;
     if (!current || ending.current) return false;
     if (confirmed.current.revision === draft.current.revision) return true;
-    const requested = { ...draft.current };
+    const batch = pendingGestures.current.slice(0, MAX_EXPOSURE_CHECKPOINT_GESTURES), last = batch.at(-1);
+    if (!saveRequest.current && !last) return false;
+    const requested = saveRequest.current ?? { revision: last!.revision, exposureTenths: last!.exposureTenths, gestures: batch.map(({ revision, ...gesture }) => ({ ...gesture })) };
+    saveRequest.current = requested;
     if (alive.current) setStatus('Salvando…');
     const operation = (async () => {
       try {
-        const result = await window.revelumo.saveExposure(photo.id, current.sessionId, requested.revision, requested.exposureTenths, 1);
+        const result = await window.revelumo.saveExposure(photo.id, current.sessionId, requested.revision, requested.exposureTenths, 1, requested.gestures);
         if (!alive.current) return false;
         if (!result.ok) { setError(result.message); setStatus('Não salvo'); return false; }
-        if (result.value.photo.id !== photo.id || result.value.sessionId !== current.sessionId || result.value.revision !== requested.revision || result.value.exposureTenths !== requested.exposureTenths) {
+        if (!confirms(result.value, current, requested)) {
           setError('Confirmação de ajuste inválida. Tente novamente.'); setStatus('Não salvo'); return false;
         }
-        confirmed.current = requested;
-        if (draft.current.revision === requested.revision) { setError(''); setStatus('Salvo'); }
+        confirmed.current = { revision: requested.revision, exposureTenths: requested.exposureTenths };
+        saveRequest.current = null;
+        pendingGestures.current = pendingGestures.current.filter(item => item.revision > requested.revision);
+        if (draft.current.revision === requested.revision) { setHistory(result.value); setError(''); setStatus('Salvo'); }
         else setStatus('Alteração pendente');
         return true;
       } catch { if (alive.current) { setError('Não foi possível salvar o ajuste. Tente novamente.'); setStatus('Não salvo'); } return false; }
@@ -55,12 +147,18 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
 
   useImperativeHandle(ref, () => ({
     async leave(discard = false) {
+      if (!discard) finishGesture();
       setLeaving(true); cancelDelay();
       try {
         await initialization.current;
         // A queued close may replay before React unmounts a discarded session.
         // Retirement is final even when discarded draft != confirmed revision.
         if (!session.current) return;
+        if (historyFlight.current) await historyFlight.current;
+        if (!discard && historyRequest.current) {
+          await moveHistory(historyRequest.current.direction);
+          if (historyRequest.current) throw new Error('Histórico ainda não confirmado.');
+        }
         if (discard) {
           ending.current = true;
           // An already running transaction may confirm; explicit discard only
@@ -90,7 +188,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
         const result = await window.revelumo.beginEditingPhoto(photo.id);
         if (!alive.current) return;
         if (!result.ok) { setError(result.message); setStatus('Ajuste indisponível'); return; }
-        session.current = result.value;
+        session.current = result.value; setHistory(result.value);
         draft.current = confirmed.current = { revision: result.value.revision, exposureTenths: result.value.exposureTenths };
         setValue(result.value.exposureTenths); setNumericText((result.value.exposureTenths / 10).toFixed(1)); setLoaded(true); setStatus('Salvo');
       } catch { if (alive.current) { setError('Não foi possível ler o ajuste salvo.'); setStatus('Ajuste indisponível'); } }
@@ -124,28 +222,38 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
     return () => { instance.terminate(); if (worker.current === instance) worker.current = null; waiting.current = null; ready.current = false; };
   }, [loaded, preview, photo.id]);
 
-  function change(text: string) {
-    if (!loaded || ending.current || !/^[-+]?\d+(\.\d)?$/.test(text)) return;
+  function change(text: string, kind: GestureKind) {
+    if (!loaded || ending.current || movingNow.current || historyRequest.current || !/^[-+]?\d+(\.\d)?$/.test(text)) return;
     const ev = Number(text), tenths = Math.round(ev * 10);
     if (!Number.isFinite(ev) || tenths < -30 || tenths > 30 || Math.abs(ev * 10 - tenths) > 1e-8 || tenths === draft.current.exposureTenths) return;
+    beginGesture(kind); activeGesture.current!.changed = true;
     draft.current = { revision: draft.current.revision + 1, exposureTenths: tenths };
+    rememberGesture(false);
     setValue(tenths); setError(''); setStatus('Alteração pendente');
     render({ ...draft.current, exposureTenths: comparison.current ? 0 : tenths }); schedule();
   }
-  function changeControl(text: string) {
+  function changeControl(text: string, kind: GestureKind = activeGesture.current?.kind === 'slider-pointer' ? 'slider-pointer' : 'slider-key') {
     setNumericText(Number(text).toFixed(1));
-    change(text);
+    change(text, kind);
   }
-  const disabled = !loaded || !prepared || leaving || Boolean(previewError);
+  const disabled = !loaded || !prepared || leaving || moving || historyFailure || Boolean(previewError);
+  const pendingChange = pendingGestures.current.some(item => item.exposureTenths !== confirmed.current.exposureTenths);
   return <div className="editing">
     {preview && <figure><canvas ref={canvas} width={1} height={1} role="img" aria-label={`Prévia de edição de ${photo.name}`}/><figcaption>{photo.name} · Prévia sRGB até 2048 px</figcaption></figure>}
     <div className="exposure" aria-label="Ajuste de exposição">
-      <label>Exposição <input aria-label="Exposição" type="range" min="-3" max="3" step="0.1" value={value / 10} disabled={disabled} onChange={event => changeControl(event.target.value)}/></label>
-      <input aria-label="Exposição em EV" type="number" min="-3" max="3" step="0.1" value={numericText} disabled={disabled} onChange={event => { setNumericText(event.target.value); change(event.target.value); }} onBlur={() => setNumericText((draft.current.exposureTenths / 10).toFixed(1))}/><span>EV</span>
-      <button disabled={disabled} onClick={() => changeControl('0')}>Redefinir exposição</button>
+      <label>Exposição <input aria-label="Exposição" type="range" min="-3" max="3" step="0.1" value={value / 10} disabled={disabled} onChange={event => changeControl(event.target.value)}
+        onPointerDown={event => { beginGesture('slider-pointer'); event.currentTarget.setPointerCapture(event.pointerId); }} onPointerUp={() => finishGesture('slider-pointer')} onPointerCancel={() => finishGesture('slider-pointer')} onLostPointerCapture={() => finishGesture('slider-pointer')}
+        onKeyDown={event => { if (isSliderKey(event.key)) { sliderKeys.current.add(event.key); if (activeGesture.current?.kind !== 'slider-pointer') beginGesture('slider-key'); } }}
+        onKeyUp={event => { if (isSliderKey(event.key)) { sliderKeys.current.delete(event.key); if (!sliderKeys.current.size) finishGesture('slider-key'); } }}
+        onBlur={finishSliderGesture}/>
+      </label>
+      <input aria-label="Exposição em EV" type="number" min="-3" max="3" step="0.1" value={numericText} disabled={disabled} onChange={event => { setNumericText(event.target.value); change(event.target.value, 'number'); }} onBlur={() => { finishGesture('number'); setNumericText((draft.current.exposureTenths / 10).toFixed(1)); }} onKeyDown={event => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) { finishGesture('number'); setNumericText((draft.current.exposureTenths / 10).toFixed(1)); } }}/><span>EV</span>
+      <button disabled={disabled} onClick={() => { finishGesture(); changeControl('0', 'reset'); finishGesture('reset'); }}>Redefinir exposição</button>
+      <button disabled={disabled || (!history.undoSteps && !pendingChange)} onClick={() => void moveHistory('undo')}>Desfazer exposição</button>
+      <button disabled={disabled || !history.redoSteps || pendingChange} onClick={() => void moveHistory('redo')}>Refazer exposição</button>
       <button disabled={disabled} aria-pressed={compare} onClick={() => { comparison.current = !comparison.current; setCompare(comparison.current); render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths }); }}>Comparar com 0 EV</button>
       <span className="save-status" role="status" aria-live="polite">{status}</span>
-      {(error || previewError) && <p role="alert">{error || previewError} {error && loaded && <button disabled={leaving} onClick={() => { cancelDelay(); void save(); }}>Tentar salvar novamente</button>}</p>}
+      {(error || previewError) && <p role="alert">{error || previewError} {error && loaded && (historyFailure ? <button disabled={leaving || moving} onClick={() => { if (historyRequest.current) void moveHistory(historyRequest.current.direction); }}>Tentar alterar histórico</button> : <button disabled={leaving} onClick={() => { cancelDelay(); void save(); }}>Tentar salvar novamente</button>)}</p>}
     </div>
   </div>;
 });

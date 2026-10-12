@@ -1,0 +1,15 @@
+[4606:1012/104334.939119:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[4606:1012/104335.022576:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[4606:1012/104335.022620:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[4606:1012/104335.227881:ERROR:ui/gfx/x/atom_cache.cc:236] Add application/vnd.portal.filetransfer to kAtomsToCache
+[4606:1012/104335.227971:ERROR:ui/gfx/x/atom_cache.cc:236] Add application/vnd.portal.files to kAtomsToCache
+Error occurred in handler for 'revelumo:invoke': Error: Test: response lost after committed exposure
+    at /workspace/scratch/827b15a15839/revelumo-history/test/electron-history.cjs:13:85
+    at async Session.<anonymous> (node:electron/js2c/browser_init:1:119972)
+AssertionError [ERR_ASSERTION]: a newer completed gesture can save after a lost acknowledgement
+
+8 !== 12
+
+    at /workspace/scratch/827b15a15839/revelumo-history/test/electron-history.cjs:134:12
+
+EXIT_CODE=1

@@ -5,7 +5,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { setImmediate } from 'node:timers/promises';
 import { Catalog } from './catalog.ts';
 import { parseRequest } from '../shared/requests.ts';
-import type { PhotoClassification, PhotoFlag, PhotoRecipe, EditSession, LibraryFilters, LibraryResults } from '../shared/contracts.ts';
+import type { PhotoClassification, PhotoFlag, PhotoRecipe, EditSession, ExposureGesture, LibraryFilters, LibraryResults } from '../shared/contracts.ts';
 import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcome, PhotoSummary, PhotoStatus, PhotoAvailability, Preview, Result } from '../shared/contracts.ts';
 
 const MAX_BYTES = 32 * 1024 * 1024;
@@ -50,6 +50,8 @@ export class Library {
   private thumbnailDecoder?: PreviewDecoder;
   private pending: Promise<void> = Promise.resolve();
   private editing: EditSession | null = null;
+  private editingOperation: string | null = null;
+  private editingGesture = { id: 0, complete: true };
   constructor(catalog: Catalog, decoder: PreviewDecoder, thumbnailDecoder?: PreviewDecoder) {
     this.catalog = catalog; this.decoder = decoder; this.thumbnailDecoder = thumbnailDecoder;
   }
@@ -95,7 +97,8 @@ export class Library {
     return this.serial(async () => {
       const recipe = this.recipe(id);
       if (!recipe.ok) return recipe;
-      this.editing = { ...recipe.value, sessionId: randomUUID(), revision: 0 };
+      this.editing = { ...recipe.value, sessionId: randomUUID(), revision: 0, ...this.catalog.exposureHistory(id) };
+      this.editingOperation = null; this.editingGesture = { id: 0, complete: true };
       return { ok: true, value: { ...this.editing } };
     });
   }
@@ -109,15 +112,34 @@ export class Library {
     });
   }
 
-  saveExposure(id: string, sessionId: string, revision: number, exposureTenths: number, processingVersion: number): Promise<Result<EditSession>> {
-    if (!parseRequest({ op: 'exposure', id, sessionId, revision, exposureTenths, processingVersion })) return Promise.resolve(failure('invalid-request', 'Solicitação inválida.'));
+  saveExposure(id: string, sessionId: string, revision: number, exposureTenths: number, processingVersion: number, gestures?: ExposureGesture[]): Promise<Result<EditSession>> {
+    if (!parseRequest({ op: 'exposure', id, sessionId, revision, exposureTenths, processingVersion, ...(gestures === undefined ? {} : { gestures }) })) return Promise.resolve(failure('invalid-request', 'Solicitação inválida.'));
+    const edits = (gestures ?? [{ id: revision, exposureTenths, complete: true }]).map(gesture => ({ ...gesture }));
+    return this.mutateExposure(id, sessionId, revision, JSON.stringify(['exposure', edits]), sha256 => {
+      const exposure = this.catalog.saveExposure(id, sha256, sessionId, edits);
+      const last = edits.at(-1)!; this.editingGesture = { id: last.id, complete: last.complete };
+      return exposure;
+    }, () => edits[0].id > this.editingGesture.id || (edits[0].id === this.editingGesture.id && !this.editingGesture.complete));
+  }
+
+  moveExposureHistory(id: string, sessionId: string, revision: number, direction: 'undo' | 'redo'): Promise<Result<EditSession>> {
+    if (!parseRequest({ op: 'exposure-history', id, sessionId, revision, direction })) return Promise.resolve(failure('invalid-request', 'Solicitação inválida.'));
+    return this.mutateExposure(id, sessionId, revision, JSON.stringify(['history', direction]), sha256 => {
+      const exposure = this.catalog.moveExposureHistory(id, sha256, direction);
+      this.editingGesture = { ...this.editingGesture, complete: true }; return exposure;
+    });
+  }
+
+  private mutateExposure(id: string, sessionId: string, revision: number, operation: string, commit: (sha256: string) => number, valid: () => boolean = () => true): Promise<Result<EditSession>> {
     return this.serial(async () => {
       try {
         const photo = this.catalog.find(id);
         if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
         const session = this.editing;
         if (!session || session.photo.id !== id || session.sessionId !== sessionId || revision < session.revision ||
-            (revision === session.revision && exposureTenths !== session.exposureTenths)) return failure('invalid-request', 'Revisão de edição obsoleta.');
+            (revision === session.revision && operation !== this.editingOperation)) return failure('invalid-request', 'Revisão de edição obsoleta.');
+        if (revision === session.revision) return { ok: true, value: { ...session } };
+        if (!valid()) return failure('invalid-request', 'Gesto de edição obsoleto.');
         if (!photo.sha256) return failure('identity-unverified', 'Abra o original disponível para comprovar sua identidade antes de salvar.');
         const image = await readJpeg(photo.path);
         if (!image.ok) return image;
@@ -125,8 +147,9 @@ export class Library {
         // The same protected queue covers session retirement, relocation and
         // identity read/commit; never admit an old revision after an await.
         if (this.editing !== session) return failure('invalid-request', 'Sessão de edição encerrada.');
-        this.catalog.saveExposure(id, photo.sha256, exposureTenths);
-        this.editing = { ...session, revision, exposureTenths };
+        const exposureTenths = commit(photo.sha256);
+        this.editing = { ...session, revision, exposureTenths, ...this.catalog.exposureHistory(id) };
+        this.editingOperation = operation;
         return { ok: true, value: { ...this.editing } };
       } catch { return failure('catalog-error', 'Não foi possível salvar o ajuste. O último ajuste confirmado foi preservado. Tente novamente.'); }
     });

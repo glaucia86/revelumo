@@ -1,0 +1,28 @@
+✖ a checkpoint at capacity offers 100 undos without evicting history for a completed no-op (75.656081ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 228.537914
+
+✖ failing tests:
+
+test at test/exposure-history.test.ts:190:1
+✖ a checkpoint at capacity offers 100 undos without evicting history for a completed no-op (75.656081ms)
+  AssertionError [ERR_ASSERTION]: active checkpoint must not advertise an unreachable 101st undo
+
+  101 !== 100
+
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-history/test/exposure-history.test.ts:194:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 101,
+    expected: 100,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

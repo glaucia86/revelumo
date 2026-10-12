@@ -1,0 +1,828 @@
+[
+  {
+    "log": "classification-first.log",
+    "exitCode": 0,
+    "result": {
+      "ok": true,
+      "mode": "first",
+      "platform": "linux",
+      "versions": {
+        "node": "24.21.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.7",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.28-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.7.0",
+        "chrome": "152.0.7977.130"
+      },
+      "checks": [
+        "hidden packaged origin, sandbox, limited bridge, migrated identity and thumbnail",
+        "all five ratings, flag replacement, repetition and invalid IPC leave confirmed states correct",
+        "real SQLite lock reports error without changing displayed or persisted classification",
+        "clear independently, accessible button names/pressed states, Chromium Enter and Space",
+        "grid/viewer navigation, import cancel, canonical reimport and renderer reload preserve classification",
+        "navigating and classifying another UUID never overwrites the previous photo",
+        "synthetic original bytes preserved"
+      ]
+    }
+  },
+  {
+    "log": "classification-reopen.log",
+    "exitCode": 0,
+    "result": {
+      "ok": true,
+      "mode": "reopen",
+      "platform": "linux",
+      "versions": {
+        "node": "24.21.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.7",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.28-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.7.0",
+        "chrome": "152.0.7977.130"
+      },
+      "checks": [
+        "hidden packaged origin, sandbox, limited bridge, migrated identity and thumbnail",
+        "new Electron process restores separate classifications on the same two migrated UUIDs",
+        "synthetic original bytes preserved"
+      ]
+    }
+  },
+  {
+    "log": "exposure-1-first.log",
+    "exitCode": 0,
+    "result": {
+      "ok": true,
+      "mode": "first",
+      "platform": "linux",
+      "versions": {
+        "node": "24.21.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.7",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.28-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.7.0",
+        "chrome": "152.0.7977.130"
+      },
+      "checks": [
+        "sRGB 128: +1 EV approximately 176, -1 approximately 92, neutral exact; no upscale",
+        "Chromium accessibility slider/spinbutton names and keyboard increments",
+        "real numeric keyboard typing preserves negative/decimal prefixes across delay and refresh; invalid text never alters recipe/revision/preview and blur restores valid EV; limits, reset and slider stay synchronized",
+        "invalid EV unchanged, clipping, reset autosave, burst one commit, old confirmation never marks newer draft saved",
+        "focus/refresh retain draft, debounce navigation flush, SQLite lock retry, close failure stays, discard explicitly restores confirmed state",
+        "limited real bridge and owner/frame handler reject invalid origin, extra fields, invalid session and unknown UUID",
+        "real decoder/OffscreenCanvas converts embedded sRGB and P3 fixtures to sRGB within 3 encoded channel units of independent LittleCMS reference",
+        "all eight EXIF orientations applied once with quadrant pixels and dimensions",
+        "application quit requests last draft flush before close"
+      ]
+    }
+  },
+  {
+    "log": "exposure-2-reopen.log",
+    "exitCode": 0,
+    "result": {
+      "ok": true,
+      "mode": "reopen",
+      "platform": "linux",
+      "versions": {
+        "node": "24.21.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.7",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.28-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.7.0",
+        "chrome": "152.0.7977.130"
+      },
+      "checks": [
+        "second process restores normal-close flush"
+      ]
+    }
+  },
+  {
+    "log": "exposure-3-interrupt.log",
+    "exitCode": 0,
+    "result": null
+  },
+  {
+    "log": "exposure-4-reopen.log",
+    "exitCode": 0,
+    "result": {
+      "ok": true,
+      "mode": "reopen",
+      "platform": "linux",
+      "versions": {
+        "node": "24.21.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.7",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.28-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.7.0",
+        "chrome": "152.0.7977.130"
+      },
+      "checks": [
+        "second process restores normal-close flush"
+      ]
+    }
+  },
+  {
+    "log": "exposure-5-discard-race.log",
+    "exitCode": 0,
+    "result": {
+      "ok": true,
+      "mode": "discard-race",
+      "platform": "linux",
+      "versions": {
+        "node": "24.21.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.7",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.28-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.7.0",
+        "chrome": "152.0.7977.130"
+      },
+      "checks": [
+        "close during explicit discard waits for retirement and closes idempotently; prior confirmed recipe preserved"
+      ]
+    }
+  },
+  {
+    "log": "exposure-6-reopen.log",
+    "exitCode": 0,
+    "result": {
+      "ok": true,
+      "mode": "reopen",
+      "platform": "linux",
+      "versions": {
+        "node": "24.21.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.7",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.28-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.7.0",
+        "chrome": "152.0.7977.130"
+      },
+      "checks": [
+        "second process restores normal-close flush"
+      ]
+    }
+  },
+  {
+    "log": "exposure-7-race.log",
+    "exitCode": 0,
+    "result": {
+      "ok": true,
+      "mode": "race",
+      "platform": "linux",
+      "versions": {
+        "node": "24.21.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.7",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.28-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.7.0",
+        "chrome": "152.0.7977.130"
+      },
+      "checks": [
+        "close during navigation flush is retained and replayed after latest confirmation"
+      ]
+    }
+  },
+  {
+    "log": "exposure-8-race-reopen.log",
+    "exitCode": 0,
+    "result": {
+      "ok": true,
+      "mode": "race-reopen",
+      "platform": "linux",
+      "versions": {
+        "node": "24.21.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.7",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.28-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.7.0",
+        "chrome": "152.0.7977.130"
+      },
+      "checks": [
+        "navigation-close race restores latest confirmed revision in new process"
+      ]
+    }
+  },
+  {
+    "log": "filters-first.log",
+    "exitCode": 0,
+    "result": {
+      "ok": true,
+      "mode": "first",
+      "platform": "linux",
+      "versions": {
+        "node": "24.21.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.7",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.28-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.7.0",
+        "chrome": "152.0.7977.130"
+      },
+      "checks": [
+        "AND filters retain import order; 48 per page; explicit filter starts page one",
+        "classification preserves exposure draft/canvas; failed flush keeps filtered photo open; retry saves exposure before updating filtered page by UUID",
+        "failed write preserves matching result; invalid page clamps after confirmed update",
+        "empty results differ from empty catalog; importing preserves filters and reports hidden imports; clear restores all",
+        "unrated is null only; delayed response cannot overwrite current filter; failed query has distinct retry state",
+        "Chromium accessible combobox labels; keyboard changes filter and clears via Enter",
+        "missing original still matches saved filters; import flushes exposure then reports hidden UUID and retains filter",
+        "delayed navigation queries preserve canceled and failed import feedback after exposure flush",
+        "strict IPC rejects invalid/extra fields, exposes summaries only, all 51 originals unchanged"
+      ]
+    }
+  },
+  {
+    "log": "filters-reopen.log",
+    "exitCode": 0,
+    "result": {
+      "ok": true,
+      "mode": "reopen",
+      "platform": "linux",
+      "versions": {
+        "node": "24.21.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.7",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.28-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.7.0",
+        "chrome": "152.0.7977.130"
+      },
+      "checks": [
+        "new process starts unfiltered while confirmed classification persists"
+      ]
+    }
+  },
+  {
+    "log": "history-1-first.log",
+    "exitCode": 0,
+    "result": {
+      "mode": "first",
+      "checks": [
+        "named controls; real numeric keyboard → pixels → save → undo/redo; finish at undo cursor"
+      ]
+    }
+  },
+  {
+    "log": "history-10-key-chord.log",
+    "exitCode": 0,
+    "result": {
+      "mode": "key-chord",
+      "checks": [
+        "unrelated key releases do not split an active pointer drag",
+        "window blur closes a slider gesture before later input"
+      ]
+    }
+  },
+  {
+    "log": "history-2-reopen.log",
+    "exitCode": 0,
+    "result": {
+      "mode": "reopen",
+      "checks": [
+        "new Electron process recovers cursor and redo values/pixels"
+      ]
+    }
+  },
+  {
+    "log": "history-3-gestures.log",
+    "exitCode": 0,
+    "result": {
+      "mode": "gestures",
+      "checks": [
+        "paused numeric typing is one undo step",
+        "two completed numeric gestures survive one debounce window",
+        "real pointer drag with a persisted pause is one step",
+        "held slider keys form one step; reset can be undone"
+      ]
+    }
+  },
+  {
+    "log": "history-4-history-failure.log",
+    "exitCode": 0,
+    "result": {
+      "mode": "history-failure",
+      "checks": [
+        "lost response retries the same Undo exactly once",
+        "normal close waits for Undo and retires the confirmed session"
+      ]
+    }
+  },
+  {
+    "log": "history-5-history-reopen.log",
+    "exitCode": 0,
+    "result": {
+      "mode": "history-reopen",
+      "checks": [
+        "reopen after close during Undo recovers recipe and cursor"
+      ]
+    }
+  },
+  {
+    "log": "history-6-interrupt.log",
+    "exitCode": 0,
+    "result": {
+      "mode": "interrupt",
+      "checks": [
+        "forced exit with an unpersisted draft after an earlier gesture checkpoint"
+      ]
+    }
+  },
+  {
+    "log": "history-7-interrupt-reopen.log",
+    "exitCode": 0,
+    "result": {
+      "mode": "interrupt-reopen",
+      "checks": [
+        "forced exit recovers only the persisted checkpoint as one step"
+      ]
+    }
+  },
+  {
+    "log": "history-8-save-failure.log",
+    "exitCode": 0,
+    "result": {
+      "mode": "save-failure",
+      "checks": [
+        "lost save acknowledgement followed by a new gesture preserves both steps exactly once"
+      ]
+    }
+  },
+  {
+    "log": "history-9-many-pending.log",
+    "exitCode": 0,
+    "result": {
+      "mode": "many-pending",
+      "checks": [
+        "more than one IPC batch of completed gestures recovers after a lock without losing the latest draft"
+      ]
+    }
+  },
+  {
+    "log": "relocation-first.log",
+    "exitCode": 0,
+    "result": {
+      "ok": true,
+      "mode": "first",
+      "versions": {
+        "node": "24.21.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.7",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.28-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.7.0",
+        "chrome": "152.0.7977.130"
+      },
+      "checks": [
+        "packaged renderer retains sandbox, context isolation and UUID-scoped bridge",
+        "paths and malformed renderer identity are refused before opening a dialog",
+        "legacy missing before migration remains cataloged with cache, explanation and no unsafe locate action",
+        "cancel, different native-decodable JPEG of equal name/length, and occupied path leave all records unchanged",
+        "single-file dialogue adapter relinks equal SHA-256 and restores actual preview without changing ID, name or cache",
+        "accessible legacy identity enables a later move; all five synthetic JPEG files retain their bytes"
+      ]
+    }
+  },
+  {
+    "log": "relocation-reopen.log",
+    "exitCode": 0,
+    "result": {
+      "ok": true,
+      "mode": "reopen",
+      "versions": {
+        "node": "24.21.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.7",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.28-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.7.0",
+        "chrome": "152.0.7977.130"
+      },
+      "checks": [
+        "packaged renderer retains sandbox, context isolation and UUID-scoped bridge",
+        "paths and malformed renderer identity are refused before opening a dialog",
+        "second Electron process preserves relocated references, all four IDs/names, cached thumbnail, blocked legacy and five file hashes"
+      ]
+    }
+  },
+  {
+    "log": "smoke-first.log",
+    "exitCode": 0,
+    "result": {
+      "ok": true,
+      "mode": "first",
+      "versions": {
+        "node": "24.21.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.7",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.28-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.7.0",
+        "chrome": "152.0.7977.130"
+      },
+      "checks": [
+        "renderer isolation and sandbox remain enabled",
+        "packaged origin and limited bridge",
+        "renderer exposes only approved bridge operations",
+        "mixed batch has 51 photos and one per-file failure",
+        "all photo tiles have native button role and accessible names",
+        "each keyboard-focusable button is wrapped in a list item",
+        "Enter activates a focused tile and opens the actual JPEG preview",
+        "pagination displays remaining three photos and thumbnails",
+        "cancel and reimport preserve catalog identity without duplicates",
+        "all 52 synthetic originals retain SHA-256 and location"
+      ]
+    }
+  },
+  {
+    "log": "smoke-reopen.log",
+    "exitCode": 0,
+    "result": {
+      "ok": true,
+      "mode": "reopen",
+      "versions": {
+        "node": "24.21.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.7",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.28-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.7.0",
+        "chrome": "152.0.7977.130"
+      },
+      "checks": [
+        "renderer isolation and sandbox remain enabled",
+        "packaged origin and limited bridge",
+        "renderer exposes only approved bridge operations",
+        "new Electron process reopens all 51 IDs, cached thumbnail and JPEG preview",
+        "cached thumbnail survives an unavailable synthetic original; preview reports unreadable and catalog is unchanged",
+        "native decoder accepts EXIF6 fixture and preview retains all original JPEG bytes"
+      ]
+    }
+  }
+]

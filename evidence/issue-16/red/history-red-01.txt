@@ -1,0 +1,18 @@
+✖ a completed exposure adjustment can be undone and redone by UUID after reopening (9.581842ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 136.192701
+
+✖ failing tests:
+
+test at test/exposure-history.test.ts:10:1
+✖ a completed exposure adjustment can be undone and redone by UUID after reopening (9.581842ms)
+  TypeError: library.moveExposureHistory is not a function
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-history/test/exposure-history.test.ts:22:32)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)

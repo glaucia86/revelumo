@@ -1,0 +1,30 @@
+✔ a completed exposure adjustment can be undone and redone by UUID after reopening (18.63256ms)
+✔ history availability starts empty, follows undo/redo and never invents a neutral state for a v5 recipe (5.938243ms)
+✖ checkpoints during one gesture remain one step, while two gestures within one autosave remain distinct (9.932342ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 207.118176
+
+✖ failing tests:
+
+test at test/exposure-history.test.ts:50:1
+✖ checkpoints during one gesture remain one step, while two gestures within one autosave remain distinct (9.932342ms)
+  AssertionError [ERR_ASSERTION]: a long gesture with an intermediate autosave has only one undo boundary
+  
+  10 !== 0
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-history/test/exposure-history.test.ts:60:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 10,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

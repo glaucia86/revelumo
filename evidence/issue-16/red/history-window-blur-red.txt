@@ -1,0 +1,12 @@
+[6655:1012/105118.827942:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[6655:1012/105118.933204:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[6655:1012/105118.933521:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[6655:1012/105119.257978:ERROR:ui/gfx/x/atom_cache.cc:236] Add application/vnd.portal.filetransfer to kAtomsToCache
+[6655:1012/105119.258055:ERROR:ui/gfx/x/atom_cache.cc:236] Add application/vnd.portal.files to kAtomsToCache
+AssertionError [ERR_ASSERTION]: leaving the window ends the held-key gesture even when keyup is lost
+
+2 !== 1.9
+
+    at /workspace/scratch/827b15a15839/revelumo-history/test/electron-history.cjs:167:12
+
+EXIT_CODE=1

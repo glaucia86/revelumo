@@ -1,0 +1,28 @@
+✖ retains exactly the latest 100 completed exposure steps per photo across reopening (76.369698ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 225.403847
+
+✖ failing tests:
+
+test at test/exposure-history.test.ts:167:1
+✖ retains exactly the latest 100 completed exposure steps per photo across reopening (76.369698ms)
+  AssertionError [ERR_ASSERTION]: 101st edit evicts only the oldest undo step
+
+  101 !== 100
+
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-history/test/exposure-history.test.ts:174:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 101,
+    expected: 100,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

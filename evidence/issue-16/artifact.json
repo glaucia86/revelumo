@@ -1,0 +1,16 @@
+{
+  "baseCommit": "8b8aa98921760945b5d708f0f481b34d1423a314",
+  "testedArtifact": "out/Revelumo-linux-x64/resources/app.asar",
+  "appAsarSha256": "879b8c3318468725afae16656238da1977c346231f58dd9556805ba6507c7ccf",
+  "reviewedWorktreePatchSha256": "275022102e995a3b599b4a39a8e4c0eb6a8ab182b6791d51b899c87bfa567edb",
+  "platform": "Linux x64 cloud",
+  "electron": "44.7.0",
+  "chromium": "152.0.7977.130",
+  "coreNode": "24.19.0",
+  "electronNode": "24.21.0",
+  "electronSqlite": "3.53.4",
+  "retentionPolicy": "100 steps per photo; no expiration",
+  "remoteCi": "pending PR publication",
+  "initialArtifactSha256": "164462234e56e3b1f05b69f69c4811a97949b20a4d98b99d1f9a240f299b1129",
+  "retentionReviewPatchSha256": "24d8b87e9f5f0b3988d8aaeb48c643ec3c0ecadc36181406359dab24b6f7e6b8"
+}

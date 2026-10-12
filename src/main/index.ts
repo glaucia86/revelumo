@@ -98,7 +98,8 @@ if (ownsInstance) app.whenReady().then(async () => {
       if (request.op === 'progress') return { ok: true, value: progress };
       if (request.op === 'recipe') return library.recipe(request.id);
       if (request.op === 'begin-edit') return await library.beginEditing(request.id);
-      if (request.op === 'exposure') return await library.saveExposure(request.id, request.sessionId, request.revision, request.exposureTenths, request.processingVersion);
+      if (request.op === 'exposure') return await library.saveExposure(request.id, request.sessionId, request.revision, request.exposureTenths, request.processingVersion, request.gestures);
+      if (request.op === 'exposure-history') return await library.moveExposureHistory(request.id, request.sessionId, request.revision, request.direction);
       if (request.op === 'end-edit') return await library.endEditing(request.id, request.sessionId);
       if (request.op === 'close-ready') {
         if (!closeRequested) return fail('invalid-request', 'Nenhum fechamento solicitado.');
