@@ -1,0 +1,12 @@
+revelumo@0.0.1 C:\Users\glauc\Documents\Codex\2026-10-11\task\revelumo
+Ôö£ÔöÇÔöÇ @electron-forge/cli@8.0.1
+Ôö£ÔöÇÔöÇ @electron-forge/plugin-vite@8.0.1
+Ôö£ÔöÇÔöÇ @electron-forge/shared-types@8.0.1
+Ôö£ÔöÇÔöÇ @types/node@24.19.2
+Ôö£ÔöÇÔöÇ @types/react-dom@19.3.0
+Ôö£ÔöÇÔöÇ @types/react@19.3.0
+Ôö£ÔöÇÔöÇ electron@44.7.0
+Ôö£ÔöÇÔöÇ react-dom@19.3.0
+Ôö£ÔöÇÔöÇ react@19.3.0
+Ôö£ÔöÇÔöÇ typescript@5.9.3
+ÔööÔöÇÔöÇ vite@8.3.4

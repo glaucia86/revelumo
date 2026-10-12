@@ -16,8 +16,10 @@ async function setup(t: any, decoder = async (_: Buffer) => thumb) {
   await copyFile(new URL('./fixtures/oriented.jpg', import.meta.url), files[2]);
   const db = join(dir, 'catalog.sqlite');
   const catalog = new Catalog(db);
-  t.after(async () => { try { catalog.close(); } catch {} await rm(dir, { recursive: true, force: true }); });
-  return { dir, files, db, catalog, library: new Library(catalog, preview, decoder) };
+  const connections = [catalog];
+  const reopen = () => { const next = new Catalog(db); connections.push(next); return next; };
+  t.after(async () => { for (const connection of connections) { try { connection.close(); } catch {} } await rm(dir, { recursive: true, force: true }); });
+  return { dir, files, db, catalog, reopen, library: new Library(catalog, preview, decoder) };
 }
 test('mixed batch commits valid references, reports each failure and emits monotonic progress', async (t) => {
   const { files, library } = await setup(t);
@@ -35,7 +37,14 @@ test('mixed batch commits valid references, reports each failure and emits monot
 });
 test('canonical path deduplication includes symlink aliases and preserves identifier', async (t) => {
   const { dir, files, library } = await setup(t);
-  const alias = join(dir, 'alias.jpg'); await symlink(files[0], alias);
+  const alias = join(dir, 'alias.jpg');
+  try { await symlink(files[0], alias); }
+  catch (error) {
+    if (process.platform === 'win32' && (error as NodeJS.ErrnoException).code === 'EPERM') {
+      t.skip('Windows requires symlink permission for this alias case'); return;
+    }
+    throw error;
+  }
   const result = await library.importBatch([files[0], alias, files[0]]);
   assert.equal(library.list().length, 1);
   assert.equal(new Set(result.items.map(x => x.result.value.id)).size, 1);
@@ -48,13 +57,13 @@ test('decoding stays serial even with overlapping service requests', async (t) =
   assert.equal(peak, 1);
 });
 test('stopping a batch preserves committed photos and cached thumbnails after reopening', async (t) => {
-  const { files, library, catalog, db } = await setup(t);
+  const { files, library, catalog, reopen } = await setup(t);
   let stop = false;
   const result = await library.importBatch(files, state => { if (state.completed === 1) stop = true; }, () => stop);
   assert.equal(result.stopped, true); assert.equal(result.items.length, 1);
   const photo = library.list()[0]; catalog.close();
   await rm(files[0]);
-  const reopened = new Catalog(db); t.after(() => reopened.close());
+  const reopened = reopen();
   const second = new Library(reopened, preview, async () => { throw new Error('must use cache'); });
   assert.equal(second.list().length, 1);
   assert.equal((await second.thumbnail(photo.id)).value.dataUrl, thumb);

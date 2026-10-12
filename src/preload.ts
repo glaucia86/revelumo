@@ -6,5 +6,8 @@ const api: RevelumoApi = {
   thumbnailPhoto: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'thumbnail', id }),
   listPhotos: () => ipcRenderer.invoke('revelumo:invoke', { op: 'list' }),
   previewPhoto: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'preview', id }),
+  originalStatus: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'status', id }),
+  originalAvailability: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'availability', id }),
+  relocatePhoto: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'relocate', id }),
 };
 contextBridge.exposeInMainWorld('revelumo', Object.freeze(api));

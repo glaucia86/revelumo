@@ -1,0 +1,7 @@
+AssertionError [ERR_ASSERTION]: restricted original status must be exposed
++ actual - expected
+
++ 'undefined'
+- 'function'
+
+    at C:\Users\glauc\Documents\Codex\2026-10-11\task\revelumo\test\electron-relocation.cjs:60:10

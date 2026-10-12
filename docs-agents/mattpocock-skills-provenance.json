@@ -1,0 +1,56 @@
+{
+  "repository": "https://github.com/mattpocock/skills",
+  "ref": "49dd158d1076134a641b33efb035946536778336",
+  "files": [
+    {
+      "installed_path": ".agents/skills/implement/agents/openai.yaml",
+      "upstream_path": "skills/engineering/implement/agents/openai.yaml",
+      "git_blob": "f8794dc153b409052a9167baf10858cf01b36175",
+      "sha256": "8970a8596ade0c28ab427f41a4ea242d6bdf6186c59ebf55e1238dbecaab79dc"
+    },
+    {
+      "installed_path": ".agents/skills/implement/SKILL.md",
+      "upstream_path": "skills/engineering/implement/SKILL.md",
+      "git_blob": "bd49e472984c7b99aac40286fdae749bb955a842",
+      "sha256": "483bdc4ccf4ac31d86ac7beeaa0d0db80313e71e120bb8c59b3196ae5decd53d"
+    },
+    {
+      "installed_path": ".agents/skills/tdd/agents/openai.yaml",
+      "upstream_path": "skills/engineering/tdd/agents/openai.yaml",
+      "git_blob": "651b838a7663e027b1b8884491e867f26bb9a021",
+      "sha256": "ea6f01cf1b8c06a4b0f5b649d74b1b8ce8685e72af1b38d70d877693e092af0b"
+    },
+    {
+      "installed_path": ".agents/skills/tdd/mocking.md",
+      "upstream_path": "skills/engineering/tdd/mocking.md",
+      "git_blob": "71cbfee674d93244ce81d1830b930ca9a69200bd",
+      "sha256": "3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef"
+    },
+    {
+      "installed_path": ".agents/skills/tdd/SKILL.md",
+      "upstream_path": "skills/engineering/tdd/SKILL.md",
+      "git_blob": "01eadaa34e7c9a63a67d6dc3cce1cc81b0e49985",
+      "sha256": "5505d25bbaa8fc14a79e4d20163936958992a2995b7f1dd1d6197edc9ed722e0"
+    },
+    {
+      "installed_path": ".agents/skills/tdd/tests.md",
+      "upstream_path": "skills/engineering/tdd/tests.md",
+      "git_blob": "7ab86479f925a1f9e8ba680af33cb3b12e015381",
+      "sha256": "859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a"
+    },
+    {
+      "installed_path": ".agents/skills/code-review/agents/openai.yaml",
+      "upstream_path": "skills/engineering/code-review/agents/openai.yaml",
+      "git_blob": "9076774ba327f49068db9273feceda03bfe940fa",
+      "sha256": "8229ca854e11dc8e6aef2131ee03f31fb1561cf905fab9ccc325180cf3331352"
+    },
+    {
+      "installed_path": ".agents/skills/code-review/SKILL.md",
+      "upstream_path": "skills/engineering/code-review/SKILL.md",
+      "git_blob": "373a4f26e6cfa3617778397945bb069d9cb184bc",
+      "sha256": "09eb147f793e4647949edd32dbad278f0554dfb56e0d46b699cd4c2c55bf0357"
+    }
+  ],
+  "license_path": "docs-agents/mattpocock-skills-LICENSE.txt",
+  "license_blob": "f1dd2c09108dde1a5f56097cee8461b3ea834499"
+}

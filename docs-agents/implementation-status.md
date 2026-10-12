@@ -1,5 +1,26 @@
 # Estado da implementação
 
+## PR #6: disponibilidade leve na grade - 12/10/2026
+
+- Corrigido o comentário Copilot sobre I/O de `originalStatus` por página/foco/refresh. Grade usa `originalAvailability`: abre/confere/fecha descritor sem ler bytes, hash, decode ou identificação do legado; presença é explicitamente não verificada. Verificação completa e política SHA-256 continuam nas operações protegidas. Sem cache de identidade baseado em nome/tamanho/mtime.
+- RED Electron com 96 leituras em 48 itens em cache; GREEN com zero conteúdo/hash/decode em página, navegação, foco e refresh. Substituto com metadados iguais continua bloqueado ao abrir. Windows: 56 aprovações, zero falhas, três skips (59 testes), typecheck/pacote e runners afetados passaram. [Evidências](../evidence/availability-windows/report.md).
+- Medição delimitada já executada: pacote de ~367,8 MiB, sem instalador; memória de quatro processos em cenários sintéticos, sem somar RSS como RAM única. [Método, dados e limites](../evidence/availability-windows/resources.md). Sem otimizações especulativas ou validação no alvo de 8 GB.
+
+## Issue #4: relocalização por identidade - 12/10/2026
+
+- Decisão SHA-256/legado aprovada e registrada na [ADR 0003](adr/0003-original-identity-relocation.md) e na [issue #4](https://github.com/glaucia86/revelumo/issues/4), que permanece aberta. Base funcional `b82e1f2`; preparação oficial Matt Pocock separada em `ce3cbdc`; feature em `feat/issue-4-relocate`, sem publicação.
+- Schema v3, hash imutável por registro, estado de ausência/diferença, relocalização de uma foto por diálogo no main, atualização atômica da referência e UI/IPC restritos implementados. Legado sem hash e já ausente é bloqueado com opção de nova importação; candidato não vira prova retroativa.
+- Windows: 58 testes do núcleo, 55 aprovados/zero falhas/três skips, typecheck e pacote passaram. Electron real verificou migração v2, ausência no renderer, cancelamento, JPEG diferente com nome/tamanho iguais, conflito, sucesso por conteúdo, preservação de ID/nome/cache e reabertura em segundo processo. Cinco arquivos sintéticos mantiveram hashes.
+- Regressão do lote/grade/teclado anteriores também passou em dois processos, com 52 arquivos sintéticos inalterados. Diálogo nativo substituído na fronteira do teste; sem inspeção visual Windows, leitor de tela ou Linux/macOS desta nova fatia. [Evidências e limites](../evidence/relocation-windows/report.md).
+- Revisão oficial independente concluída sobre diff WIP indexado desde `ce3cbdc`, antes do commit: Standards encontrou uma divergência documental baixa e dois julgamentos de manutenção, resolvidos e reconferidos; Spec não encontrou falhas funcionais ou aumento indevido de escopo. [Relatórios por eixo](../evidence/relocation-windows/code-review.md). Suíte/typecheck e integração reverificados após as correções; #5 não iniciada.
+
+## Preparação da terceira fatia e review Windows - 12/10/2026
+
+- Base autoritativa `main` em `9fcef67`; PR #1 confirmado integrado. Relocalização aguarda coordenação do critério de identidade SHA-256 e de registros antigos sem hash.
+- Corrigida semântica dos botões da grade com RED/GREEN na árvore de acessibilidade do Chromium Electron. Dois ajustes de README e limpeza dos bancos de teste no Windows concluídos, sem redesenho/capa alterada.
+- Windows: `npm test` passou com 39 aprovados, zero falhas e três skips explicitados; typecheck e pacote x64 passaram. Smoke automatizado sobre `app.asar` verificou 51 IDs em dois processos Electron, lote misto, miniaturas, prévia, paginação e integridade de 52 fixtures sintéticas. Sandbox/isolamento preservados.
+- Limites: diálogo nativo substituído no teste, sem screenshot/inspeção visual Windows; `Revelumo.exe` produzido, sem teste por duplo clique ou instalador. Linux não reexecutado; macOS pendente. [Relatório, regressão e evidências](../evidence/missing-originals-windows/review-windows.md).
+
 ## Segunda fatia: lote e grade verificados — 11/10/2026, 23:05 UTC
 
 - 42/42 testes, typecheck e empacotamento Linux passaram. Revisão independente encontrou dois P2 de cancelamento/EXIF, corrigidos com regressões RED/GREEN.

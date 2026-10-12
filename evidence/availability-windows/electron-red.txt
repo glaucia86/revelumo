@@ -1,0 +1,8 @@
+
+AssertionError [ERR_ASSERTION]: initial 48 cached legacy tiles: grid must not read JPEG contents
+
+96 !== 0
+
+    at assertLight (<repo>\test\electron-availability.cjs:66:10)
+    at <repo>\test\electron-availability.cjs:77:23
+[24400:1012/001350.742:ERROR:gpu\ipc\client\command_buffer_proxy_impl.cc:490] GPU state invalid after WaitForGetOffsetInRange.

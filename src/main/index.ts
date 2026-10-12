@@ -16,7 +16,7 @@ const ownsInstance = app.requestSingleInstanceLock();
 if (!ownsInstance) app.quit();
 let catalog: Catalog | undefined;
 let window: BrowserWindow | null = null;
-let importing = false;
+let selectingFiles = false;
 let progress: ImportProgress = { running: false, total: 0, completed: 0, succeeded: 0, failed: 0, currentName: null };
 const developmentUrl = MAIN_WINDOW_VITE_DEV_SERVER_URL;
 const entryUrl = developmentUrl || 'app://revelumo/index.html';
@@ -87,15 +87,29 @@ if (ownsInstance) app.whenReady().then(async () => {
     try {
       if (request.op === 'list') return { ok: true, value: library.list() };
       if (request.op === 'progress') return { ok: true, value: progress };
+      if (request.op === 'status') return await library.status(request.id);
+      if (request.op === 'availability') return await library.availability(request.id);
       if (request.op === 'thumbnail') return await library.thumbnail(request.id);
       if (request.op === 'preview') return await library.preview(request.id);
-      if (importing) return fail('busy', 'Uma importação já está em andamento.');
-      importing = true;
+      if (selectingFiles) return fail('busy', 'Outra seleção de arquivos está em andamento. Aguarde.');
+      if (request.op === 'relocate') {
+        selectingFiles = true;
+        try {
+          const status = await library.status(request.id);
+          if (owner.isDestroyed()) return { ok: true, value: { canceled: true } };
+          if (!status.ok) return status;
+          if (status.value.state === 'available') return fail('invalid-request', 'O original já está disponível. Volte a abrir a foto.');
+          if (!status.value.canRelocate) return fail('identity-unverified', status.value.message);
+          const selection = await dialog.showOpenDialog(owner, { title: 'Localizar original', properties: ['openFile'], filters: [{ name: 'JPEG', extensions: ['jpg', 'jpeg'] }] });
+          return await library.relocateSelected(request.id, selection.canceled ? null : selection.filePaths[0] || null, () => owner.isDestroyed());
+        } finally { selectingFiles = false; }
+      }
+      selectingFiles = true;
       progress = { running: true, total: 0, completed: 0, succeeded: 0, failed: 0, currentName: null };
       try {
         const selection = await dialog.showOpenDialog(owner, { title: 'Importar JPEGs', properties: ['openFile', 'multiSelections'], filters: [{ name: 'JPEG', extensions: ['jpg', 'jpeg'] }] });
         return { ok: true, value: await library.importBatch(selection.canceled ? null : selection.filePaths, (state) => { progress = state; }, () => owner.isDestroyed()) };
-      } finally { importing = false; progress = { ...progress, running: false, currentName: null }; }
+      } finally { selectingFiles = false; progress = { ...progress, running: false, currentName: null }; }
     } catch { return fail('catalog-error', 'Não foi possível concluir a operação. Tente novamente.'); }
   });
   await createWindow();

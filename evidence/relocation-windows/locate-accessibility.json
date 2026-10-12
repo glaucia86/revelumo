@@ -1,0 +1,17 @@
+[
+  {
+    "description": null,
+    "role": "button",
+    "name": "Localizar original de original.jpg"
+  },
+  {
+    "description": null,
+    "role": "StaticText",
+    "name": "Localizar original"
+  },
+  {
+    "description": null,
+    "role": "InlineTextBox",
+    "name": "Localizar original"
+  }
+]
