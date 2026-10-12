@@ -62,7 +62,7 @@ The main image above shows the implemented **A · Cobre (Copper)** catalog: a ne
 
 The editor already supports exposure, relative white balance, autosave, and exposure history. This is its current working interface; the editor's full Cobre redesign remains planned. [Capture details and photo credits](docs/assets/screenshots/README.md).
 
-**Languages:** the catalog, import flow, application shell and existing editor support Brazilian Portuguese, English and Spanish through a persistent language selector. This includes exposure, relative white balance, history, comparison, rating/flags, relocation and recovery messages. The first launch follows the system languages, falling back to English. Crop and export remain pending features with separate translation work.
+**Languages:** the catalog, import flow, application shell and existing editor support Brazilian Portuguese, English and Spanish through a persistent language selector. This includes exposure, relative white balance, history, comparison, rating/flags, relocation and recovery messages. The first launch follows the system languages, falling back to English. JPEG export is also translated; crop remains pending.
 
 <a id="status"></a>
 ## What you can do today
@@ -98,7 +98,8 @@ A complete drag or completed numeric edit counts as one history step, even if au
 - **Persistence:** an interruption recovers the last state actually saved. Later changes that have not been persisted may be lost.
 - **Originals:** the catalog is not a backup. Keep your own backups of the photos and catalog.
 - **Relative white balance:** an adjustment to an already-rendered JPEG, not a camera temperature or RAW development. There is no eyedropper, preset, or automatic white balance. [Behavior and validation](docs-agents/adr/0005-jpeg-white-balance.md).
-- **Still in development:** cropping and JPEG export. These features are not available in the integrated version described here.
+- **JPEG export:** use **Export JPEG** in the editor. It confirms the current adjustments, then asks for a new local filename. One original-resolution, Chromium quality-0.90 sRGB JPEG is created with exposure/white balance and orientation applied. Selected authorship/copyright is preserved and GPS metadata removed. Existing files and originals are never replaced. This version limits output to 32 MiB and refuses larger results without lowering quality or resolution. “Quality 90” means the Chromium encoder’s fixed 0.90 parameter; it does not guarantee equivalent quality or chroma subsampling across encoders.
+- **Still in development:** cropping. Unknown recipes, including crop, are rejected rather than silently exported without their adjustments.
 
 <details>
 <summary>How locating a missing original works</summary>
@@ -193,7 +194,7 @@ The Windows executable in this folder is a development package, not an installer
 | `npm start` | Open Electron Forge development mode |
 | `npm run package` | Generate the local application in `out/`, without an installer |
 
-To run only the core tests with Node.js 24, you do not need to install dependencies:
+After `npm ci`, run only the core tests with Node.js 24 (Electron is not required):
 
 ```sh
 node --test test/*.test.ts
@@ -203,7 +204,7 @@ Node's type stripping does not replace typechecking. Core tests substitute the d
 
 ### CI and evidence
 
-The [CI workflow](.github/workflows/ci.yml) checks PRs, pushes to `main`, and manual runs on **Windows and Ubuntu**, using Node 24, offline documentation checks, lockfile installation, typechecking, tests, and packaging. Windows also runs import, relocation, filtering, exposure, history, and white-balance scenarios in the packaged Electron app, including reopening in separate processes.
+The [CI workflow](.github/workflows/ci.yml) checks PRs, pushes to `main`, and manual runs on **Windows and Ubuntu**, using Node 24, offline documentation checks, lockfile installation, typechecking, tests, and packaging. Windows also runs import, relocation, filtering, exposure, history, and white-balance scenarios in the packaged Electron app, including reopening in separate processes. Windows additionally gates the isolated JPEG engine, full export circuit and editor export UI, including cancellation and IPC recovery.
 
 - [Current GitHub Actions runs](https://github.com/glaucia86/revelumo/actions/workflows/ci.yml)
 - [Reproducing CI and platform-specific limits](docs-agents/ci.md)
@@ -213,6 +214,9 @@ The [CI workflow](.github/workflows/ci.yml) checks PRs, pushes to `main`, and ma
 - [Persistent history, retention, and Linux visual QA](evidence/issue-16/report.md)
 - [Relative white balance, full-recipe persistence, and color checks](evidence/issue-17/report.md)
 - [Cobre catalog, packaged interaction checks, and visual limits](evidence/cobre-catalog/report.md)
+- [Isolated full-resolution engine and corpus](evidence/issue-19-engine/report.md)
+- [Metadata, exclusive writer and resource measurements](evidence/issue-19-circuit/report.md)
+- [Visible export UI and recovery checks](evidence/issue-19-ui/report.md)
 
 Reports record each milestone's revision and environment; references to pending publication or CI in those records are historical. Consult PRs and Actions for the remote status. Automated regression tests use synthetic images and substitute the native dialog at the file-selection boundary. Licensed photographs were also imported for the UI captures; this limited visual check does not establish broad camera-file compatibility or validation with screen readers, 8 GB hardware, or macOS. Most detailed engineering reports are currently in Portuguese.
 
@@ -240,14 +244,32 @@ flowchart TB
     LIB --> DEC
     FILES -->|"read by reference"| LIB
 
+    JOB["Main export job · confirmed revision"]
+    SNAP["Authenticated read-only snapshot"]
+    ENGINE["Isolated export renderer + preload · full-resolution sRGB JPEG"]
+    META["Main · selected credits, no GPS"]
+    WRITE["Main · exclusive writer"]
+    OUTPUT["Separate JPEG file"]
+    MAIN --> JOB
+    LIB --> JOB
+    JOB --> SNAP
+    FILES --> SNAP
+    SNAP --> ENGINE
+    SNAP --> META
+    ENGINE --> META
+    META --> WRITE
+    WRITE --> OUTPUT
+
     classDef local fill:#202020,stroke:#efb28a,color:#f1f1f1;
-    class UI,EDIT,PRE,MAIN,LIB,DB,DEC,FILES local;
+    class UI,EDIT,PRE,MAIN,LIB,DB,DEC,FILES,JOB,SNAP,ENGINE,META,WRITE,OUTPUT local;
 ```
 
 - **Interface:** library, filters, classification, and editing controls. The renderer receives neither original file paths nor direct access to Node, files, or SQLite.
 - **Preload and main:** the [typed API](src/shared/contracts.ts) and [request validation](src/shared/requests.ts) restrict operations. Dialogs and file access belong to the main process; the window maintains context isolation, sandboxing, and disabled Node integration in the renderer.
 - **Catalog:** `app.getPath('userData')/catalog.sqlite` stores references, identity, thumbnails, classification, recipes, and history. The current schema is **v7**, with a transactional migration from v6; older versions that do not recognize the new schema refuse the database without deleting it.
 - **Editing:** the API delivers the original JPEG to prepare the preview; the worker derives a reduced sRGB image and composes exposure and relative white balance in linear RGB. History stores values and metadata, without an image per step. The recipe, cursor, and checkpoint are persisted transactionally.
+
+- **Export:** The main-owned job authenticates one original, sends the verified bytes to the isolated engine, then adds selected credits and exclusively writes a separate JPEG. The export renderer has no Node or filesystem access. [Implemented flow and checks](evidence/issue-19-ui/report.md). The [export request validator](src/shared/jpeg-export-request.ts) binds requests to the owner/frame and current session/revision; paths remain main-owned inputs. Only the output receipt reveals the selected output path. See the [UI contract](docs-agents/jpeg-export-ui-design.md). Row-band processing does not bound total RAM: the engine still decodes a full-resolution raster. The [historical complete-circuit measurement](evidence/issue-19-circuit/report.md) documents one workload, not an 8 GB support guarantee.
 
 **Implemented stack:** Electron, React, TypeScript, Vite/Electron Forge, and SQLite. No Rust code is integrated, and installing Rust is not required for this version.
 
@@ -269,9 +291,9 @@ The approved first stages use `node:sqlite` in Electron Main for the catalog and
 | First non-destructive editing tools | Exposure, autosave, and persistent 100-step history implemented |
 | Relative white balance | Temperature, tint, reset, and autosave implemented; exposure-only history preserved |
 | Cropping | In development; not yet available in the integrated version |
-| JPEG export | In development; new output files are not yet available |
+| JPEG export | One new Chromium quality-0.90 sRGB JPEG at original resolution; confirmed exposure/WB, selected credits, GPS removal; 32 MiB output limit |
 | Visual redesign | Cobre catalog implemented; full editor redesign still planned |
-| App languages: Brazilian Portuguese, English, and Spanish | Persistent selector; catalog/import and existing editor translated; crop/export pending |
+| App languages: Brazilian Portuguese, English, and Spanish | Persistent selector; catalog/import and existing editor translated; crop pending; JPEG export translated |
 | RAW, HEIC reading, TIFF export, and batch adjustments | Planned; dependent on further decisions and validation |
 | Distribution | Installers, releases, and broader platform validation still pending |
 

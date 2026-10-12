@@ -18,6 +18,10 @@ export type Preview = { photo: PhotoSummary; dataUrl: string };
 export type PhotoStatus = { photo: PhotoSummary; state: 'available' | 'missing' | 'unreadable' | 'changed'; canRelocate: boolean; message: string; descriptor?: MessageDescriptor };
 export type PhotoAvailability = { photo: PhotoSummary; state: 'present' | 'missing' | 'unreadable'; identityRecorded: boolean; contentVerified: false; message: string; descriptor?: MessageDescriptor };
 export interface RevelumoApi {
+  startJpegExport(id: string, sessionId: string, revision: number, attemptId: string): Promise<import('./jpeg-export-contract.ts').ExportResult<import('./jpeg-export-contract.ts').ExportJobState>>;
+  recoverJpegExport(id: string, sessionId: string, revision: number, attemptId: string): Promise<import('./jpeg-export-contract.ts').ExportResult<import('./jpeg-export-contract.ts').ExportJobState>>;
+  jpegExportStatus(jobId: string): Promise<import('./jpeg-export-contract.ts').ExportResult<import('./jpeg-export-contract.ts').ExportJobState>>;
+  cancelJpegExport(jobId: string): Promise<import('./jpeg-export-contract.ts').ExportResult<import('./jpeg-export-contract.ts').ExportJobState>>;
   recipePhoto(id: string): Promise<Result<PhotoRecipe>>;
   beginEditingPhoto(id: string): Promise<Result<EditSession>>;
   saveAdjustments(id: string, sessionId: string, revision: number, adjustments: PhotoAdjustments, processingVersion: number, gestures: ExposureGesture[]): Promise<Result<EditSession>>;

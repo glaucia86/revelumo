@@ -5,6 +5,7 @@ import { basename } from 'node:path';
 import { createHash, randomUUID } from 'node:crypto';
 import { setImmediate } from 'node:timers/promises';
 import { Catalog } from './catalog.ts';
+import { parseExportRecipe } from '../processing/jpeg-export-contract.ts';
 import { parseRequest } from '../shared/requests.ts';
 import type { PhotoClassification, PhotoFlag, PhotoRecipe, PhotoAdjustments, EditSession, ExposureGesture, LibraryFilters, LibraryResults } from '../shared/contracts.ts';
 import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcome, PhotoSummary, PhotoStatus, PhotoAvailability, Preview, Result } from '../shared/contracts.ts';
@@ -101,6 +102,23 @@ export class Library {
       this.editing = { ...recipe.value, sessionId: randomUUID(), revision: 0, ...this.catalog.exposureHistory(id) };
       this.editingOperation = null; this.editingGesture = { id: 0, complete: true };
       return { ok: true, value: { ...this.editing } };
+    });
+  }
+
+  captureExport(id: string, sessionId: string, revision: number): Promise<Result<{ sourcePath: string; sourceSha256: string | null; name: string; recipe: PhotoAdjustments & { processingVersion: 2 }; originalPaths: string[] }>> {
+    return this.serial(async () => {
+      if (!parseRequest({ op: 'end-edit', id, sessionId }) || !Number.isSafeInteger(revision) || revision < 0 ||
+          this.editing?.photo.id !== id || this.editing.sessionId !== sessionId || this.editing.revision !== revision) {
+        return failure('invalid-request', 'Export revision is no longer current.', { key: 'errors.obsoleteRevision' });
+      }
+      const photo = this.catalog.find(id);
+      if (!photo) return failure('not-found', 'Photo not found.', { key: 'errors.notFound' });
+      const recipe = parseExportRecipe(this.catalog.recipe(id));
+      if (!recipe || recipe.exposureTenths !== this.editing.exposureTenths || recipe.temperature !== this.editing.temperature || recipe.tint !== this.editing.tint) {
+        return failure('invalid-request', 'Export recipe differs from the confirmed session.', { key: 'errors.obsoleteRevision' });
+      }
+      return { ok: true, value: { sourcePath: photo.path, sourceSha256: photo.sha256, name: photo.name,
+        recipe, originalPaths: this.catalog.list().map(photo => photo.path) } };
     });
   }
 

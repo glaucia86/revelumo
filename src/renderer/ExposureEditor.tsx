@@ -1,3 +1,5 @@
+import type { ExportJobState, ExportAttempt } from '../shared/jpeg-export-contract.ts';
+import { exportFailureMessage } from '../shared/jpeg-export-messages.ts';
 import { useLanguage } from './i18n/LanguageProvider.tsx';
 import type { MessageDescriptor } from '../shared/i18n/messages.ts';
 import { isMessageDescriptor } from '../shared/i18n/format.ts';
@@ -5,14 +7,102 @@ import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } f
 import { MAX_EXPOSURE_CHECKPOINT_GESTURES } from '../shared/contracts.ts';
 import type { EditSession, PhotoSummary, Preview, ExposureGesture, PhotoAdjustments } from '../shared/contracts.ts';
 
-export type ExposureHandle = { leave(discard?: boolean): Promise<void> };
+export type ExposureHandle = { leave(discard?: boolean): Promise<ExportJobState | undefined> };
 type GestureKind = 'number' | 'slider-pointer' | 'slider-key' | 'reset';
 type Draft = PhotoAdjustments & { revision: number };
 type PendingGesture = ExposureGesture & Draft;
 type PreviewRequest = Draft & { renderRequestId: number };
 
-export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; preview: Preview | null }>(function ExposureEditor({ photo, preview }, ref) {
+export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; preview: Preview | null; onExportResult: (result: ExportJobState) => void }>(function ExposureEditor({ photo, preview, onExportResult }, ref) {
   const { t } = useLanguage();
+  const [exporting, setExporting] = useState(false);
+  const [exportStatus, setExportStatus] = useState<MessageDescriptor | null>(null);
+  const [exportProblem, setExportProblem] = useState(false), [exportCleanup, setExportCleanup] = useState(false);
+  const pendingExportStart = useRef<ExportAttempt | null>(null);
+  const lastExport = useRef<ExportJobState | null>(null);
+  const exportGuard = useRef(false), exportCanceled = useRef(false), exportJobId = useRef<string | null>(null);
+  async function cancelExport() {
+    exportCanceled.current = true; setExportStatus({ key: 'export.canceling' });
+    if (exportJobId.current) { try { await window.revelumo.cancelJpegExport(exportJobId.current); } catch { /* Status reconciliation owns the final outcome. */ } }
+  }
+  const exportFlight = useRef<Promise<void> | null>(null), leavingNow = useRef(false);
+  function exportPhoto() {
+    if (exportFlight.current || leavingNow.current) return;
+    const operation = performExport(); exportFlight.current = operation;
+    void operation.finally(() => { if (exportFlight.current === operation) exportFlight.current = null; });
+  }
+  async function performExport() {
+    if (exportGuard.current || ending.current || leavingNow.current || !session.current) return;
+    finishGesture(); cancelDelay(); comparison.current = false; setCompare(false);
+    exportGuard.current = true; exportCanceled.current = false; setExporting(true); lastExport.current = null; setExportProblem(false); setExportCleanup(false); setExportStatus({ key: 'export.preparing' });
+    try {
+      if (pendingExportStart.current) { const recovered = await recoverExportStart(); await observeExport(recovered.jobId, recovered); return; }
+      if (exportJobId.current) { await observeExport(exportJobId.current); return; }
+      if (historyFlight.current) await historyFlight.current;
+      if (historyRequest.current) {
+        await moveHistory(historyRequest.current.direction);
+        if (historyRequest.current) throw Object.assign(new Error(), { code: 'SAVE_NOT_CONFIRMED' });
+      }
+      while (confirmed.current.revision !== draft.current.revision) {
+        if (!await save()) throw Object.assign(new Error(), { code: 'SAVE_NOT_CONFIRMED' });
+        cancelDelay();
+      }
+      render({ ...draft.current });
+      const expectedPreview = String(previewSequence.current), deadline = Date.now() + 10000;
+      while (canvas.current?.dataset.renderRequestId !== expectedPreview) {
+        if (exportCanceled.current) break;
+        if (!alive.current || Date.now() > deadline) throw Object.assign(new Error(), { code: 'PREVIEW_NOT_READY' });
+        await new Promise(resolve => setTimeout(resolve, 25));
+      }
+      if (exportCanceled.current) { setExportStatus({ key: 'export.canceled' }); return; }
+      const selection = { attemptId: crypto.randomUUID(), id: photo.id, sessionId: session.current.sessionId, revision: confirmed.current.revision };
+      pendingExportStart.current = selection;
+      let started;
+      try { started = await window.revelumo.startJpegExport(selection.id, selection.sessionId, selection.revision, selection.attemptId); }
+      catch { const recovered = await recoverExportStart(); await observeExport(recovered.jobId, recovered); return; }
+      pendingExportStart.current = null;
+      if (!started.ok) throw Object.assign(new Error(), { code: started.code });
+      exportJobId.current = started.value.jobId;
+      if (exportCanceled.current) await window.revelumo.cancelJpegExport(started.value.jobId);
+      await observeExport(started.value.jobId, started.value);
+    } catch (error) { setExportProblem(true); setExportStatus(exportFailureMessage((error as { code?: string }).code ?? 'UNKNOWN_JOB')); }
+    finally { exportGuard.current = false; setExporting(false); }
+  }
+
+  async function recoverExportStart(): Promise<ExportJobState> {
+    const selection = pendingExportStart.current!;
+    const recovered = await window.revelumo.recoverJpegExport(selection.id, selection.sessionId, selection.revision, selection.attemptId);
+    if (!recovered.ok) {
+      if (recovered.code === 'UNKNOWN_JOB') {
+        pendingExportStart.current = null;
+        onExportResult({ jobId: '', photoId: selection.id, sessionId: selection.sessionId, revision: selection.revision, state: 'failed', error: 'UNKNOWN_JOB' });
+      }
+      throw Object.assign(new Error(), { code: recovered.code });
+    }
+    pendingExportStart.current = null; exportJobId.current = recovered.value.jobId;
+    if (exportCanceled.current) await cancelExport();
+    return recovered.value;
+  }
+  async function observeExport(jobId: string, initial?: ExportJobState) {
+    let state = initial;
+    while (!state || !['succeeded', 'failed', 'canceled'].includes(state.state)) {
+      setExportStatus({ key: exportCanceled.current ? 'export.canceling' : state?.state === 'choosing' ? 'export.choosing' : 'export.exporting' });
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const response = await window.revelumo.jpegExportStatus(jobId);
+      if (!response.ok) {
+        if (response.code === 'UNKNOWN_JOB') {
+          exportJobId.current = null;
+          onExportResult({ jobId, photoId: photo.id, sessionId: session.current?.sessionId ?? '', revision: confirmed.current.revision, state: 'failed', error: 'UNKNOWN_JOB' });
+        }
+        throw Object.assign(new Error(), { code: response.code });
+      }
+      state = response.value;
+    }
+    exportJobId.current = null; lastExport.current = state; onExportResult(state);
+    setExportProblem(state.state === 'failed'); setExportCleanup(state.cleanupPending === true);
+    setExportStatus(state.state === 'failed' ? exportFailureMessage(state.error) : { key: state.state === 'succeeded' ? 'export.succeeded' : 'export.canceled' });
+  }
+
   const session = useRef<EditSession | null>(null), draft = useRef<Draft>({ revision: 0, exposureTenths: 0, temperature: 0, tint: 0 });
   const confirmed = useRef<Draft>({ revision: 0, exposureTenths: 0, temperature: 0, tint: 0 });
   const saveRequest = useRef<(Draft & { gestures: ExposureGesture[] }) | null>(null);
@@ -163,6 +253,18 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
 
   useImperativeHandle(ref, () => ({
     async leave(discard = false) {
+      leavingNow.current = true;
+      if (exportFlight.current || exportJobId.current || pendingExportStart.current) {
+        try {
+          await cancelExport();
+          if (exportFlight.current) await exportFlight.current;
+          if (pendingExportStart.current) { await recoverExportStart(); await cancelExport(); }
+          if (exportJobId.current) { setExporting(true); await observeExport(exportJobId.current); }
+          if (lastExport.current?.state === 'succeeded') { leavingNow.current = false; return lastExport.current; }
+        } catch (error) {
+          leavingNow.current = false; setExportProblem(true); setExportStatus(exportFailureMessage('UNKNOWN_JOB')); throw error;
+        } finally { setExporting(false); }
+      }
       if (!discard) finishGesture();
       setLeaving(true); cancelDelay();
       try {
@@ -193,7 +295,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
           if (!result.ok) throw new Error(result.message);
           session.current = null;
         }
-      } catch (cause) { ending.current = false; setLeaving(false); throw cause; }
+      } catch (cause) { leavingNow.current = false; ending.current = false; setLeaving(false); throw cause; }
     },
   }));
 
@@ -231,7 +333,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
           canvas.current.width = data.width; canvas.current.height = data.height;
           const ctx = canvas.current.getContext('2d', { colorSpace: 'srgb' });
           ctx?.putImageData(new ImageData(new Uint8ClampedArray(data.buffer), data.width, data.height, { colorSpace: 'srgb' }), 0, 0);
-          canvas.current.dataset.revision = String(data.revision); setPrepared(true);
+          canvas.current.dataset.revision = String(data.revision); canvas.current.dataset.renderRequestId = String(data.renderRequestId); setPrepared(true);
         }
         startNextRender();
       }
@@ -242,7 +344,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
   }, [loaded, preview, photo.id]);
 
   function change(text: string, kind: GestureKind) {
-    if (!loaded || ending.current || movingNow.current || historyRequest.current || !/^[-+]?\d+(\.\d)?$/.test(text)) return;
+    if (!loaded || exportGuard.current || ending.current || movingNow.current || historyRequest.current || !/^[-+]?\d+(\.\d)?$/.test(text)) return;
     const ev = Number(text), tenths = Math.round(ev * 10);
     if (!Number.isFinite(ev) || tenths < -30 || tenths > 30 || Math.abs(ev * 10 - tenths) > 1e-8 || tenths === draft.current.exposureTenths) return;
     beginGesture(kind); activeGesture.current!.changed = true;
@@ -256,7 +358,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
     change(text, kind);
   }
   function changeWhiteBalance(field: 'temperature' | 'tint', text: string) {
-    if (!loaded || ending.current || movingNow.current || historyRequest.current || !/^[-+]?\d+$/.test(text)) return;
+    if (!loaded || exportGuard.current || ending.current || movingNow.current || historyRequest.current || !/^[-+]?\d+$/.test(text)) return;
     const value = Number(text);
     if (!Number.isInteger(value) || value < -100 || value > 100 || value === draft.current[field]) return;
     finishGesture();
@@ -266,6 +368,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
     render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths }); schedule();
   }
   function resetWhiteBalance() {
+    if (exportGuard.current || ending.current) return;
     setWhiteBalanceText({ temperature: '0', tint: '0' });
     if (draft.current.temperature === 0 && draft.current.tint === 0) return;
     finishGesture();
@@ -276,9 +379,10 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
   function formatWhiteBalance(field: 'temperature' | 'tint') {
     setWhiteBalanceText(current => ({ ...current, [field]: String(draft.current[field]) }));
   }
-  const disabled = !loaded || !prepared || leaving || moving || historyFailure || Boolean(previewError);
+  const disabled = exporting || !loaded || !prepared || leaving || moving || historyFailure || Boolean(previewError);
   const pendingChange = pendingGestures.current.some(item => item.exposureTenths !== confirmed.current.exposureTenths);
   return <div className="editing">
+    <div className="export-controls"><button className="export-jpeg" disabled={disabled} onClick={() => void exportPhoto()}>{t({ key: exportJobId.current || pendingExportStart.current ? 'export.checkResult' : 'export.action' })}</button>{exporting && <button className="export-cancel" onClick={() => void cancelExport()}>{t({ key: 'export.cancel' })}</button>}<small>{t({ key: 'export.settings' })}</small><small>{t({ key: 'export.limitHint' })}</small>{exportStatus && <p role={exportProblem ? 'alert' : 'status'}>{t(exportStatus)}</p>}{exportCleanup && <p role="alert">{t({ key: 'export.cleanupFailure' })}</p>}</div>
     {preview && <figure><canvas ref={canvas} width={1} height={1} role="img" aria-label={t({ key: 'editor.previewLabel', params: { filename: photo.name } })}/><figcaption>{photo.name} · {t({ key: 'editor.previewCaption' })}</figcaption></figure>}
     <div className="exposure" aria-label={t({ key: 'editor.exposureGroup' })}>
       <label>{t({ key: 'editor.exposure' })} <input aria-label={t({ key: 'editor.exposure' })} type="range" min="-3" max="3" step="0.1" value={value / 10} disabled={disabled} onChange={event => changeControl(event.target.value)}

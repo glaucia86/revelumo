@@ -12,6 +12,9 @@ import { parseRequest } from '../shared/requests.ts';
 import { jpegPreview } from './preview.ts';
 import { jpegThumbnail } from './thumbnail.ts';
 import type { ImportProgress } from '../shared/contracts.ts';
+import { JpegExportJobs } from './jpeg-export-job.ts';
+import { handleJpegExportRequest } from './jpeg-export-ipc.ts';
+import { exportJpeg } from './jpeg-export-service.ts';
 import { assetPath } from './assets.ts';
 import { isTrustedDocument } from './trusted-document.ts';
 
@@ -25,6 +28,14 @@ let window: BrowserWindow | null = null;
 let closeRequested = false;
 let closeAllowed = false;
 let selectingFiles = false;
+let exportJobs: JpegExportJobs | undefined;
+let exportGeneration: object = {};
+let exportSettlement: Promise<void> = Promise.resolve();
+let rendererAlive = false;
+function retireExportGeneration() {
+  const generation = exportGeneration; exportGeneration = {};
+  exportSettlement = Promise.all([exportSettlement, exportJobs?.cancelOwner(generation)]).then(() => {});
+}
 let progress: ImportProgress = { running: false, total: 0, completed: 0, succeeded: 0, failed: 0, currentName: null };
 const developmentUrl = MAIN_WINDOW_VITE_DEV_SERVER_URL;
 const entryUrl = developmentUrl || 'app://revelumo/index.html';
@@ -48,17 +59,29 @@ async function thumbnail(bytes: Buffer): Promise<string> {
 }
 
 async function createWindow() {
-  closeRequested = false; closeAllowed = false;
+  closeRequested = false; closeAllowed = false; rendererAlive = false; retireExportGeneration();
   window = new BrowserWindow({
     width: 1160, height: 780, minWidth: 760, minHeight: 540,
     backgroundColor: '#151715', title: 'Revelumo',
     webPreferences: { preload: join(__dirname, 'preload.cjs'), contextIsolation: true, nodeIntegration: false, sandbox: true, webSecurity: true },
   });
+  const created = window;
+  created.webContents.on('did-start-navigation', (_event, _url, inPlace, mainFrame) => {
+    if (mainFrame && !inPlace) { rendererAlive = false; retireExportGeneration(); }
+  });
+  created.webContents.on('did-finish-load', () => { if (window === created) rendererAlive = true; });
+  created.webContents.on('render-process-gone', () => { if (window === created) { rendererAlive = false; retireExportGeneration(); } });
+  created.webContents.on('destroyed', () => { if (window === created) retireExportGeneration(); });
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   window.webContents.on('will-navigate', (event) => event.preventDefault());
   window.on('close', (event) => {
     if (closeAllowed) return;
     event.preventDefault(); closeRequested = true;
+    if (!rendererAlive) {
+      retireExportGeneration();
+      void exportSettlement.then(() => { if (window === created && !created.isDestroyed()) { closeAllowed = true; created.close(); } });
+      return;
+    }
     window?.webContents.send('revelumo:close-request');
   });
   window.on('closed', () => { window = null; });
@@ -100,6 +123,19 @@ if (ownsInstance) app.whenReady().then(async () => {
   });
   catalog = new Catalog(join(dataDir, 'catalog.sqlite'));
   const library = new Library(catalog, preview, thumbnail);
+  exportJobs = new JpegExportJobs(library, async name => {
+    const owner = window;
+    if (!owner || owner.isDestroyed()) return null;
+    if (selectingFiles) throw Object.assign(new Error(), { code: 'BUSY' });
+    selectingFiles = true;
+    try {
+      const result = await dialog.showSaveDialog(owner, { title: translate(language, { key: 'export.action' }),
+        defaultPath: name.replace(/\.jpe?g$/i, '') + '-edited.jpg', filters: [{ name: 'JPEG', extensions: ['jpg', 'jpeg'] }] });
+      return result.canceled ? null : result.filePath || null;
+    } finally { selectingFiles = false; }
+  }, exportJpeg, [dataDir]);
+  ipcMain.handle('revelumo:export', (event, input: unknown) => handleJpegExportRequest(exportJobs!, event, window?.webContents ?? null, entryUrl, input, exportGeneration));
+
   ipcMain.handle('revelumo:invoke', async (event, input: unknown) => {
     const owner = window;
     if (!owner || event.sender !== owner.webContents || event.senderFrame !== owner.webContents.mainFrame ||
@@ -120,6 +156,8 @@ if (ownsInstance) app.whenReady().then(async () => {
       if (request.op === 'end-edit') return await library.endEditing(request.id, request.sessionId);
       if (request.op === 'close-ready') {
         if (!closeRequested) return fail('invalid-request', 'Nenhum fechamento solicitado.', { key: 'errors.noCloseRequested' });
+        await exportJobs?.cancelOwner(exportGeneration);
+        await exportSettlement;
         closeAllowed = true;
         // Reply before closing the bridge's owning renderer.
         setImmediate(() => { if (window === owner && !owner.isDestroyed()) owner.close(); });

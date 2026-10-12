@@ -91,3 +91,21 @@
 @media (prefers-reduced-motion: reduce) {
   .catalog-header *, .catalog-sidebar *, .catalog-shell .gallery * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
+
+/* Compact export controls reuse Cobre without restyling the photographic editor. */
+.export-controls { width:100%; flex-shrink:0; display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; padding:12px; border:1px solid var(--border); border-radius:8px; background:var(--surface); font-size:12px; }
+.export-controls .export-jpeg { background:var(--accent); color:#25211e; border-color:var(--accent); font-weight:600; }
+.export-controls small { flex-basis:100%; display:block; color:var(--muted); line-height:1.45; }
+.export-controls p { flex-basis:100%; margin:0; line-height:1.5; overflow-wrap:anywhere; }
+.export-controls [role=alert] { color:var(--danger); }
+.export-receipt { flex-shrink:0; padding:9px 24px; background:var(--surface); border-bottom:1px solid var(--border); font-size:12px; line-height:1.4; max-height:100px; overflow:auto; overflow-wrap:anywhere; }
+.export-receipt strong { font-weight:500; }
+.export-receipt details { display:inline; margin-left:12px; }
+.export-receipt summary { cursor:pointer; display:inline; color:var(--accent); text-decoration:underline; }
+.export-receipt details[open] { display:block; margin:6px 0 0; }
+.export-receipt details[open] span { display:block; margin-top:4px; }
+.export-receipt p { margin:5px 0 0; }
+.export-receipt summary:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+
+.export-close-confirm { flex-shrink:0; display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:12px 24px; background:var(--surface); border-top:1px solid var(--accent); max-height:180px; overflow:auto; font-size:13px; }
+.export-close-confirm p { flex-basis:100%; margin:0; }
