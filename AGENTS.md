@@ -3,8 +3,8 @@
 Editor fotográfico desktop local para Linux, Windows e macOS, desenvolvido de forma independente e por etapas. Lightroom Classic é referência funcional, sem pressupor paridade ou data de lançamento.
 
 - Sem funcionalidades de IA no produto, assinatura ou sincronização em nuvem. Agentes de programação podem auxiliar o desenvolvimento.
-- Aprovados: Electron, React, TypeScript e Electron Forge; catálogo SQLite local acessível somente pelo processo principal, com IPC restrito. Público inicial: amadores e entusiastas. Motor RAW e licença permanecem em aberto; não transformar propostas em decisões.
-- O repositório `glaucia86/revelumo` é público por decisão da responsável. Licença permanece pendente; visibilidade pública não concede licença open source.
+- Aprovados: Electron, React, TypeScript e Electron Forge; catálogo SQLite local acessível somente pelo processo principal, com IPC restrito. Público inicial: amadores e entusiastas. Motor RAW permanece em aberto; não transformar propostas em decisões.
+- O repositório `glaucia86/revelumo` é público por decisão da responsável. Código e documentação originais sob a licença MIT da raiz. Direitos e licenças de terceiros permanecem separados; consulte THIRD_PARTY_NOTICES.md.
 - REA é uma ferramenta auxiliar de investigação, não uma dependência obrigatória.
 
 ## Agent skills

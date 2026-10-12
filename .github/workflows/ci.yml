@@ -45,6 +45,10 @@ jobs:
           node -p 'JSON.stringify({platform:process.platform,arch:process.arch,versions:process.versions})' |
             Tee-Object -FilePath (Join-Path $env:RUNNER_TEMP 'node-versions.txt')
 
+      - name: Check documentation links and language navigation
+        id: docs
+        run: npm run check:docs
+
       - name: npm ci
         id: install
         run: npm ci
@@ -173,7 +177,7 @@ jobs:
           '| Step | Outcome |' >> $env:GITHUB_STEP_SUMMARY
           '| --- | --- |' >> $env:GITHUB_STEP_SUMMARY
           $results = $env:STEP_RESULTS | ConvertFrom-Json -AsHashtable
-          foreach ($id in @('versions', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history', 'white_balance')) {
+          foreach ($id in @('versions', 'docs', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history', 'white_balance')) {
             "| $id | $($results[$id].outcome) |" >> $env:GITHUB_STEP_SUMMARY
           }
           if ($env:RUNNER_OS -ne 'Windows') {

@@ -6,7 +6,7 @@ Referência da [issue #8](https://github.com/glaucia86/revelumo/issues/8). Aprov
 
 `package.json`, `package-lock.json` (campo superior `version` e `packages[""].version`) continuam em `0.0.1`. A primeira candidata proposta é `0.1.0-alpha.1`, com tag futura `v0.1.0-alpha.1`. São nomes propostos, não uma versão lançada, reservada ou preparada para distribuição. Conteúdo e validação da candidata ainda precisam ser definidos; não incrementar versão para uma candidata vazia ou sem conteúdo validado.
 
-Esta issue entrega documentos. Não cria tag/release, envia ao npm, configura makers/assinatura/notarização ou muda app/workflow. `private: true` permanece; `makers: []` significa que `npm run package` gera uma pasta de desenvolvimento, não instaladores. A licença do projeto ainda está pendente.
+Esta issue entrega documentos. Não cria tag/release, envia ao npm, configura makers/assinatura/notarização ou muda app/workflow. `private: true` permanece; `makers: []` significa que `npm run package` gera uma pasta de desenvolvimento, não instaladores. Código e documentação originais agora estão sob MIT; avisos de terceiros permanecem separados em THIRD_PARTY_NOTICES.md.
 
 ## Preparar
 
@@ -25,7 +25,7 @@ Preencher somente numa janela futura autorizada; este checklist não executa com
 - [ ] Checkout limpo do SHA integrado final exato; registro da candidata aponta para esse SHA.
 - [ ] CI terminal verde nesse SHA; URL/evento/SHA testado e jobs conferidos, incluindo contagens de aprovados, falhas e motivos de skips.
 - [ ] Pacote desse SHA testado; plataforma/arquitetura, ferramentas, comandos, resultados e relatório identificados. Distinguir pasta empacotada de instalador.
-- [ ] Somente plataformas e experiências efetivamente verificadas declaradas; limites nativos/visuais, macOS, desempenho/cor e licença pendente explicitados. Decisões de licença/distribuição necessárias resolvidas antes de distribuir.
+- [ ] Somente plataformas e experiências efetivamente verificadas declaradas; limites nativos/visuais, macOS, desempenho/cor e obrigações de terceiros explicitados. Decisões de licença/distribuição necessárias resolvidas antes de distribuir.
 - [ ] Nome da tag ainda inexistente: conferir refs locais e remotas naquele momento. Ausência de tag não autoriza sua criação; não sobrescrever/reutilizar tag existente.
 - [ ] Autorização explícita da responsável para criar tag nesse SHA e, separadamente, publicar o conteúdo/destino aprovado. Nenhuma publicação por approval, PR ou todo merge.
 - [ ] Se autorizada a tag, verificar que resolve exatamente para o SHA aprovado; uma tag identifica código, não prova publicação nem compatibilidade.

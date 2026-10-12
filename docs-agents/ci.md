@@ -7,6 +7,7 @@ O workflow `.github/workflows/ci.yml` responde a `pull_request`, `push` em `main
 Na raiz de um checkout limpo, com Node 24:
 
 ```sh
+npm run check:docs
 npm ci
 npm run install:electron
 npm run typecheck
@@ -82,3 +83,9 @@ O protocolo limita cada lote a 1024 gestos pequenos; isto é um limite de transp
 `npm run test:wb -- <diretório novo> <modo>` executa `first`, `reopen`, `controls`, `preview-race`, `save-race`, `history-ack`, `keyboard`, `many-pending`, `close-race`, `close-reopen`, `color`, `layout` em doze processos Electron Windows. O primeiro prepara um catálogo sintético v6, verificando a migração real. Cobre pixels conhecidos, receita inteira, reset, teclado via CDP/AX, interleaving EV/WB, ACK perdido/incorreto, preview obsoleto, lote maior que 1024, Undo/Redo preservando WB e flush/reabertura. Mesmos gates/custos/permissões; cinco minutos dentro do job existente. Focus emulado via CDP torna a janela oculta determinística e não representa teclado físico ou QA perceptual.
 
 Os modos adicionais verificam ACK de Undo/Redo preservando T/M, WB+EV com sRGB/P3 e oito EXIF contra oráculos independentes e acesso aos controles na janela mínima 760×540.
+
+## Contribuições e verificação documental
+
+`npm run check:docs` roda no workflow existente, após configurar Node e antes de instalar dependências. Verifica destinos e âncoras locais e navegação entre os READMEs em inglês, português e espanhol; não acessa a rede nem executa o conteúdo dos documentos. Seus testes de comportamento entram em `npm test`. Falhas aparecem no job e no resumo com a etapa `docs`.
+
+Formulários em `.github/ISSUE_TEMPLATE/` e o template de PR apenas estruturam relatos. Não há workflow de execução de issues, interpolação do conteúdo de relatos em shell, secrets ou novas permissões. Mantêm-se `pull_request`, `push` em `main`, `workflow_dispatch`, `contents: read` e checkout sem persistir credenciais. CI não equivale a aprovação de merge, validação visual ou auditoria de licenças de um futuro instalador.
