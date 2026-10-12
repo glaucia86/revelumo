@@ -79,9 +79,11 @@ jobs:
           $root = Join-Path $env:RUNNER_TEMP ('revelumo-smokes-' + [guid]::NewGuid())
           $electron = Join-Path $root 'electron'
           $relocation = Join-Path $root 'relocation'
-          New-Item -ItemType Directory -Path $electron, $relocation | Out-Null
+          $exposure = Join-Path $root 'exposure'
+          New-Item -ItemType Directory -Path $electron, $relocation, $exposure | Out-Null
           "ELECTRON_SMOKE_DIR=$electron" >> $env:GITHUB_ENV
           "RELOCATION_SMOKE_DIR=$relocation" >> $env:GITHUB_ENV
+          "EXPOSURE_SMOKE_DIR=$exposure" >> $env:GITHUB_ENV
 
       - name: Packaged filters and exposure integration in two processes
         if: runner.os == 'Windows'
@@ -114,6 +116,25 @@ jobs:
         id: relocation_reopen
         run: npm run test:relocation -- "$env:RELOCATION_SMOKE_DIR" reopen
 
+      - name: 'Exposure: pixels, color, EXIF, IPC and autosave in hidden packaged Electron'
+        if: runner.os == 'Windows'
+        id: exposure_first
+        timeout-minutes: 3
+        run: npm run test:exposure -- "$env:EXPOSURE_SMOKE_DIR" first
+
+      - name: 'Exposure: reopen, interruption, discard and navigation-close races'
+        if: runner.os == 'Windows'
+        id: exposure_persistence
+        timeout-minutes: 5
+        run: |
+          # Every invocation is a separate real Electron process. Sequence is
+          # significant: race persists 1.7 EV; race-reopen verifies that value.
+          foreach ($mode in @('reopen', 'interrupt', 'reopen', 'discard-race', 'reopen', 'race', 'race-reopen')) {
+            Write-Output "Exposure persistence mode: $mode"
+            npm run test:exposure -- "$env:EXPOSURE_SMOKE_DIR" $mode
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+
       - name: Results and limits
         if: always()
         env:
@@ -126,7 +147,7 @@ jobs:
           '| Step | Outcome |' >> $env:GITHUB_STEP_SUMMARY
           '| --- | --- |' >> $env:GITHUB_STEP_SUMMARY
           $results = $env:STEP_RESULTS | ConvertFrom-Json -AsHashtable
-          foreach ($id in @('versions', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen')) {
+          foreach ($id in @('versions', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence')) {
             "| $id | $($results[$id].outcome) |" >> $env:GITHUB_STEP_SUMMARY
           }
           if ($env:RUNNER_OS -ne 'Windows') {
@@ -144,9 +165,9 @@ jobs:
               '```' >> $env:GITHUB_STEP_SUMMARY
             }
           }
-          foreach ($dir in @($env:ELECTRON_SMOKE_DIR, $env:RELOCATION_SMOKE_DIR, $env:FILTERS_SMOKE_DIR)) {
+          foreach ($dir in @($env:ELECTRON_SMOKE_DIR, $env:RELOCATION_SMOKE_DIR, $env:EXPOSURE_SMOKE_DIR, $env:FILTERS_SMOKE_DIR)) {
             if (!$dir) { continue }
-            foreach ($file in @('first-result.json', 'reopen-result.json', 'first-failure.txt', 'reopen-failure.txt')) {
+            foreach ($file in @('first-result.json', 'reopen-result.json', 'interrupt-result.json', 'discard-race-result.json', 'race-result.json', 'race-reopen-result.json', 'first-failure.txt', 'reopen-failure.txt', 'interrupt-failure.txt', 'discard-race-failure.txt', 'race-failure.txt', 'race-reopen-failure.txt')) {
               $path = Join-Path $dir $file
               if (Test-Path -LiteralPath $path) {
                 "### $(Split-Path $dir -Leaf) / $file" >> $env:GITHUB_STEP_SUMMARY
@@ -156,4 +177,5 @@ jobs:
               }
             }
           }
+          'Exposure uses committed synthetic JPEG/ICC fixtures and real packaged worker/canvas/SQLite. Pillow/LittleCMS fixture generation is not a CI/runtime dependency. The heavy 36 MP resource benchmark remains manual; see evidence/issue-12/report.md. Classification/availability-specific harnesses remain local, while core and import/relocation/exposure regressions run here.' >> $env:GITHUB_STEP_SUMMARY
           'Synthetic fixtures only. Native dialog replaced; no visual, physical keyboard, screen reader or executable double-click validation. makers: [] means no installers. No macOS check or end-user platform support claim. Package and local download caches disappear with the runner; no cache action or artifact upload.' >> $env:GITHUB_STEP_SUMMARY

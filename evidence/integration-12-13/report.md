@@ -34,3 +34,14 @@ CI recebe apenas o teste Windows filters first/reopen, incluindo cenários cruza
 #12 primeiro, #13 sobre main já integrada. PR20 foi confirmado merged em `72761181cf3036244c863783881da8f1a8838c6d`; sua árvore é igual à fonte `affd452`, sem alteração alheia a sobrepor. A branch de publicação será preparada no checkout novo sobre main remota revalidada, usando somente o delta #13+resolução. Commit/patch de integração fica local; fontes permanecem intactas. Push/PR rascunho autorizado depois da confirmação #12, sem merge remoto de #13 nesta etapa.
 
 Linux/macOS, inspeção visual/humana, seletor nativo, leitor de tela/teclado físico e alvo8 GB não verificados. QA Windows nativa de outra issue permanece pendente.
+
+
+## Integração final do CI #22 em #23 — 12/10/2026
+
+Depois do merge de #22, a base fixa passou a `639dbe8708fed5101fb26008243e1a42a4a4f2a8`. O run de push [38212515841](https://github.com/glaucia86/revelumo/actions/runs/38212515841) dessa base passou nos runners Windows e Ubuntu; os dois gates Windows de exposição foram executados, incluindo todos os oito processos.
+
+A atualização de #23 preserva os pais `33719f92e2e1d56e6b37598f4db0d9496c82a412` e `639dbe8708fed5101fb26008243e1a42a4a4f2a8`. Houve conflito somente no summary de `.github/workflows/ci.yml`: união dos IDs `filters`, `exposure_first`, `exposure_persistence` e dos diretórios de resultados. O workflow resultante mantém a sequência inteira de exposição, falha imediata, timeouts e execução de filtros em dois processos. Nenhum arquivo de produto, teste, tolerância, fixture ou dependência foi modificado por esta resolução.
+
+No checkout Linux x64 cloud, Node 24.19.0/npm 11.9.0: `npm run typecheck` passou; `npm test` passou com 71 testes, zero falhas e zero skips. `npm run package` inicialmente falhou porque o cache padrão `/home/agent/.cache/electron` não estava disponível; o mesmo comando com `electron_config_cache` apontando ao cache gravável já existente passou, sem alteração de código/configuração versionada. Electron de interface não foi executado neste passe de shell; a verificação empacotada Windows do novo head é exigida no CI antes do merge. A QA gráfica paralela de outra base não constitui prova deste snapshot.
+
+As evidências históricas acima continuam associadas às respectivas fontes. SHA final, merge ref e runs de PR/push ficam registrados na conversa de [PR #23](https://github.com/glaucia86/revelumo/pull/23). Sem alegação adicional sobre macOS, hardware de 8 GB, leitor de tela, teclado físico ou QA nativa/visual Windows de #4.
