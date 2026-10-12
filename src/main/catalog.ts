@@ -1,7 +1,7 @@
 import { DatabaseSync } from 'node:sqlite';
 import { randomUUID } from 'node:crypto';
 import { basename } from 'node:path';
-import type { PhotoSummary, PhotoFlag } from '../shared/contracts.ts';
+import type { PhotoSummary, PhotoFlag, LibraryFilters, LibraryResults } from '../shared/contracts.ts';
 
 export type PhotoReference = PhotoSummary & { path: string; sha256: string | null; rating: number | null; flag: PhotoFlag };
 
@@ -74,6 +74,16 @@ export class Catalog {
   list(): PhotoReference[] {
     return this.db.prepare('SELECT id, path, name, sha256, rating, flag FROM photos ORDER BY rowid').all()
       .map((row) => ({ ...row }) as PhotoReference);
+  }
+
+  query(filters: LibraryFilters): LibraryResults {
+    const photos = this.db.prepare(`SELECT id, name FROM photos
+      WHERE (? = 'all' OR (? = 'unrated' AND rating IS NULL) OR rating >= ?)
+        AND (? = 'all' OR flag = ?)
+      ORDER BY rowid`).all(filters.rating, filters.rating, typeof filters.rating === 'number' ? filters.rating : 6, filters.flag, filters.flag)
+      .map(row => ({ id: String(row.id), name: String(row.name) }));
+    const total = Number(this.db.prepare('SELECT COUNT(*) AS total FROM photos').get()!.total);
+    return { photos, total };
   }
 
   find(id: string): PhotoReference | undefined {

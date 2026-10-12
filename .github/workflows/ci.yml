@@ -85,6 +85,17 @@ jobs:
           "RELOCATION_SMOKE_DIR=$relocation" >> $env:GITHUB_ENV
           "EXPOSURE_SMOKE_DIR=$exposure" >> $env:GITHUB_ENV
 
+      - name: Packaged filters and exposure integration in two processes
+        if: runner.os == 'Windows'
+        id: filters
+        run: |
+          $filters = Join-Path $env:RUNNER_TEMP ('revelumo-filters-' + [guid]::NewGuid())
+          "FILTERS_SMOKE_DIR=$filters" >> $env:GITHUB_ENV
+          npm run test:filters -- "$filters" first
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm run test:filters -- "$filters" reopen
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
       - name: 'npm run test:electron -- <fresh directory> first'
         if: runner.os == 'Windows'
         id: electron_first
@@ -136,7 +147,7 @@ jobs:
           '| Step | Outcome |' >> $env:GITHUB_STEP_SUMMARY
           '| --- | --- |' >> $env:GITHUB_STEP_SUMMARY
           $results = $env:STEP_RESULTS | ConvertFrom-Json -AsHashtable
-          foreach ($id in @('versions', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence')) {
+          foreach ($id in @('versions', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence')) {
             "| $id | $($results[$id].outcome) |" >> $env:GITHUB_STEP_SUMMARY
           }
           if ($env:RUNNER_OS -ne 'Windows') {
@@ -154,7 +165,7 @@ jobs:
               '```' >> $env:GITHUB_STEP_SUMMARY
             }
           }
-          foreach ($dir in @($env:ELECTRON_SMOKE_DIR, $env:RELOCATION_SMOKE_DIR, $env:EXPOSURE_SMOKE_DIR)) {
+          foreach ($dir in @($env:ELECTRON_SMOKE_DIR, $env:RELOCATION_SMOKE_DIR, $env:EXPOSURE_SMOKE_DIR, $env:FILTERS_SMOKE_DIR)) {
             if (!$dir) { continue }
             foreach ($file in @('first-result.json', 'reopen-result.json', 'interrupt-result.json', 'discard-race-result.json', 'race-result.json', 'race-reopen-result.json', 'first-failure.txt', 'reopen-failure.txt', 'interrupt-failure.txt', 'discard-race-failure.txt', 'race-failure.txt', 'race-reopen-failure.txt')) {
               $path = Join-Path $dir $file
