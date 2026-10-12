@@ -1,5 +1,12 @@
 # Estado da implementação
 
+## Preparação da terceira fatia e review Windows - 12/10/2026
+
+- Base autoritativa `main` em `9fcef67`; PR #1 confirmado integrado. Relocalização aguarda coordenação do critério de identidade SHA-256 e de registros antigos sem hash.
+- Corrigida semântica dos botões da grade com RED/GREEN na árvore de acessibilidade do Chromium Electron. Dois ajustes de README e limpeza dos bancos de teste no Windows concluídos, sem redesenho/capa alterada.
+- Windows: `npm test` passou com 39 aprovados, zero falhas e três skips explicitados; typecheck e pacote x64 passaram. Smoke automatizado sobre `app.asar` verificou 51 IDs em dois processos Electron, lote misto, miniaturas, prévia, paginação e integridade de 52 fixtures sintéticas. Sandbox/isolamento preservados.
+- Limites: diálogo nativo substituído no teste, sem screenshot/inspeção visual Windows; `Revelumo.exe` produzido, sem teste por duplo clique ou instalador. Linux não reexecutado; macOS pendente. [Relatório, regressão e evidências](../evidence/missing-originals-windows/review-windows.md).
+
 ## Segunda fatia: lote e grade verificados — 11/10/2026, 23:05 UTC
 
 - 42/42 testes, typecheck e empacotamento Linux passaram. Revisão independente encontrou dois P2 de cancelamento/EXIF, corrigidos com regressões RED/GREEN.

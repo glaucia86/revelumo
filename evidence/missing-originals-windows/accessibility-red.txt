@@ -1,0 +1,4 @@
+AssertionError [ERR_ASSERTION]: Abrir synthetic-00.jpg must be exposed as a button; observed listitem
+    at C:\Users\glauc\Documents\Codex\2026-10-11\task\revelumo\test\electron-smoke.cjs:76:16
+    at check (C:\Users\glauc\Documents\Codex\2026-10-11\task\revelumo\test\electron-smoke.cjs:21:33)
+    at C:\Users\glauc\Documents\Codex\2026-10-11\task\revelumo\test\electron-smoke.cjs:72:5

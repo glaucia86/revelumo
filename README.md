@@ -20,7 +20,7 @@ Local, sem assinatura e sem funcionalidades de IA no produto.
 
 ---
 
-> **Prévia de desenvolvimento.** A primeira fatia JPEG foi validada de ponta a ponta no pacote Linux x64 deste ambiente de teste. Ainda não há release nem instaladores; Windows e macOS não foram validados. As seções abaixo distinguem o que existe hoje do que está planejado.
+> **Prévia de desenvolvimento.** O fluxo JPEG foi validado de ponta a ponta no pacote Linux x64 deste ambiente de teste. O pacote Windows x64 passou por smoke automatizado com fixtures sintéticas; diálogo nativo e inspeção visual Windows seguem pendentes. Ainda não há release nem instaladores; macOS não foi validado. As seções abaixo distinguem o que existe hoje do que está planejado.
 
 <a id="visao"></a>
 ## A fotografia fica com você
@@ -47,6 +47,8 @@ A referência funcional é o fluxo de um editor como Lightroom Classic. O Revelu
 | Distribuição | Pacote de desenvolvimento Linux x64 testado; sem instaladores ou releases; Windows/macOS pendentes |
 
 **Evidência disponível:** 42 testes do núcleo passaram em Node, o typecheck TypeScript passou e o Forge gerou o pacote Linux. No aplicativo real foram verificados cancelamento, importação, reimportação sem duplicata, rejeição de JPEG inválido, original ausente e reabertura após encerrar o processo. Os hashes das fixtures permaneceram iguais. [Primeira fatia](evidence/e2e-linux/report.md) · [Lote, grade e interrupção no Linux](evidence/batch-jpeg/report.md).
+
+**Verificação adicional Windows:** 39 testes aprovados, três skips com motivos explícitos, typecheck e pacote x64 passaram. Smoke automatizado com o código empacotado verificou acessibilidade da grade, importação, miniaturas, paginação, prévia e persistência em dois processos Electron. O seletor nativo foi substituído no teste; não houve inspeção visual Windows. [Resultados, dependências e limites](evidence/missing-originals-windows/review-windows.md).
 
 Nesta fatia, cada JPEG pode ter até **32 MiB e 40 megapixels**, dentro dos tipos de frame aceitos pelo preflight. Orientações EXIF 6 e 8 foram verificadas em imagens sintéticas; fidelidade de cor e compatibilidade ampla ainda precisam de avaliação. Arquivos ausentes permanecem no catálogo e retornam erro ao abrir a prévia; relocalização vem depois.
 
@@ -94,10 +96,10 @@ flowchart TB
 ### As fronteiras de hoje
 
 - **Renderer:** apresenta a biblioteca e a prévia. Não recebe caminhos dos originais nem acesso direto a Node, filesystem ou SQLite.
-- **Preload:** expõe somente `importJpeg`, `listPhotos` e `previewPhoto` pelo `contextBridge`.
+- **Preload:** expõe somente `importJpeg`, `importProgress`, `thumbnailPhoto`, `listPhotos` e `previewPhoto` pelo `contextBridge`. As operações IPC são `import`, `progress`, `thumbnail`, `list` e `preview`; miniaturas e prévias exigem UUID, sem receber caminhos livres.
 - **Main:** controla o diálogo nativo, valida as requisições e concentra o acesso ao catálogo e aos arquivos. A janela usa isolamento de contexto, sandbox e Node desabilitado no renderer.
 - **SQLite:** guarda o catálogo em `app.getPath('userData')/catalog.sqlite`. Fotos continuam no local original; o catálogo não é uma cópia de segurança delas.
-- **Prévia atual:** usa o JPEG original em memória, sem re-encode ou redução de resolução. Cache de miniaturas e processamento em worker ficam para as próximas etapas.
+- **Prévia atual:** usa o JPEG original em memória, sem re-encode ou redução de resolução. O cache persistente de miniaturas derivadas já está implementado no SQLite; processamento em worker permanece planejado.
 
 **Decisões abertas:** o worker nativo poderá ser em Rust ou C++; o motor RAW ainda não foi escolhido. O motor do RawTherapee é um candidato a investigar, sujeito a avaliação técnica e de licença. Essas opções não são dependências da primeira fatia.
 
