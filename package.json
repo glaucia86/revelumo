@@ -15,6 +15,7 @@
     "test:relocation": "electron test/electron-relocation.cjs",
     "test:availability": "electron test/electron-availability.cjs",
     "test:exposure": "electron test/electron-exposure.cjs",
+    "test:filters": "electron test/electron-filters.cjs",
     "typecheck": "tsc --noEmit",
     "start": "electron-forge start",
     "package": "electron-forge package",

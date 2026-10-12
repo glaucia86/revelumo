@@ -80,3 +80,6 @@ Em 11/10/2026, a leitura passou a abrir descritores com `O_RDONLY | O_NONBLOCK`,
 
 ## Próximo passo original — superado parcialmente
 O gate de typecheck, build e execução do pacote Linux foi cumprido no checkpoint acima. Permanecem as validações descritas em “Limites e próximos passos”. Os registros históricos foram preservados para distinguir tentativas bloqueadas dos resultados posteriores.
+# Issue #13: filtros de biblioteca — 12/10/2026
+
+Fatia local na branch `feat/issue-13-library-filters`, base `5aa6693`: estrelas mínimas 1–5/sem avaliação e flag por AND, consulta SQL restrita, filtros de sessão e retorno da prévia preservado. Sem schema/receitas/autosave novos. Windows: 67 testes Node (64 aprovados, três skips), typecheck/pacote e Electron oculto de filtros/grade/classificação/relocalização/disponibilidade/recursos passaram. Revisão independente Standards sem violações documentadas (uma observação baixa aceita); Spec sem achados. [Evidências, comandos e limites](../evidence/filters-windows/report.md). Commit local sem push/PR; integração com #12 e revalidação combinada ficam para o pai.

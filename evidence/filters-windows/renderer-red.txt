@@ -1,0 +1,3 @@
+Error: Timed out: accessible filter controls
+    at until (C:\Users\glauc\Documents\Codex\2026-10-12\task-7\revelumo\test\electron-filters.cjs:46:9)
+    at async C:\Users\glauc\Documents\Codex\2026-10-12\task-7\revelumo\test\electron-filters.cjs:63:3

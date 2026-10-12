@@ -47,6 +47,7 @@ const locate = name => `document.querySelector(${JSON.stringify(`button[aria-lab
 async function click(expression) { await until(() => js(`Boolean(${expression} && !${expression}.disabled)`), 'button ready'); await js(`${expression}.click()`); }
 async function importFiles(filenames, count) {
   selection = { canceled:false, filePaths:filenames };
+  await until(() => js('!document.querySelector("header button").disabled'), 'catalog ready before import');
   await click('document.querySelector("header button")');
   await until(() => js(`!document.querySelector('header button').disabled && document.querySelectorAll('.tile').length === ${count}`), 'import rendered');
 }

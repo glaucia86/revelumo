@@ -16,6 +16,7 @@ const api: RevelumoApi = {
   importProgress: () => ipcRenderer.invoke('revelumo:invoke', { op: 'progress' }),
   thumbnailPhoto: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'thumbnail', id }),
   listPhotos: () => ipcRenderer.invoke('revelumo:invoke', { op: 'list' }),
+  queryPhotos: (filters) => ipcRenderer.invoke('revelumo:invoke', { ...filters, op: 'query' }),
   previewPhoto: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'preview', id }),
   originalStatus: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'status', id }),
   originalAvailability: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'availability', id }),

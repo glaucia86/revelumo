@@ -14,14 +14,19 @@ npm test
 npm run package
 ```
 
-Depois, em PowerShell no Windows, use três pastas novas de teste (em CI, `$env:RUNNER_TEMP`; localmente, uma pasta temporária autorizada):
+Depois, em PowerShell no Windows, use quatro pastas novas de teste (em CI, `$env:RUNNER_TEMP`; localmente, uma pasta temporária autorizada):
 
 ```powershell
 $root = Join-Path $env:TEMP ('revelumo-smokes-' + [guid]::NewGuid())
 $electron = Join-Path $root 'electron'
 $relocation = Join-Path $root 'relocation'
 $exposure = Join-Path $root 'exposure'
-New-Item -ItemType Directory -Path $electron, $relocation, $exposure | Out-Null
+$filters = Join-Path $root 'filters'
+New-Item -ItemType Directory -Path $electron, $relocation, $exposure, $filters | Out-Null
+npm run test:filters -- "$filters" first
+if ($LASTEXITCODE -ne 0) { throw 'filters first failed' }
+npm run test:filters -- "$filters" reopen
+if ($LASTEXITCODE -ne 0) { throw 'filters reopen failed' }
 npm run test:electron -- "$electron" first
 if ($LASTEXITCODE -ne 0) { throw 'electron first failed' }
 npm run test:electron -- "$electron" reopen

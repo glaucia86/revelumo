@@ -94,6 +94,7 @@ if (ownsInstance) app.whenReady().then(async () => {
     if (!request) return fail('invalid-request', 'Solicitação inválida.');
     try {
       if (request.op === 'list') return { ok: true, value: library.list() };
+      if (request.op === 'query') return library.query({ rating: request.rating, flag: request.flag });
       if (request.op === 'progress') return { ok: true, value: progress };
       if (request.op === 'recipe') return library.recipe(request.id);
       if (request.op === 'begin-edit') return await library.beginEditing(request.id);

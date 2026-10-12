@@ -1,5 +1,5 @@
-import type { PhotoFlag } from './contracts.ts';
-export type Request = { op: 'import' | 'list' | 'progress' | 'close-ready' } | { op: 'preview' | 'thumbnail' | 'availability' | 'status' | 'relocate' | 'classification' | 'recipe' | 'begin-edit'; id: string } | { op: 'end-edit'; id: string; sessionId: string } | { op: 'exposure'; id: string; sessionId: string; revision: number; exposureTenths: number; processingVersion: 1 } | { op: 'classify'; id: string; rating: number | null; flag: PhotoFlag };
+import type { PhotoFlag, LibraryFilters } from './contracts.ts';
+export type Request = { op: 'import' | 'list' | 'progress' | 'close-ready' } | ({ op: 'query' } & LibraryFilters) | { op: 'preview' | 'thumbnail' | 'availability' | 'status' | 'relocate' | 'classification' | 'recipe' | 'begin-edit'; id: string } | { op: 'end-edit'; id: string; sessionId: string } | { op: 'exposure'; id: string; sessionId: string; revision: number; exposureTenths: number; processingVersion: 1 } | { op: 'classify'; id: string; rating: number | null; flag: PhotoFlag };
 const photoId = (id: unknown): id is string => typeof id === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
 export function parseRequest(input: unknown): Request | null {
   if (!input || typeof input !== 'object' || Array.isArray(input)) return null;
@@ -11,6 +11,11 @@ export function parseRequest(input: unknown): Request | null {
       typeof value.revision === 'number' && Number.isSafeInteger(value.revision) && value.revision > 0 &&
       typeof value.exposureTenths === 'number' && Number.isInteger(value.exposureTenths) && value.exposureTenths >= -30 && value.exposureTenths <= 30 && value.processingVersion === 1) {
     return { op: value.op, id: value.id, sessionId: value.sessionId, revision: value.revision, exposureTenths: value.exposureTenths, processingVersion: 1 };
+  }
+  if (value.op === 'query' && keys === 'flag,op,rating' &&
+      (value.rating === 'all' || value.rating === 'unrated' || (typeof value.rating === 'number' && Number.isInteger(value.rating) && value.rating >= 1 && value.rating <= 5)) &&
+      (value.flag === 'all' || value.flag === 'neutral' || value.flag === 'selected' || value.flag === 'rejected')) {
+    return { op: 'query', rating: value.rating as LibraryFilters['rating'], flag: value.flag };
   }
   if (value.op === 'classify' && keys === 'flag,id,op,rating' && photoId(value.id) &&
       (value.rating === null || (typeof value.rating === 'number' && Number.isInteger(value.rating) && value.rating >= 1 && value.rating <= 5)) &&
