@@ -1,0 +1,17 @@
+{
+  "equalFileBytes": false,
+  "differingBytes": 5,
+  "differingOffsets": [
+    168,
+    170,
+    171,
+    173,
+    174
+  ],
+  "differenceField": "EXIF DateTime 0x0132, confirmed by System.Drawing tag read",
+  "run1ExifDateTime": "2026:10:12 02:52:17",
+  "run2ExifDateTime": "2026:10:12 03:00:43",
+  "firstSosOffset": 1560,
+  "fromSosBytesEqual": true,
+  "fromSosSha256": "cb6d0b63145228fb183d89bcc247b51de46d4167f469a9c3efda1c8a2124f2d9"
+}

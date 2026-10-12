@@ -1,0 +1,502 @@
+{
+  "dlls": [
+    {
+      "name": "libatk-1.0-0.dll",
+      "bytes": 161906,
+      "sha256": "d18182f04f0ecb44397cd7ab30c67da1924f3b8f52479882f553d0b7e36babde"
+    },
+    {
+      "name": "libatkmm-1.6-1.dll",
+      "bytes": 269247,
+      "sha256": "5c21eb79ac00661d0dd2e632e512d5ed298ea457e8ea58d2d01252e2916ba0c8"
+    },
+    {
+      "name": "libbrotlicommon.dll",
+      "bytes": 144565,
+      "sha256": "c62c08223e450dfc2fff33c752cc228505ffd9d755201958ba800d5d30481a2c"
+    },
+    {
+      "name": "libbrotlidec.dll",
+      "bytes": 62619,
+      "sha256": "e270b6e576594ee8ee6e33ccc54e34a54304616dd6225652e11e49d6f17ef896"
+    },
+    {
+      "name": "libbrotlienc.dll",
+      "bytes": 789189,
+      "sha256": "82573820fe9cc3f57004b6603428e2fa1bfc9d2048707bfcead3cfc5ef3ab284"
+    },
+    {
+      "name": "libbz2-1.dll",
+      "bytes": 78774,
+      "sha256": "669a4bf9266d5f020e843aa5fd75b93ce8ebde27014d5ac466a8b3cf39d8aba7"
+    },
+    {
+      "name": "libcairo-2.dll",
+      "bytes": 1241396,
+      "sha256": "10cb3ddfb67ef352365d5cdf1fce0376693d2d6e90aefefee41b3c0c5ce363e4"
+    },
+    {
+      "name": "libcairo-gobject-2.dll",
+      "bytes": 36263,
+      "sha256": "bdba64fdd18aad8de2773d3553786d0f9560ae3ae005a17b6cc6bef124219370"
+    },
+    {
+      "name": "libcairomm-1.0-1.dll",
+      "bytes": 146091,
+      "sha256": "4f230aa41696b09bd54b76ea392774037b932e76c3573bd37c48a8eeadb4183b"
+    },
+    {
+      "name": "libcrypto-3-x64.dll",
+      "bytes": 5495100,
+      "sha256": "616e5c9cfd5c6f786fd81238198ec479076f5bf6702127f81686f46b31b2464d"
+    },
+    {
+      "name": "libcurl-4.dll",
+      "bytes": 1377259,
+      "sha256": "73c8004f9268e18824e9fbe260b2080619f88c8f02bb1711bfba858c1d3d977b"
+    },
+    {
+      "name": "libdatrie-1.dll",
+      "bytes": 35223,
+      "sha256": "40aee3ae9a62a77454dfe8419fe21b54c54d969e0471c9e817b65d4502a9949f"
+    },
+    {
+      "name": "libdeflate.dll",
+      "bytes": 99898,
+      "sha256": "fb54be03668f41fae3f5d8bbabeedbc24e71b37e637e3cd34acd54f89f128ac1"
+    },
+    {
+      "name": "libepoxy-0.dll",
+      "bytes": 1770497,
+      "sha256": "dc4055b53d0d6507740e9f3be18c9f2b1318faa531b9b2913eef3c5332fffedc"
+    },
+    {
+      "name": "libexiv2-28.dll",
+      "bytes": 3629044,
+      "sha256": "5f6931141804ba02ebe5d9ae7404ceb74acd1cb0301e392e82b1f09af1c9f503"
+    },
+    {
+      "name": "libexpat-1.dll",
+      "bytes": 237300,
+      "sha256": "f13a04c298b0290e722f2c1936ea076de769f8f32fa235bb17c02984e6e45fc1"
+    },
+    {
+      "name": "libffi-8.dll",
+      "bytes": 41615,
+      "sha256": "7fcb93cde5c00b7de1ddc127bfc446a82fc2e899bcb6646105223bab29773c43"
+    },
+    {
+      "name": "libfftw3f_omp-3.dll",
+      "bytes": 34764,
+      "sha256": "fb11e9897d0c5c8c39b40b122327f8f1b5d882af71ce74dff4dbaa04e5548602"
+    },
+    {
+      "name": "libfftw3f-3.dll",
+      "bytes": 4552104,
+      "sha256": "8342e0ea84f21c00946a573232621f0fcdc6cd08b9a9dc98446828585dbe031e"
+    },
+    {
+      "name": "libfontconfig-1.dll",
+      "bytes": 500237,
+      "sha256": "292fe24f957d961d6d9ac11dc79cfc0922f2925b1107e5d37a0ab17bea2adee5"
+    },
+    {
+      "name": "libfreetype-6.dll",
+      "bytes": 791593,
+      "sha256": "a3271784f8366b3c6412e0c35474884fa12899c392bacb08bc8eac00f4be7e64"
+    },
+    {
+      "name": "libfribidi-0.dll",
+      "bytes": 155504,
+      "sha256": "73a712fd51fa0085e8660084743a821ae7388de138069cd6cd8c171d4487da84"
+    },
+    {
+      "name": "libgcc_s_seh-1.dll",
+      "bytes": 153412,
+      "sha256": "ff139cfe956709283f7b70a06af8bc8bb9d1c3bef60ec1bc8d363c91351cfeb2"
+    },
+    {
+      "name": "libgdk_pixbuf-2.0-0.dll",
+      "bytes": 359253,
+      "sha256": "ed9ab5fce358af212fbde9dac122b6f4b68ca45449a38444da61b0c3a11e328f"
+    },
+    {
+      "name": "libgdk-3-0.dll",
+      "bytes": 1382980,
+      "sha256": "867de3778673beed6aa5ecaed274c8dbb31eda2cc3f72c814d42e994ac655100"
+    },
+    {
+      "name": "libgdkmm-3.0-1.dll",
+      "bytes": 300316,
+      "sha256": "719c715779c90de97a16a635043afca5fa0e7c23936355ade5444280bd185bd8"
+    },
+    {
+      "name": "libgio-2.0-0.dll",
+      "bytes": 1914851,
+      "sha256": "9e5316a8009f4e4b8d26b399558ebecf0daab48cc7965d0696104cd2ad1559de"
+    },
+    {
+      "name": "libgiomm-2.4-1.dll",
+      "bytes": 1533577,
+      "sha256": "9351c5b7c4d33861cf7b48fd0d8101fb070a044994c803e9e719df1e00e07d61"
+    },
+    {
+      "name": "libglib-2.0-0.dll",
+      "bytes": 1564508,
+      "sha256": "f606ad14f15d822a21a2e15f9f22a37318a269afab5d4c6020677acfae720b7f"
+    },
+    {
+      "name": "libglibmm-2.4-1.dll",
+      "bytes": 489641,
+      "sha256": "338cbf4c6a4dc3c9845b0d57b1af7952f192bd384401d1297c95a74cc67c74c2"
+    },
+    {
+      "name": "libgmodule-2.0-0.dll",
+      "bytes": 27494,
+      "sha256": "7deb7b7b425cbd1e66aefd5c9126abfe66711dca3685303d28e77e3cb45b5f33"
+    },
+    {
+      "name": "libgobject-2.0-0.dll",
+      "bytes": 360145,
+      "sha256": "9aa995ade80fcf86ab7d250535a1d8f1212d21c7318412ee45385c51c8912fe7"
+    },
+    {
+      "name": "libgomp-1.dll",
+      "bytes": 330185,
+      "sha256": "f53cb4da77cd3ec8e9ec15c11a8fd5cfcff448e33b37da1e1eb225c455028037"
+    },
+    {
+      "name": "libgraphite2.dll",
+      "bytes": 167857,
+      "sha256": "93953e4744bcfce9a7bc439b956544bc213095cb1349c3602a58370f32b25c18"
+    },
+    {
+      "name": "libgtk-3-0.dll",
+      "bytes": 7159259,
+      "sha256": "c5df1e6dcb722602938510a03a6a13af3be46c651ca4c52ff97c92c777593844"
+    },
+    {
+      "name": "libgtkmm-3.0-1.dll",
+      "bytes": 3970662,
+      "sha256": "cf65fe23be5ae46b3eeede74d089a5e04b33c30c50351a2695023ca69dd2c7bf"
+    },
+    {
+      "name": "libharfbuzz-0.dll",
+      "bytes": 1540489,
+      "sha256": "2e1523eddd3a7c5be5fb8ad9a8e8eee819664356752d18c56f7c8f5896126ddb"
+    },
+    {
+      "name": "libhwy.dll",
+      "bytes": 87628,
+      "sha256": "9ba0ac7bad82c4c88e9bb8d6ca8c6a83877adc1f71cc48590c65b8d26108a41c"
+    },
+    {
+      "name": "libiconv-2.dll",
+      "bytes": 1141951,
+      "sha256": "94ec68fb8d342b6c91b6b48a8d95092819cdcd006a7166e0b68062f946afd08a"
+    },
+    {
+      "name": "libidn2-0.dll",
+      "bytes": 246525,
+      "sha256": "a054a6bb69aaf4666157f968740412e9697085cbc1e48a78f8dd9622169c5aaf"
+    },
+    {
+      "name": "libinih-0.dll",
+      "bytes": 18550,
+      "sha256": "f5061ee77fd13635d800a1307bcc9e3c1f3027900e39b5c3eccaea5c0d67f920"
+    },
+    {
+      "name": "libINIReader-0.dll",
+      "bytes": 60479,
+      "sha256": "12196c40c1386e567087095371a575a744b53a045ad5b6183e5838823a5f7fb0"
+    },
+    {
+      "name": "libintl-8.dll",
+      "bytes": 298164,
+      "sha256": "0e5a178731e6be6d115442a6ade3df7f03265cd1fc4338f8b6f86a8001cbf582"
+    },
+    {
+      "name": "libjbig-0.dll",
+      "bytes": 66242,
+      "sha256": "6d1657e08318630738fb0841ee28bbe7272b41b3b2ef93adaa228c4cd10092c6"
+    },
+    {
+      "name": "libjpeg-8.dll",
+      "bytes": 967184,
+      "sha256": "c63acd5a3231725aa96aa35444b74cd8d607a6fbdab1dd18b0e0ada7e39476d4"
+    },
+    {
+      "name": "libjxl_cms.dll",
+      "bytes": 140878,
+      "sha256": "cab882e05bda645fc5b87f2093960a8d6608d40917204b30b173ab132d13c73a"
+    },
+    {
+      "name": "libjxl_threads.dll",
+      "bytes": 26420,
+      "sha256": "a5891f300a1733fe361ce708bee8841eee21b2bd3b7fc1f43510174c54e8bc6a"
+    },
+    {
+      "name": "libjxl.dll",
+      "bytes": 6209591,
+      "sha256": "53bd8cfdf5138cb8f9d96d6459c480b9256d17036f840e59ff2ac2ac03f37685"
+    },
+    {
+      "name": "liblcms2-2.dll",
+      "bytes": 448202,
+      "sha256": "03314471fadd04cdd63c108472ff85d058903d236a0356c14eda363f0e1ccb65"
+    },
+    {
+      "name": "liblensfun.dll",
+      "bytes": 137763,
+      "sha256": "b37ccc155b402647e7b4e2d30ac993f82ee482354321976a1b2c0e45939c4699"
+    },
+    {
+      "name": "libLerc.dll",
+      "bytes": 803103,
+      "sha256": "1ffee78579c25b073267bcac8d0a6045d9bd446e010c7953b569b2629ca8a58a"
+    },
+    {
+      "name": "liblzma-5.dll",
+      "bytes": 192506,
+      "sha256": "ad9656bf86fb3673fa6af18fa357531096af3d76eccb4a56c4cd6a6171da1554"
+    },
+    {
+      "name": "libnghttp2-14.dll",
+      "bytes": 213898,
+      "sha256": "090fb5e095489f8853e3ccd6d649921de2dcbab378cc6a430264881853e3a07e"
+    },
+    {
+      "name": "libnghttp3-9.dll",
+      "bytes": 206181,
+      "sha256": "65548014e2f76d9086158b3c28bc27f63c2ab9e319df545a3beedcd30c92d5ab"
+    },
+    {
+      "name": "libngtcp2_crypto_ossl-0.dll",
+      "bytes": 55437,
+      "sha256": "f4abc0446639d65c7362badc6dc0a40ced7354bbb92941b9e92785f298ed750c"
+    },
+    {
+      "name": "libngtcp2-16.dll",
+      "bytes": 393030,
+      "sha256": "56ee63b7ae14c6fa6402afcf72072bef5e25765555738ce4236bce9cbab0cc61"
+    },
+    {
+      "name": "libpango-1.0-0.dll",
+      "bytes": 437636,
+      "sha256": "d1eacfdd4c25f497be276ea3ba005adae28eb50b65f2fbc647a52927a6490363"
+    },
+    {
+      "name": "libpangocairo-1.0-0.dll",
+      "bytes": 84773,
+      "sha256": "4517aa61ba9d32f5265075b336610e68a53da3dd2cb9f56ee719afab01289fdd"
+    },
+    {
+      "name": "libpangoft2-1.0-0.dll",
+      "bytes": 112358,
+      "sha256": "fbd658fffc701abcbf4678bbb6aea017725990b6737057b1eeff3b81d8bd724c"
+    },
+    {
+      "name": "libpangomm-1.4-1.dll",
+      "bytes": 169788,
+      "sha256": "daaa2dad9e7906d00c3fd7ad656702e60582a2b0075c874b8ab8b604199370e3"
+    },
+    {
+      "name": "libpangowin32-1.0-0.dll",
+      "bytes": 111979,
+      "sha256": "1a31df9ae6363421eddb67933afe69c48baba3766c46ef7f3134b8c9a2d31740"
+    },
+    {
+      "name": "libpcre2-8-0.dll",
+      "bytes": 718625,
+      "sha256": "52ccc7e4ec5ad0aecf307c0328826340f5d504aa59f7c4143b9a1b9fff16ccda"
+    },
+    {
+      "name": "libpixman-1-0.dll",
+      "bytes": 737775,
+      "sha256": "12e693d94829f013e0bd7c042b30998b20e91ece7b6f4d5f075ddbb58b373c92"
+    },
+    {
+      "name": "libpng16-16.dll",
+      "bytes": 258972,
+      "sha256": "5c1dd5410af563f4a3c4aee10d1f749aa71e0d7fb3b4fac240eb9e96cadebd26"
+    },
+    {
+      "name": "libpsl-5.dll",
+      "bytes": 105846,
+      "sha256": "a531e72de3c64d43fb83cbfb6fa63e5ee982a970292ec51314e29d0acabf1dd5"
+    },
+    {
+      "name": "librsvg-2-2.dll",
+      "bytes": 11750625,
+      "sha256": "f359bdbb483519da1d6920d7ba162f48ba53131c97e31531fa8bd9ecf58ecc0c"
+    },
+    {
+      "name": "libsharpyuv-0.dll",
+      "bytes": 48938,
+      "sha256": "d29380c7056383f3e7a80bf9e150f0b8c425c1cf2568d1336e88979ddc2307af"
+    },
+    {
+      "name": "libsigc-2.0-0.dll",
+      "bytes": 30110,
+      "sha256": "8ab9a36f7d9903c556abaacf1b80e1df1b0d365a652358b7ab53c2f8ec77ce48"
+    },
+    {
+      "name": "libssh2-1.dll",
+      "bytes": 311537,
+      "sha256": "7c9b4edb678b738b919950492c4a390482fdd644d1276d4728990fdd3c3ea989"
+    },
+    {
+      "name": "libssl-3-x64.dll",
+      "bytes": 996164,
+      "sha256": "7f53951cf786e299521e46d860f7764d6bd671ce85d2a03dc929a8184792e2ab"
+    },
+    {
+      "name": "libstdc++-6.dll",
+      "bytes": 2667044,
+      "sha256": "d9a58184f6bb27936ef03c3a3286950e4aa61c66a9f74dfa94a532b1433b368d"
+    },
+    {
+      "name": "libsystre-0.dll",
+      "bytes": 14705,
+      "sha256": "672f96c284704f0ce74b2e105f5dbe8aa29cb0b822537102114ebaf0d1672686"
+    },
+    {
+      "name": "libthai-0.dll",
+      "bytes": 71780,
+      "sha256": "d8d8b87e9089a811e088f6a01da57c19ed54d2b6613bb85697f1958473f63666"
+    },
+    {
+      "name": "libtiff-6.dll",
+      "bytes": 618616,
+      "sha256": "ce0eb686a9b03a8586d7d1f833fadcbe67ad2f6ff8538c3f431d4edb072f935d"
+    },
+    {
+      "name": "libtre-5.dll",
+      "bytes": 99997,
+      "sha256": "1014afb8649e6eba839748cc0ad5dc542249df831ee483f7a93e465e223f7bae"
+    },
+    {
+      "name": "libunistring-5.dll",
+      "bytes": 2256134,
+      "sha256": "ee39258fa1086269674a8179d3cfaf7c4e380ada14441b5dd9ed53d82d15c4e3"
+    },
+    {
+      "name": "libwebp-7.dll",
+      "bytes": 746378,
+      "sha256": "8dfe40c4e0abc90ddf18f080898987e01253d099b2b2d6daf7db521e55c00446"
+    },
+    {
+      "name": "libwinpthread-1.dll",
+      "bytes": 64703,
+      "sha256": "4bd23b274a3a96ff8114d0069e69177fd0c88911a987f530fabc12a2cc5b5ecc"
+    },
+    {
+      "name": "libxml2-16.dll",
+      "bytes": 1239933,
+      "sha256": "be9f24e4506b73812c5f477a079d4c45b5dc2630222783195e913fcabd6c7eab"
+    },
+    {
+      "name": "libzstd.dll",
+      "bytes": 1217412,
+      "sha256": "48368ab0ca622d0ec12f41ce85d91f22866bf5da92c77a69a06483564c93816c"
+    },
+    {
+      "name": "zlib1.dll",
+      "bytes": 127291,
+      "sha256": "11cd91171765cd65f1c3362e3df67e5f5a618a6b88c8cdec899b802eaf1c7b0d"
+    }
+  ],
+  "licenses": [
+    {
+      "name": "cJSON_LICENSE",
+      "bytes": 1102,
+      "sha256": "b10f3606e8d18183b0b48c7e7f801854120a9d7e74d6f5a7fb4c778c7905393d"
+    },
+    {
+      "name": "DroidSansMonoDotted.txt",
+      "bytes": 11560,
+      "sha256": "3ddf9be5c28fe27dad143a5dc76eea25222ad1dd68934a047064e56ed2fa40c5"
+    },
+    {
+      "name": "Expat_LICENSE",
+      "bytes": 1165,
+      "sha256": "431dd07ea1ffce7b9e525014bbf923006f129ee28ef5cdffc048f8e3eb39191c"
+    },
+    {
+      "name": "gtkmm_LICENSE",
+      "bytes": 7817,
+      "sha256": "7d3a95e5e06978064ed3f8e2b7c8f845e7fd8a405294727cc708f94cb83b8059"
+    },
+    {
+      "name": "jpeg_ijg_LICENSE",
+      "bytes": 19223,
+      "sha256": "b52d09da69cc2c0644ce067469fa2a1d707d17222716bcd2d31a226f719672cd"
+    },
+    {
+      "name": "lcms2_LICENSE",
+      "bytes": 1102,
+      "sha256": "bc1ba06a8fdf54466daa2b9a927fdca7c4d626a598045b2da62494a556491af6"
+    },
+    {
+      "name": "Lensfun_LICENSE",
+      "bytes": 7817,
+      "sha256": "7d3a95e5e06978064ed3f8e2b7c8f845e7fd8a405294727cc708f94cb83b8059"
+    },
+    {
+      "name": "libcanberra_LICENSE",
+      "bytes": 27031,
+      "sha256": "c1edd44780981493ea86173d9dd80241edfbda6f2ba6c41879220caaad26b35b"
+    },
+    {
+      "name": "libiptcdata_LICENSE",
+      "bytes": 25774,
+      "sha256": "aa092600e3f475f0a55821fb9c529583d8e23e41bf0461254f02fcf94d3a32c2"
+    },
+    {
+      "name": "libjxl_LICENSE",
+      "bytes": 1535,
+      "sha256": "2c783d8d5d952bd0726292e56ad1f3f247f370667809497a8020b8c2915ba470"
+    },
+    {
+      "name": "LibRaw_LICENSE",
+      "bytes": 26062,
+      "sha256": "af4bfc202bb3eacfd9ff83aa07eca7a22df1bf36c481acaa082789cde11f004e"
+    },
+    {
+      "name": "librsvg_LICENSE",
+      "bytes": 27032,
+      "sha256": "1e7e6bae5a5bde32f1ae5a7c37a082d1ab03cf89354f7f936ac40be9e39a6531"
+    },
+    {
+      "name": "libtiff_LICENSE",
+      "bytes": 1160,
+      "sha256": "8eeab3915f97f6f7b62a8008bf77e7ac3bfbb034b04d93cd63aafa10b2dd6614"
+    },
+    {
+      "name": "LunaSVG_LICENSE",
+      "bytes": 1125,
+      "sha256": "8472fe0abf72389f09f4992ed4bfeb631e1f3cc49ad74d7711b75781c2c3464b"
+    },
+    {
+      "name": "osx_libiomp5_LICENSE.txt",
+      "bytes": 1538,
+      "sha256": "5eba560d33b506f8638dc228d8cc5c8afb4242fcac99ab29013edb96c07e4ac1"
+    },
+    {
+      "name": "README",
+      "bytes": 724,
+      "sha256": "79915d42563fb80699228a1149db01cc2f63129c6045bdab2bedf8e07b3c6c6d"
+    },
+    {
+      "name": "sleef_LICENSE.txt",
+      "bytes": 1710,
+      "sha256": "e3a042c96c8047106a0ba737653476676dbf790b7f60f77afba6b411a5b61e69"
+    },
+    {
+      "name": "tcmalloc_LICENSE",
+      "bytes": 11560,
+      "sha256": "de260a483f1c8a229d61d833aaabad9f9a7438f3384c59abefa50182cb798199"
+    }
+  ],
+  "build": "Version: 5.13\r\nBranch: 5.13\r\nCommit: 192417910\r\nCommit date: 2026-07-25\r\nCompiler: cc 16.1.0\r\nProcessor: generic x86\r\nSystem: Windows\r\nBit depth: 64 bits\r\nGtkmm: 3.24.10\r\nLensfun: 0.3.4.0\r\nlibjxl: 0.12.0\r\nBuild type: release\r\nBuild flags:  -ffp-contract=off -mtune=generic -O3 -DNDEBUG -Wall -Wuninitialized -Wcast-qual -Wno-deprecated-declarations -Wno-unused-result -Wunused-macros -Werror=unused-label -fno-math-errno -Wno-attributes -Werror=delete-incomplete -ftree-vectorize\r\nLink flags:  -mtune=generic\r\nOpenMP support: ON\r\nMMAP support: ON\r\nBuild OS: MINGW64_NT-10.0-26100 x86_64\r\nBuild date: Sat, 25 Jul 2026 22:58:00 +0000 UTC\r\nBuild epoch: 1785020280\r\nBuild UUID: git-1924179107995b01b73cdc7f4fe91e44fc8227a7\r\n"
+}

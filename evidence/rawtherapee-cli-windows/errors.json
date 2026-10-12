@@ -1,0 +1,80 @@
+{
+  "cases": [
+    {
+      "name": "missing-input",
+      "command": [
+        "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\RawTherapee-5.13\\rawtherapee-cli.exe",
+        "-o",
+        "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\errors-01\\missing.jpg",
+        "-j92",
+        "-js3",
+        "-c",
+        "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\errors-01\\missing.nef"
+      ],
+      "exitCode": 2,
+      "timedOut": false,
+      "elapsedMs": 190,
+      "stdout": "RawTherapee, version 5.13, command line.\r\n\"C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\errors-01\\missing.nef\"  doesn't exist!\r\n",
+      "stderr": "",
+      "outputExists": false
+    },
+    {
+      "name": "truncated-input",
+      "command": [
+        "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\RawTherapee-5.13\\rawtherapee-cli.exe",
+        "-o",
+        "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\errors-01\\truncated.jpg",
+        "-j92",
+        "-js3",
+        "-c",
+        "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\errors-01\\truncated.nef"
+      ],
+      "exitCode": -2,
+      "timedOut": false,
+      "elapsedMs": 180,
+      "stdout": "RawTherapee, version 5.13, command line.\r\nOutput is 8-bit integer.\r\nProcessing: C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\errors-01\\truncated.nef\r\n",
+      "stderr": "Error loading file: C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\errors-01\\truncated.nef\r\n",
+      "outputExists": false
+    },
+    {
+      "name": "existing-output",
+      "command": [
+        "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\RawTherapee-5.13\\rawtherapee-cli.exe",
+        "-o",
+        "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\run-01\\derivative.jpg",
+        "-j92",
+        "-js3",
+        "-c",
+        "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\nikon-d200.nef"
+      ],
+      "exitCode": 0,
+      "timedOut": false,
+      "elapsedMs": 177,
+      "stdout": "RawTherapee, version 5.13, command line.\r\nOutput is 8-bit integer.\r\nProcessing: C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\nikon-d200.nef\r\n",
+      "stderr": "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\run-01\\derivative.jpg already exists: use -Y option to overwrite. This image has been skipped.\r\n",
+      "outputExists": true
+    },
+    {
+      "name": "invalid-output-parent",
+      "command": [
+        "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\RawTherapee-5.13\\rawtherapee-cli.exe",
+        "-o",
+        "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\errors-01\\parent-is-file\\output.jpg",
+        "-j92",
+        "-js3",
+        "-c",
+        "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\nikon-d200.nef"
+      ],
+      "exitCode": -2,
+      "timedOut": false,
+      "elapsedMs": 1543,
+      "stdout": "RawTherapee, version 5.13, command line.\r\nOutput is 8-bit integer.\r\nProcessing: C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\nikon-d200.nef\r\n",
+      "stderr": "Error saving to: C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\errors-01\\parent-is-file\\output.jpg\r\n",
+      "outputExists": false
+    }
+  ],
+  "originalBefore": "B0800A1166B952430B255600373573E1D528ADF8DE98857781E06A98472B3C35",
+  "originalAfter": "B0800A1166B952430B255600373573E1D528ADF8DE98857781E06A98472B3C35",
+  "existingBefore": "31C8032AA8C82D99038271133F15FAF3D440D9D6B45F2AB52A5B89D1A2978337",
+  "existingAfter": "31C8032AA8C82D99038271133F15FAF3D440D9D6B45F2AB52A5B89D1A2978337"
+}

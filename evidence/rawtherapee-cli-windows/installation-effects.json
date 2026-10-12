@@ -1,0 +1,22 @@
+{
+  "installerExitCode": 0,
+  "outerShellElevatedToken": false,
+  "installerAdministrativeMode": true,
+  "installerRootKey": "HKEY_LOCAL_MACHINE",
+  "userPathUnchanged": true,
+  "machinePathUnchanged": true,
+  "processPathUnchanged": true,
+  "appGui": "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\RawTherapee-5.13\\rawtherapee.exe",
+  "appCli": "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\RawTherapee-5.13\\rawtherapee-cli.exe",
+  "folderContextAbsent": true,
+  "fileContextAbsent": true,
+  "uninstall": {
+    "PSPath": "Microsoft.PowerShell.Core\\Registry::HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\RawTherapee5.13_is1",
+    "DisplayName": "RawTherapee versão 5.13",
+    "DisplayVersion": "5.13",
+    "InstallLocation": "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\RawTherapee-5.13\\",
+    "UninstallString": "\"C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\RawTherapee-5.13\\unins000.exe\""
+  },
+  "engineExecuted": false,
+  "stopReason": "Actual installer administrative mode and HKLM uninstall key differ from authorized no-admin installation"
+}
