@@ -15,8 +15,8 @@ export type FailureCode = 'invalid-request' | 'invalid-jpeg' | 'too-large' | 'un
 export type Result<T> = { ok: true; value: T } | { ok: false; code: FailureCode; message: string; descriptor?: MessageDescriptor };
 export type ImportOutcome = { canceled: true } | { canceled: false; photo: PhotoSummary };
 export type Preview = { photo: PhotoSummary; dataUrl: string };
-export type PhotoStatus = { photo: PhotoSummary; state: 'available' | 'missing' | 'unreadable' | 'changed'; canRelocate: boolean; message: string };
-export type PhotoAvailability = { photo: PhotoSummary; state: 'present' | 'missing' | 'unreadable'; identityRecorded: boolean; contentVerified: false; message: string };
+export type PhotoStatus = { photo: PhotoSummary; state: 'available' | 'missing' | 'unreadable' | 'changed'; canRelocate: boolean; message: string; descriptor?: MessageDescriptor };
+export type PhotoAvailability = { photo: PhotoSummary; state: 'present' | 'missing' | 'unreadable'; identityRecorded: boolean; contentVerified: false; message: string; descriptor?: MessageDescriptor };
 export interface RevelumoApi {
   recipePhoto(id: string): Promise<Result<PhotoRecipe>>;
   beginEditingPhoto(id: string): Promise<Result<EditSession>>;

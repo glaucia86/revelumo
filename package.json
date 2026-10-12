@@ -25,7 +25,8 @@
     "test:cobre-catalog": "electron test/electron-cobre-catalog.cjs",
     "test:wb": "electron test/electron-white-balance.cjs",
     "check:docs": "node scripts/check-docs.mjs",
-    "test:language": "electron test/electron-language-catalog.cjs"
+    "test:language": "electron test/electron-language-catalog.cjs",
+    "test:editor-language": "electron test/electron-language-editor.cjs"
   },
   "dependencies": {
     "react": "^19.3.0",

@@ -164,7 +164,7 @@ const timeout = setTimeout(() => { console.error('Language smoke timed out'); ap
     assert.equal(await js('document.querySelector(".exposure input[type=number]").value'), '');
     assert.equal(beginCount, beforeBegin); assert.equal(saveCount, beforeSave);
     await type('1');
-    await until(() => js('document.querySelector(".save-status")?.textContent === "Salvo"'), 'draft saved');
+    await until(() => js('document.querySelector(".save-status")?.textContent === "Guardado"'), 'draft saved');
     assert.equal((await api('recipePhoto', id)).value.exposureTenths, -10);
     let releaseSave; heldSave = { promise: new Promise(resolve => { releaseSave = resolve; }), entered: false };
     await selectNumeric(); await type('1.');

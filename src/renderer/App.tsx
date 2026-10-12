@@ -12,7 +12,7 @@ import { ExposureEditor, type ExposureHandle } from './ExposureEditor.tsx';
 
 export function App() {
   const { t, resolved: locale } = useLanguage();
-  const renderMessage = (value: string | MessageDescriptor[]) => typeof value === 'string' ? value : value.map(t).join(' ');
+  const renderMessage = (value: MessageDescriptor[]) => value.map(t).join(' ');
   const [photos, setPhotos] = useState<PhotoSummary[]>([]);
   const [filters, setFilters] = useState<LibraryFilters>({ rating: 'all', flag: 'all' });
   const [total, setTotal] = useState(0);
@@ -31,7 +31,7 @@ export function App() {
   const [statuses, setStatuses] = useState<Record<string, PhotoAvailability>>({});
   const [refresh, setRefresh] = useState(0);
   const [viewing, setViewing] = useState(false);
-  const [message, setMessage] = useState<string | MessageDescriptor[]>('');
+  const [message, setMessage] = useState<MessageDescriptor[]>([]);
   const [progress, setProgress] = useState<ImportProgress | null>(null);
   const [failures, setFailures] = useState<BatchItem[]>([]);
   const [page, setPage] = useState(0);
@@ -96,7 +96,7 @@ export function App() {
 
   function changeFilters(next: LibraryFilters) {
     ++querySequence.current;
-    setFilters(next); setPage(0); setPhotos([]); setLoading(true); setQueryError(null); setMessage(''); setImportNotice(null);
+    setFilters(next); setPage(0); setPhotos([]); setLoading(true); setQueryError(null); setMessage([]); setImportNotice(null);
   }
 
   useEffect(() => {
@@ -160,47 +160,47 @@ export function App() {
       const result = await window.revelumo.originalStatus(photo.id);
       if (sequence !== openSequence.current) return;
       if (result.ok) setCurrentStatus(result.value);
-      else setMessage(result.message);
-    } catch { if (sequence === openSequence.current) setMessage('Não foi possível verificar o original.'); }
+      else setMessage([result.descriptor ?? { key: 'errors.generic' }]);
+    } catch { if (sequence === openSequence.current) setMessage([{ key: 'viewer.statusFailed' }]); }
   }
 
   async function openPhotoAfterFlush(photo: PhotoSummary) {
     const sequence = ++openSequence.current;
     setImportNotice(null);
-    setViewing(true); setSelectedPhoto(photo); setCurrentStatus(null); setMessage('Abrindo prévia…'); setPreview(null);
+    setViewing(true); setSelectedPhoto(photo); setCurrentStatus(null); setMessage([{ key: 'viewer.opening' }]); setPreview(null);
     try {
       const status = await window.revelumo.originalStatus(photo.id);
       if (sequence !== openSequence.current) return;
-      if (!status.ok) { setMessage(status.message); return; }
+      if (!status.ok) { setMessage([status.descriptor ?? { key: 'errors.generic' }]); return; }
       setCurrentStatus(status.value);
-      if (status.value.state !== 'available') { setMessage(status.value.message); return; }
+      if (status.value.state !== 'available') { setMessage([status.value.descriptor ?? { key: 'errors.generic' }]); return; }
       const result = await window.revelumo.previewPhoto(photo.id);
       if (sequence !== openSequence.current) return;
-      if (result.ok) { setPreview(result.value); setMessage(''); }
+      if (result.ok) { setPreview(result.value); setMessage([]); }
       else {
-        setMessage(result.message);
+        setMessage([result.descriptor ?? { key: 'errors.generic' }]);
         const fresh = await window.revelumo.originalStatus(photo.id);
         if (sequence === openSequence.current && fresh.ok) setCurrentStatus(fresh.value);
       }
-    } catch { if (sequence === openSequence.current) setMessage('Não foi possível abrir a prévia.'); }
+    } catch { if (sequence === openSequence.current) setMessage([{ key: 'viewer.openFailed' }]); }
   }
 
   async function relocatePhoto() {
     if (!selectedPhoto || !currentStatus?.canRelocate || relocating || importing) return;
     const photo = selectedPhoto;
-    setRelocating(true); setMessage('Escolha a nova localização do original.');
+    setRelocating(true); setMessage([{ key: 'viewer.chooseLocation' }]);
     try {
       const result = await window.revelumo.relocatePhoto(photo.id);
       if (!result.ok) {
-        setMessage(result.message);
+        setMessage([result.descriptor ?? { key: 'errors.generic' }]);
         const status = await window.revelumo.originalStatus(photo.id);
         if (status.ok) {
           setCurrentStatus(status.value);
           if (status.value.state === 'available') await openPhoto(photo);
         }
-      } else if (result.value.canceled) setMessage('Localização cancelada.');
+      } else if (result.value.canceled) setMessage([{ key: 'viewer.locationCanceled' }]);
       else { setRefresh(current => current + 1); if (preview) await refreshSelectedStatus(result.value.photo); else await openPhoto(result.value.photo); }
-    } catch { setMessage('Não foi possível localizar o original. O registro anterior foi preservado.'); }
+    } catch { setMessage([{ key: 'viewer.locationFailed' }]); }
     finally { setRelocating(false); }
   }
 
@@ -221,7 +221,7 @@ export function App() {
     finally { setImporting(false); setProgress(null); }
   }
 
-  function resetViewer() { if (viewing) returnFocusId.current = selectedPhoto?.id ?? null; ++openSequence.current; setLoading(true); setQueryRefresh(current => current + 1); setImportNotice(null); setViewing(false); setSelectedPhoto(null); setCurrentStatus(null); setPreview(null); setMessage(''); }
+  function resetViewer() { if (viewing) returnFocusId.current = selectedPhoto?.id ?? null; ++openSequence.current; setLoading(true); setQueryRefresh(current => current + 1); setImportNotice(null); setViewing(false); setSelectedPhoto(null); setCurrentStatus(null); setPreview(null); setMessage([]); }
   function showGrid() { void leave(resetViewer); }
 
   return <main className="catalog-shell" data-view={viewing ? 'editor' : 'catalog'}>
@@ -258,8 +258,8 @@ export function App() {
           {progress && progress.total > 0 && <><progress max={progress.total} value={progress.completed}/><p className="current-file">{progress.currentName}</p></>}
         </div>}
       </aside>
-      <section ref={catalogSection} className={viewing ? 'viewer' : 'gallery'} aria-label={viewing ? 'Visualização da foto' : t({ key: 'catalog.grid' })} aria-busy={loading}>
-        {viewing ? <><button className="back" disabled={relocating || classifying || exiting} onClick={showGrid}>← Voltar à grade</button>{currentStatus && currentStatus.state !== 'available' ? <div className="original-notice" role="status"><h2>{selectedPhoto?.name}</h2><p>{currentStatus.message}</p>{preview && <p>A prévia existente e o rascunho foram mantidos; o original precisa estar disponível para salvar.</p>}{currentStatus.canRelocate && <button disabled={relocating || importing || classifying || exiting} onClick={() => void relocatePhoto()} aria-label={`Localizar original de ${selectedPhoto?.name}`}>{relocating ? 'Localizando…' : 'Localizar original'}</button>}</div> : !preview && <p className="quiet">{renderMessage(message) || 'Abrindo prévia…'}</p>}{selectedPhoto && <><ExposureEditor key={`exposure-${selectedPhoto.id}`} ref={editor} photo={selectedPhoto} preview={preview}/><ClassificationControls key={selectedPhoto.id} photo={selectedPhoto} onBusyChange={setClassifying} onMessage={setMessage}/></>}</> :
+      <section ref={catalogSection} className={viewing ? 'viewer' : 'gallery'} aria-label={viewing ? t({ key: 'viewer.label' }) : t({ key: 'catalog.grid' })} aria-busy={loading}>
+        {viewing ? <><button className="back" disabled={relocating || classifying || exiting} onClick={showGrid}>{t({ key: 'viewer.back' })}</button>{currentStatus && currentStatus.state !== 'available' ? <div className="original-notice" role="status"><h2>{selectedPhoto?.name}</h2><p>{t(currentStatus.descriptor ?? { key: 'errors.generic' })}</p>{preview && <p>{t({ key: 'viewer.draftPreserved' })}</p>}{currentStatus.canRelocate && <button disabled={relocating || importing || classifying || exiting} onClick={() => void relocatePhoto()} aria-label={t({ key: 'viewer.locateNamed', params: { filename: selectedPhoto?.name ?? '' } })}>{t({ key: relocating ? 'viewer.locating' : 'viewer.locate' })}</button>}</div> : !preview && <p className="quiet">{renderMessage(message) || t({ key: 'viewer.opening' })}</p>}{selectedPhoto && <><ExposureEditor key={`exposure-${selectedPhoto.id}`} ref={editor} photo={selectedPhoto} preview={preview}/><ClassificationControls key={selectedPhoto.id} photo={selectedPhoto} onBusyChange={setClassifying} onMessage={setMessage}/></>}</> :
           <><div className="catalog-heading"><h1 tabIndex={-1}>{t({ key: filtered ? 'catalog.filtered' : 'shell.allPhotos' })}</h1><p>{t({ key: 'catalog.description' })}</p></div>{failures.length > 0 && <details className="failures"><summary>{t({ key: 'import.failedFiles', params: { count: failures.length } })}</summary><ul>{failures.map((item, index) => <li key={index}>{item.name}: {!item.result.ok && t(item.result.descriptor ?? { key: 'errors.generic' })}</li>)}</ul></details>}
             {loading ? <p role="status">{t({ key: 'catalog.loading' })}</p> : queryError ? <div className="query-error" role="alert"><p>{t(queryError)}</p><button onClick={() => setQueryRefresh(current => current + 1)}>{t({ key: 'preferences.retry' })}</button></div> : photos.length ? <><p className="quiet" role="status">{t({ key: filtered ? 'catalog.filteredSummary' : 'catalog.summary', params: { count: photos.length, total } })}</p><div className="grid" role="list" aria-label={t({ key: 'catalog.imported' })}>{visible.map(photo => <div role="listitem" key={photo.id}><button className="tile" data-photo-id={photo.id} onClick={() => void openPhoto(photo)} aria-label={t({ key: 'catalog.openNamed', params: { filename: photo.name } })} aria-describedby={statuses[photo.id] && statuses[photo.id].state !== 'present' ? `original-${photo.id}` : undefined}>
               <span className="thumbnail">{thumbnails[photo.id] ? <img src={thumbnails[photo.id]} alt=""/> : <span title={thumbnailErrors[photo.id] ? t(thumbnailErrors[photo.id]) : undefined}>{t({ key: thumbnailErrors[photo.id] ? 'catalog.thumbnailUnavailable' : 'catalog.thumbnailLoading' })}</span>}</span><span className="filename" title={photo.name}>{photo.name}</span><span className="tile-meta"><span>JPEG</span><span>{t({ key: 'catalog.openPhoto' })} <Icon name="arrow"/></span></span>
@@ -269,7 +269,7 @@ export function App() {
           </>}
       </section>
     </div>
-    {exitFailed && <div className="exit-failure" role="alert"><p>Não foi possível salvar o último ajuste. A foto permanece aberta.</p><button disabled={exiting} onClick={() => { const action = pendingExit.current; if (action) void leave(action); }}>Tentar novamente e sair</button><button disabled={exiting} onClick={() => { pendingExit.current = null; setExitFailed(false); }}>Permanecer</button><button disabled={exiting} onClick={() => { const action = pendingExit.current; if (action) void leave(action, true); }}>Descartar ajuste não salvo e sair</button></div>}
+    {exitFailed && <div className="exit-failure" role="alert"><p>{t({ key: 'viewer.exitFailed' })}</p><button disabled={exiting} onClick={() => { const action = pendingExit.current; if (action) void leave(action); }}>{t({ key: 'viewer.retryExit' })}</button><button disabled={exiting} onClick={() => { pendingExit.current = null; setExitFailed(false); }}>{t({ key: 'viewer.stay' })}</button><button disabled={exiting} onClick={() => { const action = pendingExit.current; if (action) void leave(action, true); }}>{t({ key: 'viewer.discardExit' })}</button></div>}
     <footer className="catalog-footer"><span role="status" aria-live="polite">{renderMessage(message) || t({ key: 'shell.footer' })}</span><span>{t({ key: 'shell.development' })}</span></footer>
   </main>;
 }

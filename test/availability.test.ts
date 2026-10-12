@@ -22,7 +22,7 @@ test('probing an accessible cached legacy original reports unverified presence w
   const library = new Library(catalog, async () => { decodes++; return 'decoded'; });
   const before = library.list();
   const available = await library.availability(id);
-  assert.deepEqual(available, { ok: true, value: { photo: before[0], state: 'present', identityRecorded: false, contentVerified: false, message: 'Arquivo acessível. Conteúdo ainda não verificado.' } });
+  assert.deepEqual(available, { ok: true, value: { photo: before[0], state: 'present', identityRecorded: false, contentVerified: false, message: 'Arquivo acessível. Conteúdo ainda não verificado.', descriptor: { key: 'availability.present' } } });
   assert.equal(decodes, 0);
   await rename(file, moved);
   const missing = await library.availability(id);

@@ -62,7 +62,7 @@ La imagen principal muestra el catálogo **A · Cobre** implementado: entorno os
 
 El editor ya ofrece exposición, balance de blancos relativo, guardado automático e historial de exposición. Esta es su interfaz funcional actual; el rediseño completo del editor en Cobre sigue planificado. [Detalles de las capturas y créditos de las fotos](docs/assets/screenshots/README.md).
 
-**Idiomas:** el catálogo, la importación y la estructura de la aplicación ofrecen portugués de Brasil, inglés y español mediante un selector persistente. El primer inicio sigue los idiomas del sistema, con inglés como alternativa. La traducción del editor y de la exportación sigue en tareas separadas; la aplicación completa todavía no está traducida.
+**Idiomas:** el catálogo, la importación, la estructura de la aplicación y el editor existente ofrecen portugués de Brasil, inglés y español mediante un selector persistente. Incluye exposición, balance de blancos relativo, historial, comparación, estrellas/marcas, reubicación y mensajes de recuperación. El primer inicio sigue los idiomas del sistema, con inglés como alternativa. El recorte y la exportación siguen siendo funciones pendientes con traducción en tareas separadas.
 
 <a id="status"></a>
 ## Qué puedes hacer hoy
@@ -271,7 +271,7 @@ Las primeras etapas aprobadas usan `node:sqlite` en Electron Main para el catál
 | Recorte | En desarrollo; todavía no disponible en la versión integrada |
 | Exportación JPEG | En desarrollo; todavía no se generan nuevos archivos de salida |
 | Rediseño visual | Catálogo Cobre implementado; rediseño completo del editor todavía planificado |
-| Idiomas de la aplicación: portugués de Brasil, inglés y español | Selector persistente y catálogo/importación traducidos; editor/exportación pendientes |
+| Idiomas de la aplicación: portugués de Brasil, inglés y español | Selector persistente; catálogo/importación y editor existente traducidos; recorte/exportación pendientes |
 | RAW, lectura HEIC, exportación TIFF y ajustes por lotes | Planificados; dependen de nuevas decisiones y validaciones |
 | Distribución | Instaladores, versiones publicadas y validación ampliada por sistema todavía pendientes |
 

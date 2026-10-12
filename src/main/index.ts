@@ -119,7 +119,7 @@ if (ownsInstance) app.whenReady().then(async () => {
       if (request.op === 'exposure-history') return await library.moveExposureHistory(request.id, request.sessionId, request.revision, request.direction);
       if (request.op === 'end-edit') return await library.endEditing(request.id, request.sessionId);
       if (request.op === 'close-ready') {
-        if (!closeRequested) return fail('invalid-request', 'Nenhum fechamento solicitado.');
+        if (!closeRequested) return fail('invalid-request', 'Nenhum fechamento solicitado.', { key: 'errors.noCloseRequested' });
         closeAllowed = true;
         // Reply before closing the bridge's owning renderer.
         setImmediate(() => { if (window === owner && !owner.isDestroyed()) owner.close(); });
@@ -138,9 +138,9 @@ if (ownsInstance) app.whenReady().then(async () => {
           const status = await library.status(request.id);
           if (owner.isDestroyed()) return { ok: true, value: { canceled: true } };
           if (!status.ok) return status;
-          if (status.value.state === 'available') return fail('invalid-request', 'O original já está disponível. Volte a abrir a foto.');
-          if (!status.value.canRelocate) return fail('identity-unverified', status.value.message);
-          const selection = await dialog.showOpenDialog(owner, { title: 'Localizar original', properties: ['openFile'], filters: [{ name: 'JPEG', extensions: ['jpg', 'jpeg'] }] });
+          if (status.value.state === 'available') return fail('invalid-request', 'O original já está disponível. Volte a abrir a foto.', { key: 'errors.originalAlreadyAvailable' });
+          if (!status.value.canRelocate) return fail('identity-unverified', status.value.message, status.value.descriptor ?? { key: 'errors.legacyIdentity' });
+          const selection = await dialog.showOpenDialog(owner, { title: translate(language, { key: 'dialog.relocateTitle' }), properties: ['openFile'], filters: [{ name: 'JPEG', extensions: ['jpg', 'jpeg'] }] });
           return await library.relocateSelected(request.id, selection.canceled ? null : selection.filePaths[0] || null, () => owner.isDestroyed());
         } finally { selectingFiles = false; }
       }

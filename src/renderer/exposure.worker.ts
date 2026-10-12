@@ -1,4 +1,5 @@
 /// <reference lib="webworker" />
+import type { MessageDescriptor } from '../shared/i18n/messages.ts';
 import { applyJpegAdjustments } from '../processing/jpeg-adjustments.ts';
 // Only one selected image lives in this worker. Every adjustment starts from
 // the same reduced, oriented, quantized sRGB base, never the prior output.
@@ -28,5 +29,5 @@ context.onmessage = async ({ data }) => {
       const pixels = applyJpegAdjustments(base, data);
       context.postMessage({ op: 'pixels', id, sessionId, revision: data.revision, renderRequestId: data.renderRequestId, width, height, buffer: pixels.buffer }, [pixels.buffer]);
     }
-  } catch { context.postMessage({ op: 'error', id, sessionId, message: 'Não foi possível preparar a prévia de edição sRGB.' }); }
+  } catch { context.postMessage({ op: 'error', id, sessionId, message: 'Não foi possível preparar a prévia de edição sRGB.', descriptor: { key: 'errors.prepareEditingPreview' } satisfies MessageDescriptor }); }
 };

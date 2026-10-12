@@ -62,7 +62,7 @@ The main image above shows the implemented **A · Cobre (Copper)** catalog: a ne
 
 The editor already supports exposure, relative white balance, autosave, and exposure history. This is its current working interface; the editor's full Cobre redesign remains planned. [Capture details and photo credits](docs/assets/screenshots/README.md).
 
-**Languages:** the catalog, import flow and application shell support Brazilian Portuguese, English and Spanish through a persistent language selector. The first launch follows the system languages, falling back to English. Editor and export translation remain separate work; the entire application is not yet translated.
+**Languages:** the catalog, import flow, application shell and existing editor support Brazilian Portuguese, English and Spanish through a persistent language selector. This includes exposure, relative white balance, history, comparison, rating/flags, relocation and recovery messages. The first launch follows the system languages, falling back to English. Crop and export remain pending features with separate translation work.
 
 <a id="status"></a>
 ## What you can do today
@@ -271,7 +271,7 @@ The approved first stages use `node:sqlite` in Electron Main for the catalog and
 | Cropping | In development; not yet available in the integrated version |
 | JPEG export | In development; new output files are not yet available |
 | Visual redesign | Cobre catalog implemented; full editor redesign still planned |
-| App languages: Brazilian Portuguese, English, and Spanish | Persistent selector and catalog/import translated; editor/export translation pending |
+| App languages: Brazilian Portuguese, English, and Spanish | Persistent selector; catalog/import and existing editor translated; crop/export pending |
 | RAW, HEIC reading, TIFF export, and batch adjustments | Planned; dependent on further decisions and validation |
 | Distribution | Installers, releases, and broader platform validation still pending |
 
