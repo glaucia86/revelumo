@@ -1,0 +1,114 @@
+{
+  "command": [
+    "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\RawTherapee-5.13\\rawtherapee-cli.exe",
+    "-o",
+    "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\run-01\\derivative.jpg",
+    "-j92",
+    "-js3",
+    "-c",
+    "C:\\Users\\glauc\\Documents\\Codex\\2026-10-12\\task-5\\experiment\\raw14\\nikon-d200.nef"
+  ],
+  "cliSha256": "9172a03896f0200daf621909b024f6cd65a24837cad56d0748730b2fa6d2fb6a",
+  "powershellVersion": "7.6.5",
+  "versionBanner": "RawTherapee, version 5.13, command line.",
+  "ompNumThreads": 2,
+  "exitCode": 0,
+  "timedOut": false,
+  "elapsedMs": 1987,
+  "peakWorkingSetBytes": 493969408,
+  "samples": [
+    {
+      "elapsedMs": 198,
+      "workingSetBytes": 26828800,
+      "privateBytes": 11456512
+    },
+    {
+      "elapsedMs": 308,
+      "workingSetBytes": 30027776,
+      "privateBytes": 14942208
+    },
+    {
+      "elapsedMs": 412,
+      "workingSetBytes": 42708992,
+      "privateBytes": 52031488
+    },
+    {
+      "elapsedMs": 524,
+      "workingSetBytes": 56901632,
+      "privateBytes": 52031488
+    },
+    {
+      "elapsedMs": 633,
+      "workingSetBytes": 110149632,
+      "privateBytes": 133898240
+    },
+    {
+      "elapsedMs": 745,
+      "workingSetBytes": 248721408,
+      "privateBytes": 230092800
+    },
+    {
+      "elapsedMs": 855,
+      "workingSetBytes": 248930304,
+      "privateBytes": 230318080
+    },
+    {
+      "elapsedMs": 964,
+      "workingSetBytes": 368099328,
+      "privateBytes": 349573120
+    },
+    {
+      "elapsedMs": 1066,
+      "workingSetBytes": 376864768,
+      "privateBytes": 475586560
+    },
+    {
+      "elapsedMs": 1179,
+      "workingSetBytes": 377810944,
+      "privateBytes": 474447872
+    },
+    {
+      "elapsedMs": 1292,
+      "workingSetBytes": 400560128,
+      "privateBytes": 474578944
+    },
+    {
+      "elapsedMs": 1395,
+      "workingSetBytes": 420974592,
+      "privateBytes": 474882048
+    },
+    {
+      "elapsedMs": 1517,
+      "workingSetBytes": 444973056,
+      "privateBytes": 475054080
+    },
+    {
+      "elapsedMs": 1617,
+      "workingSetBytes": 465235968,
+      "privateBytes": 475226112
+    },
+    {
+      "elapsedMs": 1731,
+      "workingSetBytes": 488067072,
+      "privateBytes": 475377664
+    },
+    {
+      "elapsedMs": 1833,
+      "workingSetBytes": 396587008,
+      "privateBytes": 412319744
+    },
+    {
+      "elapsedMs": 1949,
+      "workingSetBytes": 370638848,
+      "privateBytes": 351502336
+    }
+  ],
+  "originalBefore": "b0800a1166b952430b255600373573e1d528adf8de98857781e06a98472b3c35",
+  "originalAfter": "b0800a1166b952430b255600373573e1d528adf8de98857781e06a98472b3c35",
+  "originalUnchanged": true,
+  "output": {
+    "bytes": 2418846,
+    "sha256": "31c8032aa8c82d99038271133f15faf3d440d9d6b45f2ab52a5b89d1a2978337"
+  },
+  "limits": "One process only. Working set is not exclusive physical RAM. No post-exit retention, child process, offline, ICC, orientation, or visual validation is inferred."
+}

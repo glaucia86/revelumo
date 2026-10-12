@@ -61,7 +61,7 @@
     }
   ],
   "originalAfterInvestigation": "b0800a1166b952430b255600373573e1d528adf8de98857781e06a98472b3c35",
-  "engineExecuted": false,
+  "engineExecuted": true,
   "installerExecuted": true,
   "extractor": {
     "url": "https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip",
@@ -73,5 +73,6 @@
     "listExitCode": 2,
     "setupExecuted": false
   },
-  "installationCheckpoint": "installation-checkpoint.md"
+  "installationCheckpoint": "installation-checkpoint.md",
+  "finalReport": "report.md"
 }

@@ -1,5 +1,7 @@
 # Checkpoint após autorização de instalação — #14
 
+Registro histórico: depois deste checkpoint, a responsável aceitou manter o desvio HKLM e autorizou continuar somente o experimento. Os resultados posteriores estão em [report.md](report.md); não foi feita desinstalação ou outra mudança de sistema.
+
 ## Resultado atual
 
 Instalador oficial RawTherapee 5.13 executado após autorização explícita da responsável para GPLv3 e instalação experimental limitada. Exit code 0; arquivos no destino aprovado. **Interrompido antes de executar a CLI**, conforme instrução de parar se efeitos reais fossem materialmente diferentes: log registra modo administrativo e chave nova de desinstalação **HKLM**, embora autorização exigisse sem admin. Não foi realizada desinstalação nem alteração manual de registro para esconder/corrigir o efeito. Nenhuma rejeição de auto-review ocorreu; o reviewer autorizou a execução solicitada.

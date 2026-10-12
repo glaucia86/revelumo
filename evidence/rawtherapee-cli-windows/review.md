@@ -19,3 +19,13 @@ Resumo por eixo: Standards — 0 violações duras, 1 melhoria adotada; Spec —
 Checkpoint posterior: fonte/licenças do innoextract oficial portátil consultadas e listagem autorizada pelo reviewer, sem setup/aceite. Falha de suporte reproduzida e adicionada ao relatório, esclarecendo que o bloqueio é aceite/instalação específica, não uma proibição geral inferida de instalar. Evidência de ausência da CLI permanece.
 
 Após autorização humana de instalação: ambos os agentes revisaram somente por leitura o checkpoint e os registros reais. Standards e Spec confirmam relato coerente da diferença administrativa/HKLM e interrupção antes da engine, sem alegação de conversão. Sugeriram distinguir diretamente a preparação histórica do estado atual; adotado em report.md e verification.txt. A issue permanece parcial, com conversão/recursos/erros/offline pendentes. Sem achados adicionais de escopo ou alegações indevidas.
+
+## Standards — revisão final após execução
+
+Sem achados impeditivos. Relatório mantém motor/licença do produto abertos; diff só tem evidências textuais e runners. Valores de tempo/memória coincidem com JSONs; preservação do NEF e JPEG existente demonstrada. Offline físico, 8 GB, outros OS, colorimetria e retenção prolongada não alegados. Diferença EXIF/igualdade do fluxo JPEG e skip com zero descritos corretamente. Alguma duplicação entre runners é heurística de smell, sem necessidade de abstração compartilhada para este spike. Rastreabilidade da CLI/PowerShell atendida. Revisão somente leitura; não reinspecionou imagem independentemente nesta rodada.
+
+## Spec — revisão final após execução
+
+Sem achados impeditivos no snapshot contra a base fixa. Duas conversões, fixture CC0 individual, hashes, JPEG inspecionado, quatro erros, recursos/inventário e aceite posterior HKLM coerentes com registros. Não transformar limites de offline/timeout/cancelamento/cor/OS em validações ou eleição de motor. Robustez de instrumentação diante de exceções e processos filhos permanece cobertura futura. Sem integração, fotos ou binários. Revisão somente leitura, sem executar engine/setup.
+
+Resumo final: Standards 0 achados impeditivos; Spec 0 achados impeditivos. A instalação/conversão foi retomada com autorização; limites de cobertura permanecem. Os registros anteriores acima são históricos, não o estado final do experimento.

@@ -1,5 +1,22 @@
 2026-10-12 — Windows, base 5aa6693d05bbfea1c538a9360c84ee69ce195a68
 
+FINAL SPIKE VERIFICATION (after explicit approval to retain HKLM effect and continue):
+- Real RawTherapee 5.13 CLI: two sequential successful conversions, exit 0.
+- Original SHA-256 equal before/after both conversions and all negative cases.
+- JPEG decoded with System.Drawing, dimensions 3891x2608; local visual inspection.
+- Embedded ICC byte-equal to installed RTv4_sRGB.icc; orientation tag absent.
+- Four negative cases: missing (2), truncated (-2), existing output (0/skipped), invalid output parent (-2).
+- Existing JPEG hash preserved by skip case.
+- Two output hashes differ only in 5 EXIF DateTime bytes; bytes from SOS are equal.
+- Both PowerShell runners parse without errors; negative runner rejects mismatched fixture before process/output creation.
+- Working set/private-byte samples retained; process-name checks returned zero after experiments.
+- Installed DLL/license/build inventory recorded as text/hashes; no binary/image committed.
+- No disconnected-adapter/socket capture, other OS, 8 GB, calibrated color, prolonged retention or product integration test claimed.
+- Product code/dependencies unchanged; CI is an independent product regression gate.
+- Repository stdout/stderr copies have trailing blank lines normalized; original raw logs remain local.
+
+HISTORICAL PREPARATION / INSTALLATION CHECKS:
+
 Historical preparation checks below preceded installation approval.
 Current follow-up: official installer executed with explicit approval, exit 0.
 Unexpected administrative mode/HKLM uninstall key observed: engine stopped before conversion.
