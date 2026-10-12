@@ -1,0 +1,140 @@
+{
+  "platform": "linux",
+  "runtimeSourceTree": "44770aa99c6bd4cfc6e76a0f2b5f561b48c3346a",
+  "boundary": "Real packaged Electron main/preload/renderer/worker, synthetic fixtures and isolated userData; native chooser replaced",
+  "invocation": "node_modules/electron/dist/electron test/electron-<suite>.cjs <fresh-suite-directory> <mode>",
+  "suites": {
+    "smoke": [
+      {
+        "mode": "first",
+        "exitCode": 0
+      },
+      {
+        "mode": "reopen",
+        "exitCode": 0
+      }
+    ],
+    "exposure": [
+      {
+        "mode": "first",
+        "exitCode": 0
+      },
+      {
+        "mode": "reopen",
+        "exitCode": 0
+      },
+      {
+        "mode": "interrupt",
+        "exitCode": 0
+      },
+      {
+        "mode": "reopen",
+        "exitCode": 0
+      },
+      {
+        "mode": "discard-race",
+        "exitCode": 0
+      },
+      {
+        "mode": "reopen",
+        "exitCode": 0
+      },
+      {
+        "mode": "race",
+        "exitCode": 0
+      },
+      {
+        "mode": "race-reopen",
+        "exitCode": 0
+      }
+    ],
+    "relocation": [
+      {
+        "mode": "first",
+        "exitCode": 0
+      },
+      {
+        "mode": "reopen",
+        "exitCode": 0
+      }
+    ],
+    "classification": [
+      {
+        "mode": "first",
+        "exitCode": 0
+      },
+      {
+        "mode": "reopen",
+        "exitCode": 0
+      }
+    ],
+    "filters": [
+      {
+        "mode": "first",
+        "exitCode": 0
+      },
+      {
+        "mode": "reopen",
+        "exitCode": 0
+      }
+    ],
+    "history": [
+      {
+        "mode": "first",
+        "exitCode": 0
+      },
+      {
+        "mode": "reopen",
+        "exitCode": 0
+      },
+      {
+        "mode": "gestures",
+        "exitCode": 0
+      },
+      {
+        "mode": "history-failure",
+        "exitCode": 0
+      },
+      {
+        "mode": "history-reopen",
+        "exitCode": 0
+      },
+      {
+        "mode": "interrupt",
+        "exitCode": 0
+      },
+      {
+        "mode": "interrupt-reopen",
+        "exitCode": 0
+      },
+      {
+        "mode": "save-failure",
+        "exitCode": 0
+      },
+      {
+        "mode": "many-pending",
+        "exitCode": 0
+      },
+      {
+        "mode": "key-chord",
+        "exitCode": 0
+      },
+      {
+        "mode": "retention",
+        "exitCode": 0
+      },
+      {
+        "mode": "retention-reopen",
+        "exitCode": 0
+      }
+    ]
+  },
+  "processes": 28,
+  "passed": 28,
+  "failed": 0,
+  "limits": [
+    "No installer or executable double-click verification",
+    "No physical keyboard/screen reader",
+    "No Windows local or macOS claim"
+  ]
+}

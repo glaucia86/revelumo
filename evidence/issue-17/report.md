@@ -18,9 +18,9 @@ Seam pública Library: teste de salvar/reabrir WB falhou sem `saveAdjustments`, 
 
 Dois erros de harness foram diagnosticados, não tratados como bugs do produto: blur em campo sem foco; loop de 1025 gestos em janela oculta sem foco não encerrava cada gesto. A versão atual ativa foco CDP e exige lote 1024 antes de aceitar a cobertura.
 
-## Gates ainda em andamento neste checkpoint
+## Gates por snapshot
 
-Reconferência da revisão Spec após correções, revisão Standards independente e CI Windows/Ubuntu do head corrigido. A regressão anterior de 26 processos passou no primeiro snapshot; está sendo repetida após as correções abaixo. Este relatório não declara merge nem entrega final enquanto esses gates estiverem pendentes.
+Os registros abaixo distinguem cada snapshot. A aprovação para merge exige CI verde associado ao head corrente do [PR #28](https://github.com/glaucia86/revelumo/pull/28), além das revisões independentes; resultados históricos não substituem esse gate. Este documento não é uma publicação/release.
 
 Limites: dados sintéticos, diálogo substituído, sem leitor de tela/teclado físico, sem Windows local/macOS, sem teste no hardware-alvo de 8 GB. Sem instaladores, lançamento, IA, RAW, exportação, recorte ou nova stack. O README está fora desta alteração por coordenação do estudo visual.
 
@@ -28,6 +28,12 @@ Limites: dados sintéticos, diálogo substituído, sem leitor de tela/teclado f�
 
 - Spec independente do snapshot inicial: dois P2, ACK histórico sem validar T/M e controles cortados na janela mínima. [Parecer](code-review.md). Ambos tiveram RED real no Electron e regressão GREEN no pacote corrigido: `history-ack` rejeita alteração de T e M nos ACKs de Undo/Redo, preserva draft e retry; `layout` exige hit-test/alcance dos controles em 760×540. O pedido de histórico agora congela T/M após flush; o painel tem rolagem contida.
 - Cor integrada: sRGB/P3 + WB100/100 e EV−1 contra Decimal/LittleCMS (tolerância 4); EXIF1–8 com quadrantes (tolerância 6), ordem/dimensões exatas. Reset exige recuperar a base exatamente; dez hashes preservados. [Proveniência](../../test/fixtures/jpeg-adjustments-provenance.md).
-- Inspeção visual default 1160×780 no aplicativo Linux cloud mostrou labels/valores/reset e status legíveis, sem sobreposição. O teste de tamanho mínimo revelou o problema corrigido acima; nova inspeção final em andamento.
-- Primeiro CI: [run 38269097695](https://github.com/glaucia86/revelumo/actions/runs/38269097695): Ubuntu passou; Windows encontrou EPERM no teardown de um teste, pois o segundo Catalog fechava num after-hook posterior à remoção do diretório. Corrigido com finally que fecha a conexão antes do teardown. Nenhum assert funcional foi removido nem erro mascarado. Novo CI ainda necessário.
+- Inspeção visual no aplicativo Linux cloud (captura de conteúdo 1180×784) mostrou labels/valores/reset e status legíveis, sem sobreposição. O teste de tamanho mínimo revelou o problema corrigido acima; a inspeção final confirmou WB legível e alcançável na janela mínima 760×540 (captura de conteúdo 760×512), com rolagem necessária para alternar prévia/controles nessa altura.
+- Primeiro CI: [run 38269097695](https://github.com/glaucia86/revelumo/actions/runs/38269097695): Ubuntu passou; Windows encontrou EPERM no teardown de um teste, pois o segundo Catalog fechava num after-hook posterior à remoção do diretório. Corrigido com finally que fecha a conexão antes do teardown. Nenhum assert funcional foi removido nem erro mascarado. O [CI seguinte 38270569588](https://github.com/glaucia86/revelumo/actions/runs/38270569588), head `4375f7fa4925940e9ca96f006f5e8b956e2e8bef`, passou Windows/Ubuntu incluindo os doze processos WB.
 - Após fixes: core 100/100, typecheck e package exit 0; sequência WB completa de doze processos em diretório novo passou. Sem flags para desativar sandbox/GPU.
+
+## Fechamento da verificação local
+
+- Spec reconferiu os dois P2 no snapshot corrigido e não encontrou remanescentes. Standards: zero violações documentadas, uma heurística P3 de nomes internos, resolvida por renomeação mecânica sem mudança de API pública. [Pareceres separados](code-review.md).
+- Após as correções funcionais, 28 processos de regressão completos passaram: importação, relocalização, filtros, classificação, exposição e histórico. [Resumo reproduzível](regression-summary.json). Os doze processos WB passaram em diretório novo. Após renomeação, core100/typecheck/package passaram novamente; o CI do head final permanece a fonte de seu resultado multiplataforma.
+- Base README atualizada para main `54a2881c66fd46da7656d84730b0154b13529875`, tree `6fc35575a0dbc598a01825272a4d94ceb16513ae`. Os três READMEs aprovados foram preservados byte a byte; nenhuma alteração de narrativa/visual foi feita por esta fatia.

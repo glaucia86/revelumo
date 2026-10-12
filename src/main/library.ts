@@ -116,7 +116,7 @@ export class Library {
     if (!parseRequest({ op: 'exposure', id, sessionId, revision, exposureTenths, processingVersion, ...(gestures === undefined ? {} : { gestures }) })) return Promise.resolve(failure('invalid-request', 'Solicitação inválida.'));
     const edits = (gestures ?? [{ id: revision, exposureTenths, complete: true }]).map(gesture => ({ ...gesture }));
     return this.mutateExposure(id, sessionId, revision, JSON.stringify(['exposure', edits]), sha256 => {
-      const exposure = this.catalog.saveExposure(id, sha256, sessionId, edits);
+      const exposure = this.catalog.saveAdjustmentCheckpoint(id, sha256, sessionId, edits);
       const last = edits.at(-1)!; this.editingGesture = { id: last.id, complete: last.complete };
       return exposure;
     }, () => edits[0].id > this.editingGesture.id || (edits[0].id === this.editingGesture.id && !this.editingGesture.complete));
@@ -127,7 +127,7 @@ export class Library {
     if (!request || request.op !== 'adjustments') return Promise.resolve(failure('invalid-request', 'Solicitação inválida.'));
     const edits = request.gestures.map(gesture => ({ ...gesture })), values = { ...request.adjustments };
     return this.mutateExposure(id, sessionId, revision, JSON.stringify(['adjustments', values, edits]), sha256 => {
-      const exposure = this.catalog.saveExposure(id, sha256, sessionId, edits, values);
+      const exposure = this.catalog.saveAdjustmentCheckpoint(id, sha256, sessionId, edits, values);
       const last = edits.at(-1); if (last) this.editingGesture = { id: last.id, complete: last.complete };
       return exposure;
     }, () => edits.length ? edits[0].id > this.editingGesture.id || (edits[0].id === this.editingGesture.id && !this.editingGesture.complete) : values.exposureTenths === this.editing?.exposureTenths);

@@ -160,8 +160,8 @@ export class Catalog {
     history.active = null;
   }
 
-  saveExposure(id: string, sha256: string, sessionId: string, gestures: ExposureGesture[], whiteBalance?: { temperature: number; tint: number }): number {
-    return this.changeExposureHistory(id, sha256, history => {
+  saveAdjustmentCheckpoint(id: string, sha256: string, sessionId: string, gestures: ExposureGesture[], whiteBalance?: { temperature: number; tint: number }): number {
+    return this.changeRecipeAndExposureHistory(id, sha256, history => {
       for (const gesture of gestures) {
         const key = `${sessionId}:${gesture.id}`;
         if (history.active?.key !== key) this.finishGesture(history);
@@ -172,13 +172,13 @@ export class Catalog {
   }
 
   moveExposureHistory(id: string, sha256: string, direction: 'undo' | 'redo'): number {
-    return this.changeExposureHistory(id, sha256, history => {
+    return this.changeRecipeAndExposureHistory(id, sha256, history => {
       this.finishGesture(history);
       history.cursor = Math.max(0, Math.min(history.states.length - 1, history.cursor + (direction === 'undo' ? -1 : 1)));
     });
   }
 
-  private changeExposureHistory(id: string, sha256: string, change: (history: ExposureHistory) => void, whiteBalance?: { temperature: number; tint: number }): number {
+  private changeRecipeAndExposureHistory(id: string, sha256: string, change: (history: ExposureHistory) => void, whiteBalance?: { temperature: number; tint: number }): number {
     this.db.exec('BEGIN IMMEDIATE');
     try {
       if (this.find(id)?.sha256 !== sha256) throw new Error('Photo identity changed');
