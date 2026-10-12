@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "sourceFixture": "test/fixtures/exposure-orientation-6.jpg",
+  "sourceFixtureSha256": "8a36ae018c56209f1c736706983e2f4caf57c85a8fa548d5200f0ad01d15bf2a",
+  "sourceSha256": "74de376dd0e0a4c5b256173dda643828fabfee728f9912ede2280ec4f593650f",
+  "sourceBytes": 3000,
+  "sourceDimensions": [
+    80,
+    40
+  ],
+  "sourceOrientation": 6,
+  "outputDimensions": [
+    40,
+    80
+  ],
+  "outputOrientation": 1,
+  "recipe": {
+    "processingVersion": 2,
+    "exposureTenths": -10,
+    "temperature": 100,
+    "tint": 100
+  },
+  "maximumChannelError": 8,
+  "credits": {
+    "exif": {
+      "artist": "Synthetic Artist",
+      "copyright": "(c) 2026 Synthetic Studio",
+      "xpAuthor": "João & Gláucia · laboratório"
+    },
+    "xmp": {
+      "creators": [
+        "João & <Equipe>",
+        "Gláucia — 日本語"
+      ],
+      "rights": [
+        {
+          "language": "x-default",
+          "value": "© 2026 Estúdio Sintético"
+        },
+        {
+          "language": "pt-BR",
+          "value": "Créditos de teste: João & Gláucia"
+        },
+        {
+          "language": "ja",
+          "value": "© 2026 合成スタジオ"
+        }
+      ]
+    },
+    "iptc": {
+      "byline": [
+        "João & Gláucia"
+      ],
+      "credit": [
+        "Estúdio Sintético — São Paulo"
+      ],
+      "copyright": [
+        "© 2026 Créditos de teste"
+      ]
+    }
+  },
+  "sourceIccSha256": "cd5c32f23bb9319f16268d202717065fe48125f52a762011c45089c171e844cb",
+  "sourceIccCopyright": "No copyright, use freely",
+  "syntheticLocation": {
+    "exifGps": "0 N, 0 E",
+    "xmpGps": [
+      "0,0N",
+      "0,0E"
+    ],
+    "iptc": [
+      "Synthetic location",
+      "0,0"
+    ]
+  }
+}

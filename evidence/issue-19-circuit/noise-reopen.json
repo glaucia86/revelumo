@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "dimensions": [
+    8000,
+    5000
+  ],
+  "bytes": 20495358,
+  "icc": {
+    "bytes": 456,
+    "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+    "description": "sRGB",
+    "identityProbeMaximumError": 1
+  },
+  "pixels": "Full decode only; high-frequency color fidelity not asserted."
+}

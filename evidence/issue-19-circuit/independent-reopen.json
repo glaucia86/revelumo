@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "sourcePath": "source.jpg",
+  "publishedPath": "published.jpg",
+  "sourceSha256": "74de376dd0e0a4c5b256173dda643828fabfee728f9912ede2280ec4f593650f",
+  "publishedSha256": "8938b5a524d33dbe86f2262a360b15fe5eee7fad0d878e2d163835e89f78992c",
+  "publishedBytes": 2000,
+  "dimensions": [
+    40,
+    80
+  ],
+  "orientation": 1,
+  "fullRasterDecoded": true,
+  "pixelsChecked": 1536,
+  "centerPatchPixelsChecked": 100,
+  "maximumChannelError": 4,
+  "channelTolerance": 8,
+  "boundaryMarginPixels": 8,
+  "recipe": {
+    "processingVersion": 2,
+    "exposureTenths": -10,
+    "temperature": 100,
+    "tint": 100
+  },
+  "outputProfile": {
+    "bytes": 456,
+    "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+    "description": "sRGB",
+    "identityProbeMaximumError": 1
+  },
+  "credits": {
+    "exif": {
+      "artist": "Synthetic Artist",
+      "copyright": "(c) 2026 Synthetic Studio",
+      "xpAuthor": "João & Gláucia · laboratório"
+    },
+    "xmp": {
+      "creators": [
+        "João & <Equipe>",
+        "Gláucia — 日本語"
+      ],
+      "rights": [
+        {
+          "language": "x-default",
+          "value": "© 2026 Estúdio Sintético"
+        },
+        {
+          "language": "pt-BR",
+          "value": "Créditos de teste: João & Gláucia"
+        },
+        {
+          "language": "ja",
+          "value": "© 2026 合成スタジオ"
+        }
+      ]
+    },
+    "iptc": {
+      "byline": [
+        "João & Gláucia"
+      ],
+      "credit": [
+        "Estúdio Sintético — São Paulo"
+      ],
+      "copyright": [
+        "© 2026 Créditos de teste"
+      ]
+    }
+  },
+  "metadata": {
+    "exif": {
+      "tags": [
+        315,
+        33432,
+        40093
+      ],
+      "orientation": 1,
+      "hasGps": false
+    },
+    "xmp": {
+      "gpsProperties": []
+    },
+    "iptc": {
+      "otherDatasets": []
+    }
+  },
+  "patches": [
+    {
+      "box": [
+        8,
+        18,
+        13,
+        23
+      ],
+      "expectedCenter": [
+        0,
+        0,
+        171
+      ],
+      "actualCenter": [
+        0,
+        0,
+        170
+      ],
+      "maximumChannelError": 1
+    },
+    {
+      "box": [
+        28,
+        18,
+        33,
+        23
+      ],
+      "expectedCenter": [
+        233,
+        0,
+        0
+      ],
+      "actualCenter": [
+        233,
+        0,
+        3
+      ],
+      "maximumChannelError": 3
+    },
+    {
+      "box": [
+        8,
+        58,
+        13,
+        63
+      ],
+      "expectedCenter": [
+        234,
+        172,
+        0
+      ],
+      "actualCenter": [
+        234,
+        172,
+        1
+      ],
+      "maximumChannelError": 1
+    },
+    {
+      "box": [
+        28,
+        58,
+        33,
+        63
+      ],
+      "expectedCenter": [
+        0,
+        172,
+        0
+      ],
+      "actualCenter": [
+        0,
+        172,
+        0
+      ],
+      "maximumChannelError": 2
+    }
+  ],
+  "pillowVersion": "12.3.0",
+  "littleCmsVersion": "2.19"
+}

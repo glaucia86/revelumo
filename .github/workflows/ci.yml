@@ -213,6 +213,15 @@ jobs:
           npm run test:jpeg-engine -- "$jpegEngine" full
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
+      - name: 'JPEG export circuit: authenticated credits and exclusive publication'
+        if: runner.os == 'Windows'
+        id: jpeg_export_circuit
+        timeout-minutes: 3
+        run: |
+          $jpegCircuit = Join-Path $env:RUNNER_TEMP ('revelumo-jpeg-circuit-' + [guid]::NewGuid())
+          npm run test:jpeg-export-circuit -- "$jpegCircuit" full
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
       - name: Results and limits
         if: always()
         env:
@@ -225,7 +234,7 @@ jobs:
           '| Step | Outcome |' >> $env:GITHUB_STEP_SUMMARY
           '| --- | --- |' >> $env:GITHUB_STEP_SUMMARY
           $results = $env:STEP_RESULTS | ConvertFrom-Json -AsHashtable
-          foreach ($id in @('versions', 'docs', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'cobre_catalog', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history', 'white_balance', 'language', 'editor_language', 'jpeg_engine')) {
+          foreach ($id in @('versions', 'docs', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'cobre_catalog', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history', 'white_balance', 'language', 'editor_language', 'jpeg_engine', 'jpeg_export_circuit')) {
             "| $id | $($results[$id].outcome) |" >> $env:GITHUB_STEP_SUMMARY
           }
           if ($env:RUNNER_OS -ne 'Windows') {
