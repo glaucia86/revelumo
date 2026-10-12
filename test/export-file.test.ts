@@ -254,14 +254,24 @@ test('does not traverse a replacement staging directory symlink during cleanup',
   const other = join(directory, 'unrelated');
   await fs.mkdir(other);
   await fs.writeFile(join(other, 'payload'), 'unrelated file');
+  let substituted = false;
   const result = await publishNewExport(request, {
-    ...fs, link: async (source, destination) => {
-      await fs.link(source, destination);
-      const staging = (await import('node:path')).dirname(String(source));
-      await fs.rename(staging, staging + '-moved');
-      await fs.symlink(other, staging, 'junction');
+    ...fs, open: async (...args) => {
+      const handle = await fs.open(...args);
+      const close = handle.close.bind(handle);
+      handle.close = async () => {
+        await close();
+        // Windows forbids renaming the directory with this handle still open.
+        // Substitute it immediately before the writer's cleanup identity check.
+        const staging = (await import('node:path')).dirname(String(args[0]));
+        await fs.rename(staging, staging + '-moved');
+        await fs.symlink(other, staging, 'junction');
+        substituted = true;
+      };
+      return handle;
     },
   });
+  assert.equal(substituted, true, 'the adversarial substitution must actually occur');
   assert.equal(result.cleanupPending, true);
   assert.equal(await fs.readFile(join(other, 'payload'), 'utf8'), 'unrelated file');
   assert.equal(await fs.readFile(request.destination, 'utf8'), 'completed export');
