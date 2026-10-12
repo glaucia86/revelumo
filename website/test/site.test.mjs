@@ -73,3 +73,18 @@ test('Pages deployment is main-only after successful build with job-local permis
  assert.match(workflow,/path: website\/dist/);
  assert.doesNotMatch(workflow,/pull_request_target|contents: write|secrets\./);
 });
+
+test('language documentation reflects the integrated catalog without claiming a fully translated editor', async()=>{
+ const {locales}=await import('../content.mjs');
+ for(const locale of Object.values(locales)){
+  assert.match(locale.guideIntro,/PT-BR\/EN\/ES/);
+  assert.match(locale.guideIntro,/persist/);
+  assert.match(locale.guideIntro,/editor/);
+  assert.match(locale.roadmapItems[0][1],/PT-BR\/EN\/ES/);
+ }
+ assert.match(locales.en.guideIntro,/partial/);
+ assert.match(locales['pt-BR'].guideIntro,/parcia/);
+ assert.match(locales.es.guideIntro,/parcia/);
+ assert.match(locales.en.screenshot,/shown in Portuguese/);
+ assert.match(locales.en.guideSteps[1][1],/Import JPEGs/);
+});
