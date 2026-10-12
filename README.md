@@ -7,8 +7,8 @@
 <p>An independent desktop photo editor for hobbyists and enthusiasts.<br>A local library to organize and edit JPEGs while preserving the originals.</p>
 <p><strong>Local · No subscription · No AI features in the product</strong></p>
 
-<img src="evidence/batch-jpeg/22-large-grid-reopened.png" alt="Actual Revelumo library in a packaged Linux build, with synthetic test images." width="1120" />
-<p><sub>Actual screenshot from an earlier Linux development milestone, before the selected Copper redesign. An updated main-screen capture will follow its integration; there is no public installer yet.</sub></p>
+<img src="docs/assets/screenshots/revelumo-cobre-catalog.png" alt="Real Revelumo Cobre catalog in the packaged Linux app, with eight licensed demonstration photographs." width="1120" />
+<p><sub>Real Cobre catalog in the packaged Linux app, with JPEGs imported through the application. Development build, not a public installer. <a href="docs/assets/screenshots/README.md">Capture details and photo credits</a>.</sub></p>
 
 <p>
 <a href="https://github.com/glaucia86/revelumo/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/glaucia86/revelumo/actions/workflows/ci.yml/badge.svg?branch=main" /></a>
@@ -52,20 +52,15 @@ Lightroom Classic is a functional reference for the library and editing workflow
 
 The application opens an Electron window with a React interface. You can import JPEGs, browse thumbnails, rate photos, and filter the library. Opening a photo lets you adjust exposure and relative white balance, compare with 0 EV while keeping white balance, and undo or redo exposure changes.
 
-### The library in action
+### The current catalog
 
-The main image at the top is a real capture from the JPEG batch-import milestone. It predates today's rating, filtering, and editing controls. [Milestone report](evidence/batch-jpeg/report.md).
+The main image above shows the implemented **A · Cobre (Copper)** catalog: a neutral dark workspace, copper accents, local JPEGs, and library filters. The images were actually imported into the packaged application. [Implementation and verification](evidence/cobre-catalog/report.md).
 
-<details>
-<summary>See the photo preview from the same milestone</summary>
+### Editing a photo
 
-<img src="evidence/batch-jpeg/24-page-two-preview.png" alt="Actual screenshot of a synthetic JPEG preview in Revelumo, with a button to return to the grid." width="100%" />
+<img src="docs/assets/screenshots/revelumo-editor.png" alt="Actual Revelumo editor showing a licensed landscape photograph, exposure, relative temperature and tint, and save status." width="1120" />
 
-This screenshot records grid-to-preview navigation before the exposure editor was added. The current controls and their verification are described in the [exposure](evidence/issue-12/report.md) and [persistent history](evidence/issue-16/report.md) reports.
-
-</details>
-
-**Selected visual direction: A · Cobre (Copper).** A neutral dark workspace with copper accents on controls and selections has been chosen for the redesign. This approves the design direction; the mockup has not been integrated into the application. The screenshots above document the existing implementation.
+The editor already supports exposure, relative white balance, autosave, and exposure history. This is its current working interface; the editor's full Cobre redesign remains planned. [Capture details and photo credits](docs/assets/screenshots/README.md).
 
 **Languages:** the current app interface is in Portuguese. This README is available in English, Brazilian Portuguese, and Spanish; language selection inside the app is planned and is not available yet.
 
@@ -217,8 +212,9 @@ The [CI workflow](.github/workflows/ci.yml) checks PRs, pushes to `main`, and ma
 - [Exposure, autosave, color, and resource measurements](evidence/issue-12/report.md)
 - [Persistent history, retention, and Linux visual QA](evidence/issue-16/report.md)
 - [Relative white balance, full-recipe persistence, and color checks](evidence/issue-17/report.md)
+- [Cobre catalog, packaged interaction checks, and visual limits](evidence/cobre-catalog/report.md)
 
-Reports record each milestone's revision and environment; references to pending publication or CI in those records are historical. Consult PRs and Actions for the remote status. Automated tests use synthetic images and substitute the native dialog at the file-selection boundary. They do not establish validation with real photographs, screen readers, 8 GB hardware, or macOS. Most detailed engineering reports are currently in Portuguese.
+Reports record each milestone's revision and environment; references to pending publication or CI in those records are historical. Consult PRs and Actions for the remote status. Automated regression tests use synthetic images and substitute the native dialog at the file-selection boundary. Licensed photographs were also imported for the UI captures; this limited visual check does not establish broad camera-file compatibility or validation with screen readers, 8 GB hardware, or macOS. Most detailed engineering reports are currently in Portuguese.
 
 CI keeps results in logs and job summaries, without package uploads or persistent caches. The CI matrix is not an end-user support declaration.
 
@@ -274,7 +270,7 @@ The approved first stages use `node:sqlite` in Electron Main for the catalog and
 | Relative white balance | Temperature, tint, reset, and autosave implemented; exposure-only history preserved |
 | Cropping | In development; not yet available in the integrated version |
 | JPEG export | In development; new output files are not yet available |
-| Visual redesign | A · Cobre (Copper) direction selected; implementation pending |
+| Visual redesign | Cobre catalog implemented; full editor redesign still planned |
 | App languages: Portuguese, English, and Spanish | Planned; language selection not implemented |
 | RAW, HEIC reading, TIFF export, and batch adjustments | Planned; dependent on further decisions and validation |
 | Distribution | Installers, releases, and broader platform validation still pending |
@@ -310,7 +306,7 @@ Dependencies, engineering skills, images, portraits, fonts, and third-party mark
 
 <h3>Glaucia Lemos</h3>
 <p><strong>Principal Software Engineer · Microsoft MVP · Codex Ambassador</strong></p>
-<p>Formerly at Microsoft. I share practical knowledge about JavaScript, TypeScript,<br>and software development through technical content, talks, and live coding.<br>I am the creator of Revelumo.</p>
+<p>I work with AI and software engineering, building <a href="https://github.com/glaucia86/repocheckai">applications</a> and exploring<br><a href="https://github.com/glaucia86/palestra-sdd">AI coding agents</a> with JavaScript and TypeScript. Formerly at Microsoft, I share<br>practical knowledge through open-source projects, talks, and technical content.<br>I am the creator of Revelumo.</p>
 
 <p>
 <a href="https://www.youtube.com/user/l32759"><img alt="YouTube" src="https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white" /></a>

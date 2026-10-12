@@ -4,7 +4,7 @@ Mudanças relevantes para quem usa o Revelumo. `Unreleased` contém somente entr
 
 ## Unreleased
 
-Base de aplicação integrada em 12/10/2026: `9f40a288573f4ea95d8744e014c8cb1a0ef01c35` (PR #28). Versão do projeto: `0.0.1`; nenhuma tag, alpha ou release publicada. As entradas documentais desta atualização passam a fazer parte de `Unreleased` quando a PR for integrada.
+Base de aplicação integrada em 12/10/2026: `fbc46631502c9b00f8d667abf4f98491e6ad289a` (PR #33). Versão do projeto: `0.0.1`; nenhuma tag, alpha ou release publicada. As entradas documentais desta atualização passam a fazer parte de `Unreleased` quando a PR for integrada.
 
 ### Adicionado
 
@@ -21,6 +21,8 @@ Base de aplicação integrada em 12/10/2026: `9f40a288573f4ea95d8744e014c8cb1a0e
 ### Alterado
 
 - Catálogo com a identidade Cobre: cabeçalho compacto, grade neutra, fonte Geist local com OFL preservada, controles legíveis e retorno de foco por teclado à foto aberta. Paginação, filtros, importação e originais permanecem preservados. O visual completo do editor continua separado. [PR #33](https://github.com/glaucia86/revelumo/pull/33), [issue #29](https://github.com/glaucia86/revelumo/issues/29).
+
+- READMEs alinhados ao catálogo Cobre integrado, com capturas reais de catálogo/editor, créditos das fotografias e mini bio destacando o trabalho da criadora com IA. [Issue #29](https://github.com/glaucia86/revelumo/issues/29), [proveniência das capturas](docs/assets/screenshots/README.md).
 
 ### Licença
 
