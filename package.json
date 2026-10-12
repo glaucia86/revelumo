@@ -21,7 +21,8 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "install:electron": "install-electron",
-    "test:history": "electron test/electron-history.cjs"
+    "test:history": "electron test/electron-history.cjs",
+    "test:wb": "electron test/electron-white-balance.cjs"
   },
   "dependencies": {
     "react": "^19.3.0",

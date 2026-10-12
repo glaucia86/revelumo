@@ -6,6 +6,7 @@ ipcRenderer.on('revelumo:close-request', () => { closePending = true; for (const
 const api: RevelumoApi = {
   recipePhoto: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'recipe', id }),
   beginEditingPhoto: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'begin-edit', id }),
+  saveAdjustments: (id, sessionId, revision, adjustments, processingVersion, gestures) => ipcRenderer.invoke('revelumo:invoke', { op: 'adjustments', id, sessionId, revision, adjustments, processingVersion, gestures }),
   saveExposure: (id, sessionId, revision, exposureTenths, processingVersion, gestures) => ipcRenderer.invoke('revelumo:invoke', { op: 'exposure', id, sessionId, revision, exposureTenths, processingVersion, ...(gestures === undefined ? {} : { gestures }) }),
   moveExposureHistory: (id, sessionId, revision, direction) => ipcRenderer.invoke('revelumo:invoke', { op: 'exposure-history', id, sessionId, revision, direction }),
   endEditingPhoto: (id, sessionId) => ipcRenderer.invoke('revelumo:invoke', { op: 'end-edit', id, sessionId }),

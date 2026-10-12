@@ -5,7 +5,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { setImmediate } from 'node:timers/promises';
 import { Catalog } from './catalog.ts';
 import { parseRequest } from '../shared/requests.ts';
-import type { PhotoClassification, PhotoFlag, PhotoRecipe, EditSession, ExposureGesture, LibraryFilters, LibraryResults } from '../shared/contracts.ts';
+import type { PhotoClassification, PhotoFlag, PhotoRecipe, PhotoAdjustments, EditSession, ExposureGesture, LibraryFilters, LibraryResults } from '../shared/contracts.ts';
 import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcome, PhotoSummary, PhotoStatus, PhotoAvailability, Preview, Result } from '../shared/contracts.ts';
 
 const MAX_BYTES = 32 * 1024 * 1024;
@@ -122,6 +122,17 @@ export class Library {
     }, () => edits[0].id > this.editingGesture.id || (edits[0].id === this.editingGesture.id && !this.editingGesture.complete));
   }
 
+  saveAdjustments(id: string, sessionId: string, revision: number, adjustments: PhotoAdjustments, processingVersion: number, gestures: ExposureGesture[]): Promise<Result<EditSession>> {
+    const request = parseRequest({ op: 'adjustments', id, sessionId, revision, adjustments, processingVersion, gestures });
+    if (!request || request.op !== 'adjustments') return Promise.resolve(failure('invalid-request', 'Solicitação inválida.'));
+    const edits = request.gestures.map(gesture => ({ ...gesture })), values = { ...request.adjustments };
+    return this.mutateExposure(id, sessionId, revision, JSON.stringify(['adjustments', values, edits]), sha256 => {
+      const exposure = this.catalog.saveExposure(id, sha256, sessionId, edits, values);
+      const last = edits.at(-1); if (last) this.editingGesture = { id: last.id, complete: last.complete };
+      return exposure;
+    }, () => edits.length ? edits[0].id > this.editingGesture.id || (edits[0].id === this.editingGesture.id && !this.editingGesture.complete) : values.exposureTenths === this.editing?.exposureTenths);
+  }
+
   moveExposureHistory(id: string, sessionId: string, revision: number, direction: 'undo' | 'redo'): Promise<Result<EditSession>> {
     if (!parseRequest({ op: 'exposure-history', id, sessionId, revision, direction })) return Promise.resolve(failure('invalid-request', 'Solicitação inválida.'));
     return this.mutateExposure(id, sessionId, revision, JSON.stringify(['history', direction]), sha256 => {
@@ -148,7 +159,7 @@ export class Library {
         // identity read/commit; never admit an old revision after an await.
         if (this.editing !== session) return failure('invalid-request', 'Sessão de edição encerrada.');
         const exposureTenths = commit(photo.sha256);
-        this.editing = { ...session, revision, exposureTenths, ...this.catalog.exposureHistory(id) };
+        this.editing = { ...session, ...this.catalog.recipe(id), revision, exposureTenths, ...this.catalog.exposureHistory(id) };
         this.editingOperation = operation;
         return { ok: true, value: { ...this.editing } };
       } catch { return failure('catalog-error', 'Não foi possível salvar o ajuste. O último ajuste confirmado foi preservado. Tente novamente.'); }

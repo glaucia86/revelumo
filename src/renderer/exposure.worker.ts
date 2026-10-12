@@ -1,4 +1,5 @@
 /// <reference lib="webworker" />
+import { applyJpegAdjustments } from '../processing/jpeg-adjustments.ts';
 // Only one selected image lives in this worker. Every adjustment starts from
 // the same reduced, oriented, quantized sRGB base, never the prior output.
 let base: Uint8ClampedArray | null = null;
@@ -24,18 +25,8 @@ context.onmessage = async ({ data }) => {
       } finally { bitmap.close(); }
       context.postMessage({ op: 'ready', id, sessionId, width, height });
     } else if (data.op === 'render' && base && data.id === id && data.sessionId === sessionId) {
-      const pixels = new Uint8ClampedArray(base);
-      if (data.exposureTenths !== 0) {
-        const gain = 2 ** (data.exposureTenths / 10), lut = new Uint8ClampedArray(256);
-        for (let channel = 0; channel < 256; channel++) {
-          const srgb = channel / 255;
-          const linear = srgb <= 0.04045 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
-          const adjusted = Math.min(1, linear * gain);
-          lut[channel] = Math.round(255 * (adjusted <= 0.0031308 ? adjusted * 12.92 : 1.055 * adjusted ** (1 / 2.4) - 0.055));
-        }
-        for (let i = 0; i < pixels.length; i += 4) { pixels[i] = lut[base[i]]; pixels[i + 1] = lut[base[i + 1]]; pixels[i + 2] = lut[base[i + 2]]; }
-      }
-      context.postMessage({ op: 'pixels', id, sessionId, revision: data.revision, width, height, buffer: pixels.buffer }, [pixels.buffer]);
+      const pixels = applyJpegAdjustments(base, data);
+      context.postMessage({ op: 'pixels', id, sessionId, revision: data.revision, renderRequestId: data.renderRequestId, width, height, buffer: pixels.buffer }, [pixels.buffer]);
     }
   } catch { context.postMessage({ op: 'error', id, sessionId, message: 'Não foi possível preparar a prévia de edição sRGB.' }); }
 };
