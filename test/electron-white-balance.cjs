@@ -2,6 +2,8 @@
 // delivery timing are replaceable test boundaries; synthetic JPEGs only.
 const electron = require('electron');
 const { app, dialog, BrowserWindow: RealWindow, nativeImage } = electron;
+// Pin the OS adapter for legacy Portuguese UI assertions; language tests cover detection.
+app.getPreferredSystemLanguages = () => ['pt-BR'];
 const Module = require('node:module'), load = Module._load;
 const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict'), crypto = require('node:crypto');
 const { DatabaseSync } = require('node:sqlite');

@@ -1,6 +1,11 @@
 import { app, BrowserWindow, dialog, ipcMain, nativeImage, protocol, session } from 'electron';
 import { mkdir, readFile } from 'node:fs/promises';
 import { join, extname } from 'node:path';
+import { PreferencesStore } from './preferences.ts';
+import { handlePreferencesRequest } from './preferences-ipc.ts';
+import { resolveLanguage, type UiLanguage } from '../shared/i18n/locale.ts';
+import type { MessageDescriptor } from '../shared/i18n/messages.ts';
+import { translate } from '../shared/i18n/format.ts';
 import { Catalog } from './catalog.ts';
 import { Library } from './library.ts';
 import { parseRequest } from '../shared/requests.ts';
@@ -15,6 +20,7 @@ protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { standard: t
 const ownsInstance = app.requestSingleInstanceLock();
 if (!ownsInstance) app.quit();
 let catalog: Catalog | undefined;
+let language: UiLanguage = 'en';
 let window: BrowserWindow | null = null;
 let closeRequested = false;
 let closeAllowed = false;
@@ -22,7 +28,7 @@ let selectingFiles = false;
 let progress: ImportProgress = { running: false, total: 0, completed: 0, succeeded: 0, failed: 0, currentName: null };
 const developmentUrl = MAIN_WINDOW_VITE_DEV_SERVER_URL;
 const entryUrl = developmentUrl || 'app://revelumo/index.html';
-const fail = (code: string, message: string) => ({ ok: false, code, message });
+const fail = (code: string, message: string, descriptor: MessageDescriptor = { key: 'errors.generic' }) => ({ ok: false, code, message, descriptor });
 
 async function preview(bytes: Buffer): Promise<string> {
   return jpegPreview(bytes, (content) => {
@@ -80,18 +86,28 @@ if (ownsInstance) app.whenReady().then(async () => {
       callback({ responseHeaders: { ...details.responseHeaders, 'Content-Security-Policy': [csp.replace("style-src 'self'", "style-src 'self' 'unsafe-inline'").replace("connect-src 'none'", `connect-src 'self' ${socketOrigin}`)] } });
     });
   }
+  let preferred: unknown = [];
+  try { preferred = app.getPreferredSystemLanguages(); } catch { /* English fallback keeps boot available. */ }
+  language = resolveLanguage('system', preferred);
   const dataDir = app.getPath('userData');
   await mkdir(dataDir, { recursive: true });
+  const preferences = new PreferencesStore(dataDir, preferred);
+  language = (await preferences.read()).resolved;
+  ipcMain.handle('revelumo:preferences', async (event, input: unknown) => {
+    const result = await handlePreferencesRequest(preferences, event, window?.webContents ?? null, entryUrl, input);
+    if (result.ok) language = result.value.resolved;
+    return result;
+  });
   catalog = new Catalog(join(dataDir, 'catalog.sqlite'));
   const library = new Library(catalog, preview, thumbnail);
   ipcMain.handle('revelumo:invoke', async (event, input: unknown) => {
     const owner = window;
     if (!owner || event.sender !== owner.webContents || event.senderFrame !== owner.webContents.mainFrame ||
         !isTrustedDocument(event.senderFrame.url, entryUrl)) {
-      return fail('invalid-request', 'Origem não autorizada.');
+      return fail('invalid-request', 'Origem não autorizada.', { key: 'errors.unauthorized' });
     }
     const request = parseRequest(input);
-    if (!request) return fail('invalid-request', 'Solicitação inválida.');
+    if (!request) return fail('invalid-request', 'Solicitação inválida.', { key: 'errors.invalidRequest' });
     try {
       if (request.op === 'list') return { ok: true, value: library.list() };
       if (request.op === 'query') return library.query({ rating: request.rating, flag: request.flag });
@@ -115,7 +131,7 @@ if (ownsInstance) app.whenReady().then(async () => {
       if (request.op === 'availability') return await library.availability(request.id);
       if (request.op === 'thumbnail') return await library.thumbnail(request.id);
       if (request.op === 'preview') return await library.preview(request.id);
-      if (selectingFiles) return fail('busy', 'Outra seleção de arquivos está em andamento. Aguarde.');
+      if (selectingFiles) return fail('busy', 'Outra seleção de arquivos está em andamento. Aguarde.', { key: 'errors.busy' });
       if (request.op === 'relocate') {
         selectingFiles = true;
         try {
@@ -131,7 +147,7 @@ if (ownsInstance) app.whenReady().then(async () => {
       selectingFiles = true;
       progress = { running: true, total: 0, completed: 0, succeeded: 0, failed: 0, currentName: null };
       try {
-        const selection = await dialog.showOpenDialog(owner, { title: 'Importar JPEGs', properties: ['openFile', 'multiSelections'], filters: [{ name: 'JPEG', extensions: ['jpg', 'jpeg'] }] });
+        const selection = await dialog.showOpenDialog(owner, { title: translate(language, { key: 'dialog.importTitle' }), properties: ['openFile', 'multiSelections'], filters: [{ name: 'JPEG', extensions: ['jpg', 'jpeg'] }] });
         return { ok: true, value: await library.importBatch(selection.canceled ? null : selection.filePaths, (state) => { progress = state; }, () => owner.isDestroyed()) };
       } finally { selectingFiles = false; progress = { ...progress, running: false, currentName: null }; }
     } catch { return fail('catalog-error', 'Não foi possível concluir a operação. Tente novamente.'); }
@@ -139,7 +155,7 @@ if (ownsInstance) app.whenReady().then(async () => {
   await createWindow();
   app.on('activate', () => { if (!window) void createWindow(); });
 }).catch(() => {
-  dialog.showErrorBox('Não foi possível abrir o Revelumo', 'O catálogo pode estar indisponível ou ter sido criado por uma versão mais nova. Nenhum original foi alterado.');
+  dialog.showErrorBox(translate(language, { key: 'boot.title' }), translate(language, { key: 'boot.failed' }));
   app.quit();
 });
 app.on('second-instance', () => { if (window) { if (window.isMinimized()) window.restore(); window.focus(); } });

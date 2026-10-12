@@ -174,6 +174,27 @@ jobs:
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
 
+      - name: 'Language: persistent PT-BR/EN/ES catalog, faults and state preservation'
+        if: runner.os == 'Windows'
+        id: language
+        timeout-minutes: 5
+        run: |
+          $language = Join-Path $env:RUNNER_TEMP ('revelumo-language-' + [guid]::NewGuid())
+          foreach ($mode in @('first', 'reopen')) {
+            npm run test:language -- "$language" $mode
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          $system = Join-Path $env:RUNNER_TEMP ('revelumo-system-language-' + [guid]::NewGuid())
+          foreach ($mode in @('system-first', 'system-reopen')) {
+            npm run test:language -- "$system" $mode
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          foreach ($mode in @('fallback', 'os-error', 'boot-error', 'corrupt', 'future', 'oversized')) {
+            $profile = Join-Path $env:RUNNER_TEMP ('revelumo-language-' + $mode + '-' + [guid]::NewGuid())
+            npm run test:language -- "$profile" $mode
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+
       - name: Results and limits
         if: always()
         env:
@@ -186,7 +207,7 @@ jobs:
           '| Step | Outcome |' >> $env:GITHUB_STEP_SUMMARY
           '| --- | --- |' >> $env:GITHUB_STEP_SUMMARY
           $results = $env:STEP_RESULTS | ConvertFrom-Json -AsHashtable
-          foreach ($id in @('versions', 'docs', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'cobre_catalog', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history', 'white_balance')) {
+          foreach ($id in @('versions', 'docs', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'cobre_catalog', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history', 'white_balance', 'language')) {
             "| $id | $($results[$id].outcome) |" >> $env:GITHUB_STEP_SUMMARY
           }
           if ($env:RUNNER_OS -ne 'Windows') {

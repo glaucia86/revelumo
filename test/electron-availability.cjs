@@ -1,6 +1,8 @@
 // Observe actual filesystem, hashing and native decoding at system boundaries.
 // App code, IPC, renderer and SQLite remain real; only dialogs supply fixtures.
 const { app, BrowserWindow, dialog, nativeImage } = require('electron');
+// Pin the OS adapter for legacy Portuguese UI assertions; language tests cover detection.
+app.getPreferredSystemLanguages = () => ['pt-BR'];
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const fsp = require('node:fs/promises');

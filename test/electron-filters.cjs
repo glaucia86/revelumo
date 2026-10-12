@@ -1,6 +1,8 @@
 // Hidden packaged renderer; only native dialogs and bridge transport faults are substituted.
 const electron = require('electron');
 const { app, dialog, BrowserWindow: RealWindow, ipcMain } = electron;
+// Pin the OS adapter for legacy Portuguese UI assertions; language tests cover detection.
+app.getPreferredSystemLanguages = () => ['pt-BR'];
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -26,8 +28,8 @@ const hiddenElectron = { ...electron, BrowserWindow: class extends RealWindow {
 let heldQuery, holdNext = false, failNext = false, failImport = false;
 const handle = ipcMain.handle.bind(ipcMain);
 ipcMain.handle = (channel, listener) => handle(channel, async (event, request) => {
-  if (request?.op === 'import' && failImport) { failImport = false; return { ok: false, code: 'catalog-error', message: 'Importação temporariamente indisponível.' }; }
-  if (request?.op === 'query' && failNext) { failNext = false; return { ok: false, code: 'catalog-error', message: 'Consulta temporariamente indisponível.' }; }
+  if (request?.op === 'import' && failImport) { failImport = false; return { ok: false, code: 'catalog-error', message: 'Importação temporariamente indisponível.', descriptor: { key: 'import.failed' } }; }
+  if (request?.op === 'query' && failNext) { failNext = false; return { ok: false, code: 'catalog-error', message: 'Consulta temporariamente indisponível.', descriptor: { key: 'errors.query' } }; }
   const result = await listener(event, request);
   if (request?.op === 'query' && holdNext) { holdNext = false; return new Promise(resolve => { heldQuery = () => resolve(result); }); }
   return result;
@@ -134,7 +136,7 @@ const timeout = setTimeout(() => fatal(new Error('filter integration exceeded 12
     const extra = path.join(run, 'extra.jpg'); fs.writeFileSync(extra, sample);
     selection = { canceled: false, filePaths: [extra] };
     await click('Importar JPEGs');
-    await until(() => js('document.querySelector("footer").textContent.includes("1 foto(s) importada(s) oculta(s)")'), 'hidden import feedback');
+    await until(() => js('document.querySelector("footer").textContent.includes("1 foto importada está oculta")'), 'hidden import feedback');
     await grid(0); assert.equal(await js('document.getElementById("filter-rating").value'), '5');
     await click('Limpar filtros'); await grid(48, 'Página 1 de 2');
     assert.equal((await api('listPhotos')).value.length, 51);
@@ -153,7 +155,7 @@ const timeout = setTimeout(() => fatal(new Error('filter integration exceeded 12
     await delay(150); await grid(48);
     assert.equal(await js('document.getElementById("filter-rating").value'), '4');
     failNext = true; await filter('filter-flag', 'neutral');
-    await until(() => js('document.querySelector(".query-error")?.textContent.includes("Consulta temporariamente indisponível")'), 'query error');
+    await until(() => js('document.querySelector(".query-error")?.textContent.includes("Não foi possível consultar a biblioteca")'), 'query error');
     assert.equal(await js('Boolean(document.querySelector(".empty"))'), false);
     await click('Tentar novamente'); await grid(0);
     checks.push('unrated is null only; delayed response cannot overwrite current filter; failed query has distinct retry state');
@@ -177,7 +179,7 @@ const timeout = setTimeout(() => fatal(new Error('filter integration exceeded 12
     await exposure(1.7);
     selection = { canceled: false, filePaths: [extra] };
     await click('Importar JPEGs');
-    await until(() => js('document.querySelector("footer").textContent.includes("1 foto(s) importada(s) oculta(s)")'), 'hidden import feedback during preview');
+    await until(() => js('document.querySelector("footer").textContent.includes("1 foto importada está oculta")'), 'hidden import feedback during preview');
     await grid(48, 'Página 1 de 2');
     assert.equal((await api('recipePhoto', photos[0].id)).value.exposureTenths, 17);
     assert.equal(await js('document.getElementById("filter-rating").value'), '4');
@@ -188,7 +190,7 @@ const timeout = setTimeout(() => fatal(new Error('filter integration exceeded 12
       selection = { canceled: true, filePaths: [] }; failImport = failed; holdNext = true;
       await click('Importar JPEGs');
       await until(() => Boolean(heldQuery), 'navigation query held during canceled/failed import');
-      const feedback = failed ? 'Importação temporariamente indisponível.' : 'Seleção cancelada.';
+      const feedback = failed ? 'Não foi possível concluir a importação.' : 'Seleção cancelada.';
       await until(() => js(`document.querySelector('footer').textContent.includes(${JSON.stringify(feedback)})`), 'import feedback before delayed query');
       heldQuery(); heldQuery = undefined; await grid(48);
       assert.equal(await js(`document.querySelector('footer').textContent.includes(${JSON.stringify(feedback)})`), true, 'delayed navigation query preserves import outcome feedback');

@@ -1,3 +1,4 @@
+import type { MessageDescriptor } from './i18n/messages.ts';
 import type { JpegAdjustments } from '../processing/jpeg-adjustments.ts';
 export type PhotoSummary = { id: string; name: string };
 export type PhotoFlag = 'neutral' | 'selected' | 'rejected';
@@ -11,7 +12,7 @@ export const MAX_EXPOSURE_CHECKPOINT_GESTURES = 1024;
 export type ExposureGesture = { id: number; exposureTenths: number; complete: boolean };
 export type EditSession = PhotoRecipe & { sessionId: string; revision: number; undoSteps: number; redoSteps: number };
 export type FailureCode = 'invalid-request' | 'invalid-jpeg' | 'too-large' | 'unreadable' | 'not-found' | 'catalog-error' | 'busy' | 'identity-mismatch' | 'identity-unverified' | 'path-conflict';
-export type Result<T> = { ok: true; value: T } | { ok: false; code: FailureCode; message: string };
+export type Result<T> = { ok: true; value: T } | { ok: false; code: FailureCode; message: string; descriptor?: MessageDescriptor };
 export type ImportOutcome = { canceled: true } | { canceled: false; photo: PhotoSummary };
 export type Preview = { photo: PhotoSummary; dataUrl: string };
 export type PhotoStatus = { photo: PhotoSummary; state: 'available' | 'missing' | 'unreadable' | 'changed'; canRelocate: boolean; message: string };

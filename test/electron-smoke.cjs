@@ -2,6 +2,8 @@
 // Exercises the packaged app, not a test renderer. The native file dialog is
 // stubbed at its adapter boundary; no user catalog or photographs are read.
 const { app, BrowserWindow, dialog } = require('electron');
+// Pin the OS adapter for legacy Portuguese UI assertions; language tests cover detection.
+app.getPreferredSystemLanguages = () => ['pt-BR'];
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');

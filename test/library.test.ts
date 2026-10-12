@@ -81,3 +81,14 @@ test('preview lookup cannot use an arbitrary filesystem path', async (t) => {
   const { library, file } = await setup(t);
   assert.equal((await library.preview(file)).code, 'not-found');
 });
+
+test('catalog failures carry stable translatable descriptors without replacing legacy codes', async t => {
+  const { library, file, dir } = await setup(t);
+  await writeFile(file, 'invalid JPEG');
+  const invalid = await library.importSelected(file);
+  assert.equal(invalid.ok, false);
+  if (!invalid.ok) { assert.equal(invalid.code, 'invalid-jpeg'); assert.deepEqual(invalid.descriptor, { key: 'errors.invalidJpeg' }); }
+  const absent = await library.importSelected(join(dir, 'absent.jpg'));
+  assert.equal(absent.ok, false);
+  if (!absent.ok) assert.deepEqual(absent.descriptor, { key: 'errors.locateFile' });
+});

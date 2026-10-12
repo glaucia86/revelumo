@@ -25,3 +25,10 @@ const api: RevelumoApi = {
   relocatePhoto: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'relocate', id }),
 };
 contextBridge.exposeInMainWorld('revelumo', Object.freeze(api));
+
+import type { PreferencesApi } from './shared/preferences-contract.ts';
+const preferences: PreferencesApi = {
+  getLanguage: () => ipcRenderer.invoke('revelumo:preferences', { op: 'get-language' }),
+  setLanguage: choice => ipcRenderer.invoke('revelumo:preferences', { op: 'set-language', choice }),
+};
+contextBridge.exposeInMainWorld('revelumoPreferences', Object.freeze(preferences));

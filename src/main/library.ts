@@ -1,3 +1,4 @@
+import type { MessageDescriptor } from '../shared/i18n/messages.ts';
 import { open, realpath, stat } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { basename } from 'node:path';
@@ -10,7 +11,7 @@ import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcom
 
 const MAX_BYTES = 32 * 1024 * 1024;
 export type PreviewDecoder = (bytes: Buffer) => Promise<string>;
-const failure = (code: FailureCode, message: string): Result<never> => ({ ok: false, code, message });
+const failure = (code: FailureCode, message: string, descriptor?: MessageDescriptor): Result<never> => ({ ok: false, code, message, ...(descriptor ? { descriptor } : {}) });
 const summary = ({ id, name }: PhotoSummary): PhotoSummary => ({ id, name });
 const digest = (bytes: Buffer): string => createHash('sha256').update(bytes).digest('hex');
 const identityDiffers = (recorded: string | null | undefined, incoming: string): boolean => Boolean(recorded && recorded !== incoming);
@@ -22,8 +23,8 @@ async function readJpeg(filename: string): Promise<Result<Buffer>> {
     const handle = await open(filename, constants.O_RDONLY | constants.O_NONBLOCK);
     try {
       const info = await handle.stat();
-      if (!info.isFile()) return failure('unreadable', 'Escolha um arquivo JPEG.');
-      if (info.size > MAX_BYTES) return failure('too-large', 'Esta primeira versão aceita JPEGs de até 32 MiB.');
+      if (!info.isFile()) return failure('unreadable', 'Escolha um arquivo JPEG.', { key: 'errors.chooseJpeg' });
+      if (info.size > MAX_BYTES) return failure('too-large', 'Esta primeira versão aceita JPEGs de até 32 MiB.', { key: 'errors.tooLarge' });
       // Bound the allocation/read even if another process grows the file.
       const bytes = Buffer.alloc(info.size + 1);
       let count = 0;
@@ -32,15 +33,15 @@ async function readJpeg(filename: string): Promise<Result<Buffer>> {
         if (result.bytesRead === 0) break;
         count += result.bytesRead;
       }
-      if (count !== info.size) return failure('unreadable', 'O arquivo mudou durante a leitura. Tente novamente.');
+      if (count !== info.size) return failure('unreadable', 'O arquivo mudou durante a leitura. Tente novamente.', { key: 'errors.changedDuringRead' });
       const content = bytes.subarray(0, count);
       if (count < 4 || content[0] !== 0xff || content[1] !== 0xd8 || content[2] !== 0xff) {
-        return failure('invalid-jpeg', 'O arquivo não é um JPEG válido.');
+        return failure('invalid-jpeg', 'O arquivo não é um JPEG válido.', { key: 'errors.invalidJpeg' });
       }
       return { ok: true, value: content };
     } finally { await handle.close(); }
   } catch {
-    return failure('unreadable', 'Não foi possível ler o original. Verifique sua localização e permissão.');
+    return failure('unreadable', 'Não foi possível ler o original. Verifique sua localização e permissão.', { key: 'errors.unreadable' });
   }
 }
 
@@ -75,7 +76,7 @@ export class Library {
       const result = await this.serial(() => this.importOne(filename, shouldStop));
       if (result.ok && result.value.canceled) break;
       items.push({ name: basename(filename), result: result.ok && !result.value.canceled ? { ok: true, value: result.value.photo } :
-        result.ok ? failure('unreadable', 'Seleção vazia.') : result });
+        result.ok ? failure('unreadable', 'Seleção vazia.', { key: 'errors.emptySelection' }) : result });
       report(progress());
       await setImmediate();
     }
@@ -85,10 +86,10 @@ export class Library {
   list(): PhotoSummary[] { return this.catalog.list().map(summary); }
 
   recipe(id: string): Result<PhotoRecipe> {
-    if (!parseRequest({ op: 'recipe', id })) return failure('invalid-request', 'Solicitação inválida.');
+    if (!parseRequest({ op: 'recipe', id })) return failure('invalid-request', 'Solicitação inválida.', { key: 'errors.invalidRequest' });
     try {
       const photo = this.catalog.find(id);
-      if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
+      if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
       return { ok: true, value: { photo: summary(photo), ...this.catalog.recipe(id) } };
     } catch { return failure('catalog-error', 'Não foi possível ler o ajuste salvo.'); }
   }
@@ -104,7 +105,7 @@ export class Library {
   }
 
   endEditing(id: string, sessionId: string): Promise<Result<null>> {
-    if (!parseRequest({ op: 'end-edit', id, sessionId })) return Promise.resolve(failure('invalid-request', 'Solicitação inválida.'));
+    if (!parseRequest({ op: 'end-edit', id, sessionId })) return Promise.resolve(failure('invalid-request', 'Solicitação inválida.', { key: 'errors.invalidRequest' }));
     return this.serial(async () => {
       if (this.editing?.photo.id !== id || this.editing.sessionId !== sessionId) return failure('invalid-request', 'Sessão de edição encerrada.');
       this.editing = null;
@@ -113,7 +114,7 @@ export class Library {
   }
 
   saveExposure(id: string, sessionId: string, revision: number, exposureTenths: number, processingVersion: number, gestures?: ExposureGesture[]): Promise<Result<EditSession>> {
-    if (!parseRequest({ op: 'exposure', id, sessionId, revision, exposureTenths, processingVersion, ...(gestures === undefined ? {} : { gestures }) })) return Promise.resolve(failure('invalid-request', 'Solicitação inválida.'));
+    if (!parseRequest({ op: 'exposure', id, sessionId, revision, exposureTenths, processingVersion, ...(gestures === undefined ? {} : { gestures }) })) return Promise.resolve(failure('invalid-request', 'Solicitação inválida.', { key: 'errors.invalidRequest' }));
     const edits = (gestures ?? [{ id: revision, exposureTenths, complete: true }]).map(gesture => ({ ...gesture }));
     return this.mutateExposure(id, sessionId, revision, JSON.stringify(['exposure', edits]), sha256 => {
       const exposure = this.catalog.saveAdjustmentCheckpoint(id, sha256, sessionId, edits);
@@ -124,7 +125,7 @@ export class Library {
 
   saveAdjustments(id: string, sessionId: string, revision: number, adjustments: PhotoAdjustments, processingVersion: number, gestures: ExposureGesture[]): Promise<Result<EditSession>> {
     const request = parseRequest({ op: 'adjustments', id, sessionId, revision, adjustments, processingVersion, gestures });
-    if (!request || request.op !== 'adjustments') return Promise.resolve(failure('invalid-request', 'Solicitação inválida.'));
+    if (!request || request.op !== 'adjustments') return Promise.resolve(failure('invalid-request', 'Solicitação inválida.', { key: 'errors.invalidRequest' }));
     const edits = request.gestures.map(gesture => ({ ...gesture })), values = { ...request.adjustments };
     return this.mutateExposure(id, sessionId, revision, JSON.stringify(['adjustments', values, edits]), sha256 => {
       const exposure = this.catalog.saveAdjustmentCheckpoint(id, sha256, sessionId, edits, values);
@@ -134,7 +135,7 @@ export class Library {
   }
 
   moveExposureHistory(id: string, sessionId: string, revision: number, direction: 'undo' | 'redo'): Promise<Result<EditSession>> {
-    if (!parseRequest({ op: 'exposure-history', id, sessionId, revision, direction })) return Promise.resolve(failure('invalid-request', 'Solicitação inválida.'));
+    if (!parseRequest({ op: 'exposure-history', id, sessionId, revision, direction })) return Promise.resolve(failure('invalid-request', 'Solicitação inválida.', { key: 'errors.invalidRequest' }));
     return this.mutateExposure(id, sessionId, revision, JSON.stringify(['history', direction]), sha256 => {
       const exposure = this.catalog.moveExposureHistory(id, sha256, direction);
       this.editingGesture = { ...this.editingGesture, complete: true }; return exposure;
@@ -145,7 +146,7 @@ export class Library {
     return this.serial(async () => {
       try {
         const photo = this.catalog.find(id);
-        if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
+        if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
         const session = this.editing;
         if (!session || session.photo.id !== id || session.sessionId !== sessionId || revision < session.revision ||
             (revision === session.revision && operation !== this.editingOperation)) return failure('invalid-request', 'Revisão de edição obsoleta.');
@@ -167,24 +168,24 @@ export class Library {
   }
 
   query(filters: LibraryFilters): Result<LibraryResults> {
-    if (!parseRequest({ ...filters, op: 'query' })) return failure('invalid-request', 'Solicitação inválida.');
+    if (!parseRequest({ ...filters, op: 'query' })) return failure('invalid-request', 'Solicitação inválida.', { key: 'errors.invalidRequest' });
     try { return { ok: true, value: this.catalog.query(filters) }; }
-    catch { return failure('catalog-error', 'Não foi possível consultar a biblioteca. Tente novamente.'); }
+    catch { return failure('catalog-error', 'Não foi possível consultar a biblioteca. Tente novamente.', { key: 'errors.query' }); }
   }
 
   classification(id: string): Result<PhotoClassification> {
-    if (!parseRequest({ op: 'classification', id })) return failure('invalid-request', 'Solicitação inválida.');
+    if (!parseRequest({ op: 'classification', id })) return failure('invalid-request', 'Solicitação inválida.', { key: 'errors.invalidRequest' });
     try {
       const photo = this.catalog.find(id);
-      if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
+      if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
       return { ok: true, value: { photo: summary(photo), rating: photo.rating, flag: photo.flag } };
     } catch { return failure('catalog-error', 'Não foi possível ler a classificação.'); }
   }
 
   classify(id: string, rating: number | null, flag: PhotoFlag): Result<PhotoClassification> {
-    if (!parseRequest({ op: 'classify', id, rating, flag })) return failure('invalid-request', 'Solicitação inválida.');
+    if (!parseRequest({ op: 'classify', id, rating, flag })) return failure('invalid-request', 'Solicitação inválida.', { key: 'errors.invalidRequest' });
     try {
-      if (!this.catalog.find(id)) return failure('not-found', 'Foto não encontrada no catálogo.');
+      if (!this.catalog.find(id)) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
       const photo = this.catalog.classify(id, rating, flag);
       return { ok: true, value: { photo: summary(photo), rating: photo.rating, flag: photo.flag } };
     } catch { return failure('catalog-error', 'Não foi possível salvar a classificação. O estado anterior foi preservado.'); }
@@ -194,7 +195,7 @@ export class Library {
   // bytes are read, decoded or hashed, and legacy records are not enrolled.
   async availability(id: string): Promise<Result<PhotoAvailability>> {
     const photo = this.catalog.find(id);
-    if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
+    if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
     let state: PhotoAvailability['state'];
     try {
       const handle = await open(photo.path, constants.O_RDONLY | constants.O_NONBLOCK);
@@ -208,7 +209,7 @@ export class Library {
   status(id: string): Promise<Result<PhotoStatus>> {
     return this.serial(async () => {
       const photo = this.catalog.find(id);
-      if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
+      if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
       let state: PhotoStatus['state'];
       try { state = (await stat(photo.path)).isFile() ? 'available' : 'unreadable'; }
       catch (error) { state = ['ENOENT', 'ENOTDIR'].includes((error as NodeJS.ErrnoException).code || '') ? 'missing' : 'unreadable'; }
@@ -241,12 +242,12 @@ export class Library {
     return this.serial(async () => {
       if (shouldStop()) return { ok: true, value: { canceled: true } };
       const photo = this.catalog.find(id);
-      if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
+      if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
       if (filename === null) return { ok: true, value: { canceled: true } };
       if (!photo.sha256) return failure('identity-unverified', 'Este registro antigo não possui identificação comprovada. Importe o arquivo como uma nova foto; o registro anterior será preservado.');
       let canonical: string;
       try { canonical = await realpath(filename); }
-      catch { return failure('unreadable', 'Não foi possível localizar o arquivo escolhido.'); }
+      catch { return failure('unreadable', 'Não foi possível localizar o arquivo escolhido.', { key: 'errors.locateFile' }); }
       if (shouldStop()) return { ok: true, value: { canceled: true } };
       const image = await readJpeg(canonical);
       if (shouldStop()) return { ok: true, value: { canceled: true } };
@@ -263,37 +264,37 @@ export class Library {
     if (filename === null || shouldStop()) return { ok: true, value: { canceled: true } };
     let canonical: string;
     try { canonical = await realpath(filename); }
-    catch { return failure('unreadable', 'Não foi possível localizar o arquivo escolhido.'); }
+    catch { return failure('unreadable', 'Não foi possível localizar o arquivo escolhido.', { key: 'errors.locateFile' }); }
     const image = await readJpeg(canonical);
     if (!image.ok) return image;
     const sha256 = digest(image.value);
     const existing = this.catalog.findByPath(canonical);
-    if (identityDiffers(existing?.sha256, sha256)) return failure('identity-mismatch', 'O arquivo é diferente do original catalogado. O registro anterior foi preservado.');
+    if (identityDiffers(existing?.sha256, sha256)) return failure('identity-mismatch', 'O arquivo é diferente do original catalogado. O registro anterior foi preservado.', { key: 'errors.importIdentity' });
     if (shouldStop()) return { ok: true, value: { canceled: true } };
     let thumbnail: string | undefined;
     try { if (this.thumbnailDecoder) thumbnail = await this.thumbnailDecoder(image.value); else await this.decoder(image.value); }
-    catch { return failure('invalid-jpeg', 'Não foi possível decodificar este JPEG dentro dos limites desta versão.'); }
+    catch { return failure('invalid-jpeg', 'Não foi possível decodificar este JPEG dentro dos limites desta versão.', { key: 'errors.decodeJpeg' }); }
     if (shouldStop()) return { ok: true, value: { canceled: true } };
     try {
       return { ok: true, value: { canceled: false, photo: summary(this.catalog.add(canonical, thumbnail, sha256)) } };
-    } catch { return failure('catalog-error', 'Não foi possível salvar a referência no catálogo.'); }
+    } catch { return failure('catalog-error', 'Não foi possível salvar a referência no catálogo.', { key: 'errors.saveReference' }); }
   }
 
   thumbnail(id: string): Promise<Result<Preview>> {
     return this.serial(async () => {
       const photo = this.catalog.find(id);
-      if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
+      if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
       const cached = this.catalog.thumbnail(id);
       if (cached) return { ok: true, value: { photo: summary(photo), dataUrl: cached } };
-      if (!this.thumbnailDecoder) return failure('not-found', 'Miniatura indisponível.');
+      if (!this.thumbnailDecoder) return failure('not-found', 'Miniatura indisponível.', { key: 'catalog.thumbnailUnavailable' });
       const image = await readJpeg(photo.path);
       if (!image.ok) return image;
-      if (identityDiffers(photo.sha256, digest(image.value))) return failure('identity-mismatch', 'O arquivo neste caminho é diferente do original catalogado. A miniatura anterior não foi substituída.');
+      if (identityDiffers(photo.sha256, digest(image.value))) return failure('identity-mismatch', 'O arquivo neste caminho é diferente do original catalogado. A miniatura anterior não foi substituída.', { key: 'errors.thumbnailIdentity' });
       let dataUrl: string;
       try { dataUrl = await this.thumbnailDecoder(image.value); }
-      catch { return failure('invalid-jpeg', 'Não foi possível criar a miniatura.'); }
+      catch { return failure('invalid-jpeg', 'Não foi possível criar a miniatura.', { key: 'errors.createThumbnail' }); }
       try { this.catalog.add(photo.path, dataUrl, digest(image.value)); }
-      catch { return failure('catalog-error', 'Não foi possível salvar a miniatura.'); }
+      catch { return failure('catalog-error', 'Não foi possível salvar a miniatura.', { key: 'errors.saveThumbnail' }); }
       return { ok: true, value: { photo: summary(photo), dataUrl } };
     });
   }
@@ -302,7 +303,7 @@ export class Library {
 
   private async openPreview(id: string): Promise<Result<Preview>> {
     const photo = this.catalog.find(id);
-    if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
+    if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
     const image = await readJpeg(photo.path);
     if (!image.ok) return image;
     if (identityDiffers(photo.sha256, digest(image.value))) return failure('identity-mismatch', 'O arquivo neste caminho é diferente do original catalogado. Localize o original para continuar.');

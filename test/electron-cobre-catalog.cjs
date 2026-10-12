@@ -1,6 +1,8 @@
 // Hidden packaged renderer; only native dialogs and bridge transport faults are substituted.
 const electron = require('electron');
 const { app, dialog, BrowserWindow: RealWindow, ipcMain } = electron;
+// Pin the OS adapter for legacy Portuguese UI assertions; language tests cover detection.
+app.getPreferredSystemLanguages = () => ['pt-BR'];
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -26,7 +28,7 @@ const hiddenElectron = { ...electron, BrowserWindow: class extends RealWindow {
 let heldQuery, holdNext = false, failNext = false;
 const handle = ipcMain.handle.bind(ipcMain);
 ipcMain.handle = (channel, listener) => handle(channel, async (event, request) => {
-  if (request?.op === 'query' && failNext) { failNext = false; return { ok: false, code: 'catalog-error', message: 'Consulta temporariamente indisponível.' }; }
+  if (request?.op === 'query' && failNext) { failNext = false; return { ok: false, code: 'catalog-error', message: 'Consulta temporariamente indisponível.', descriptor: { key: 'errors.query' } }; }
   const result = await listener(event, request);
   if (request?.op === 'query' && holdNext) { holdNext = false; return new Promise(resolve => { heldQuery = () => resolve(result); }); }
   return result;
@@ -116,7 +118,7 @@ const timeout = setTimeout(() => fatal(new Error('Cobre catalog integration exce
   await until(() => js('Boolean(document.querySelector(".original-notice button"))'), 'missing original offers relocation');
   await click('Catálogo'); await grid(1);
   await filter('filter-rating', '5'); await grid(0);
-  assert.match(await js('document.querySelector(".empty").textContent'), /As 49 fotos continuam/);
+  assert.match(await js('document.querySelector(".empty").textContent'), /49 fotos continuam/);
   failNext = true; await filter('filter-flag', 'selected');
   await until(() => js('Boolean(document.querySelector(".query-error"))'), 'query failure');
   assert.equal(await js('Boolean(document.querySelector(".empty"))'), false);

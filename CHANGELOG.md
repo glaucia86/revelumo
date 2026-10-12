@@ -8,6 +8,8 @@ Base de aplicação integrada em 12/10/2026: `fbc46631502c9b00f8d667abf4f98491e6
 
 ### Adicionado
 
+- Seletor persistente Português (Brasil)/English/Español/Seguir sistema; catálogo, importação, filtros, paginação e mensagens de preferência traduzidos. Preferência local separada do catálogo, fallback inglês e preservação do estado de edição. Editor/exportação ainda não traduzidos nesta fatia. [Issue #30](https://github.com/glaucia86/revelumo/issues/30), [evidências e limites](evidence/language-catalog/report.md).
+
 - Catálogo SQLite local, importação de JPEG por referência e prévia, preservando os originais. Importação em lote com progresso e resultado por arquivo, miniaturas persistentes orientadas e grade paginada. Reabrir preserva itens confirmados; um lote interrompido não retoma automaticamente. [PR #1](https://github.com/glaucia86/revelumo/pull/1).
 - Indicação de original ausente e relocalização individual após igualdade de SHA-256, preservando registro e miniatura. Cancelamento, conteúdo diferente e conflito preservam a referência anterior. Registros antigos já ausentes sem hash exigem nova importação, sem substituir o registro anterior. [PR #6](https://github.com/glaucia86/revelumo/pull/6).
 
