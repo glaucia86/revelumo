@@ -49,3 +49,9 @@ Os runners de smoke vieram do PR #6, head `0f2c1b560d828f534b171ae7dea288b2a44a4
 Ubuntu verifica núcleo/typecheck/pacote; os smokes Electron desta fatia são Windows. Não há validação macOS: seu layout `.app` exige adaptação. `makers: []` não produz instaladores; não executar `make` como prova de distribuição. Smokes substituem o diálogo nativo e usam fixtures sintéticas, sem validar inspeção visual, teclado físico, leitor de tela ou abertura por duplo clique. Runners e Node 24 recebem atualizações; o lockfile fixa as dependências, mas não a imagem inteira do sistema.
 
 Consulte [evidências e pendências](../evidence/ci/report.md). Relatórios históricos não são resultados de CI.
+
+## Exposição JPEG — issue #12
+
+O CI Windows executa agora `npm run test:exposure` first e a sequência reopen/interruption/reopen/discard-race/reopen/race/race-reopen no pacote real, em processos separados e janelas ocultas. Inclui pixels lineares, sRGB/P3, EXIF1–8, IPC, autosave, flush, falhas e corridas; timeouts por etapa de 3 e 5 minutos dentro do job de 25 minutos. Cada erro interrompe a sequência e o summary always registra resultados/falhas.
+
+As [fixtures sintéticas e sua proveniência](../test/fixtures/exposure-provenance.md) estão no checkout; Python/Pillow/LittleCMS não são dependências de CI ou produto. Mantêm-se runners padrão, permissions contents:read, sem cache persistente, artifacts ou benchmark 36MP automático. [Recursos medidos manualmente](../evidence/issue-12/report.md). Ubuntu verifica core/types/pacote; o harness Electron de exposição é Windows. Não retirar asserts de cor/pixels por diferenças de runner: registrar/diagnosticar eventual falha.
