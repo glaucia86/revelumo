@@ -1,3 +1,6 @@
+import { useLanguage } from './i18n/LanguageProvider.tsx';
+import type { MessageDescriptor } from '../shared/i18n/messages.ts';
+import { isMessageDescriptor } from '../shared/i18n/format.ts';
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { MAX_EXPOSURE_CHECKPOINT_GESTURES } from '../shared/contracts.ts';
 import type { EditSession, PhotoSummary, Preview, ExposureGesture, PhotoAdjustments } from '../shared/contracts.ts';
@@ -9,6 +12,7 @@ type PendingGesture = ExposureGesture & Draft;
 type PreviewRequest = Draft & { renderRequestId: number };
 
 export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; preview: Preview | null }>(function ExposureEditor({ photo, preview }, ref) {
+  const { t } = useLanguage();
   const session = useRef<EditSession | null>(null), draft = useRef<Draft>({ revision: 0, exposureTenths: 0, temperature: 0, tint: 0 });
   const confirmed = useRef<Draft>({ revision: 0, exposureTenths: 0, temperature: 0, tint: 0 });
   const saveRequest = useRef<(Draft & { gestures: ExposureGesture[] }) | null>(null);
@@ -21,7 +25,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
   const [whiteBalance, setWhiteBalance] = useState({ temperature: 0, tint: 0 });
   const [whiteBalanceText, setWhiteBalanceText] = useState({ temperature: '0', tint: '0' });
   const [value, setValue] = useState(0), [loaded, setLoaded] = useState(false), [prepared, setPrepared] = useState(false);
-  const [status, setStatus] = useState('Lendo ajuste salvo.'), [error, setError] = useState(''), [previewError, setPreviewError] = useState('');
+  const [status, setStatus] = useState<MessageDescriptor>({ key: 'editor.reading' }), [error, setError] = useState<MessageDescriptor | null>(null), [previewError, setPreviewError] = useState<MessageDescriptor | null>(null);
   const [leaving, setLeaving] = useState(false), [compare, setCompare] = useState(false);
   const comparison = useRef(false);
   const pendingGestures = useRef<PendingGesture[]>([]);
@@ -47,7 +51,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
     if (!gesture || (kind && gesture.kind !== kind)) return;
     if (gesture.changed) {
       draft.current = { ...draft.current, revision: draft.current.revision + 1 };
-      rememberGesture(true); setStatus('Alteração pendente');
+      rememberGesture(true); setStatus({ key: 'editor.pending' });
       render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths }); schedule();
     }
     activeGesture.current = null;
@@ -93,21 +97,21 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
       const requested = historyRequest.current ?? { revision: draft.current.revision + 1, direction, temperature: draft.current.temperature, tint: draft.current.tint };
       historyRequest.current = requested;
       const { revision } = requested;
-      setStatus('Salvando…');
+      setStatus({ key: 'editor.saving' });
       const result = await window.revelumo.moveExposureHistory(photo.id, current.sessionId, revision, requested.direction);
       if (!alive.current) return;
-      if (!result.ok) { setHistoryFailure(true); setError(result.message); setStatus('Não salvo'); return; }
+      if (!result.ok) { setHistoryFailure(true); setError(result.descriptor ?? { key: 'errors.generic' }); setStatus({ key: 'editor.unsaved' }); return; }
       if (!confirms(result.value, current, requested)) {
-        setHistoryFailure(true); setError('Confirmação de histórico inválida. Tente novamente.'); setStatus('Não salvo'); return;
+        setHistoryFailure(true); setError({ key: 'editor.historyConfirmation' }); setStatus({ key: 'editor.unsaved' }); return;
       }
       historyRequest.current = null; setHistoryFailure(false);
       draft.current = confirmed.current = { revision, exposureTenths: result.value.exposureTenths, temperature: result.value.temperature, tint: result.value.tint };
       setWhiteBalance({ temperature: result.value.temperature, tint: result.value.tint });
       setWhiteBalanceText({ temperature: String(result.value.temperature), tint: String(result.value.tint) });
       setHistory(result.value); setValue(result.value.exposureTenths); setNumericText((result.value.exposureTenths / 10).toFixed(1));
-      setError(''); setStatus('Salvo');
+      setError(null); setStatus({ key: 'editor.saved' });
       render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths });
-    } catch { if (alive.current) { setHistoryFailure(true); setError('Não foi possível alterar o histórico. Tente novamente.'); setStatus('Não salvo'); } }
+    } catch { if (alive.current) { setHistoryFailure(true); setError({ key: 'editor.historyFailed' }); setStatus({ key: 'editor.unsaved' }); } }
     finally { movingNow.current = false; if (alive.current) setMoving(false); }
   }
 
@@ -133,22 +137,22 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
     const requested = saveRequest.current ?? { revision: snapshot.revision, exposureTenths: snapshot.exposureTenths, temperature: snapshot.temperature, tint: snapshot.tint,
       gestures: batch.map(({ id, exposureTenths, complete }) => ({ id, exposureTenths, complete })) };
     saveRequest.current = requested;
-    if (alive.current) setStatus('Salvando…');
+    if (alive.current) setStatus({ key: 'editor.saving' });
     const operation = (async () => {
       try {
         const result = await window.revelumo.saveAdjustments(photo.id, current.sessionId, requested.revision, { exposureTenths: requested.exposureTenths, temperature: requested.temperature, tint: requested.tint }, 2, requested.gestures);
         if (!alive.current) return false;
-        if (!result.ok) { setError(result.message); setStatus('Não salvo'); return false; }
+        if (!result.ok) { setError(result.descriptor ?? { key: 'errors.generic' }); setStatus({ key: 'editor.unsaved' }); return false; }
         if (!confirms(result.value, current, requested)) {
-          setError('Confirmação de ajuste inválida. Tente novamente.'); setStatus('Não salvo'); return false;
+          setError({ key: 'editor.saveConfirmation' }); setStatus({ key: 'editor.unsaved' }); return false;
         }
         confirmed.current = { revision: requested.revision, exposureTenths: requested.exposureTenths, temperature: requested.temperature, tint: requested.tint };
         saveRequest.current = null;
         pendingGestures.current = pendingGestures.current.filter(item => item.revision > requested.revision);
-        if (draft.current.revision === requested.revision) { setHistory(result.value); setError(''); setStatus('Salvo'); }
-        else setStatus('Alteração pendente');
+        if (draft.current.revision === requested.revision) { setHistory(result.value); setError(null); setStatus({ key: 'editor.saved' }); }
+        else setStatus({ key: 'editor.pending' });
         return true;
-      } catch { if (alive.current) { setError('Não foi possível salvar o ajuste. Tente novamente.'); setStatus('Não salvo'); } return false; }
+      } catch { if (alive.current) { setError({ key: 'editor.saveFailed' }); setStatus({ key: 'editor.unsaved' }); } return false; }
     })();
     inFlight.current = operation;
     const ok = await operation;
@@ -199,13 +203,13 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
       try {
         const result = await window.revelumo.beginEditingPhoto(photo.id);
         if (!alive.current) return;
-        if (!result.ok) { setError(result.message); setStatus('Ajuste indisponível'); return; }
+        if (!result.ok) { setError(result.descriptor ?? { key: 'errors.generic' }); setStatus({ key: 'editor.unavailable' }); return; }
         session.current = result.value; setHistory(result.value);
         draft.current = confirmed.current = { revision: result.value.revision, exposureTenths: result.value.exposureTenths, temperature: result.value.temperature, tint: result.value.tint };
         setWhiteBalance({ temperature: result.value.temperature, tint: result.value.tint });
         setWhiteBalanceText({ temperature: String(result.value.temperature), tint: String(result.value.tint) });
-        setValue(result.value.exposureTenths); setNumericText((result.value.exposureTenths / 10).toFixed(1)); setLoaded(true); setStatus('Salvo');
-      } catch { if (alive.current) { setError('Não foi possível ler o ajuste salvo.'); setStatus('Ajuste indisponível'); } }
+        setValue(result.value.exposureTenths); setNumericText((result.value.exposureTenths / 10).toFixed(1)); setLoaded(true); setStatus({ key: 'editor.saved' });
+      } catch { if (alive.current) { setError({ key: 'editor.readFailed' }); setStatus({ key: 'editor.unavailable' }); } }
     })();
     return () => { alive.current = false; cancelDelay(); worker.current?.terminate(); worker.current = null; waiting.current = null; if (canvas.current) canvas.current.width = canvas.current.height = 1; };
   }, [photo.id]);
@@ -217,7 +221,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
     worker.current = instance; setPrepared(false);
     instance.onmessage = ({ data }) => {
       if (!alive.current || instance !== worker.current || data.id !== photo.id || data.sessionId !== current.sessionId) return;
-      if (data.op === 'error') { setPreviewError(data.message); return; }
+      if (data.op === 'error') { setPreviewError(isMessageDescriptor(data.descriptor) ? data.descriptor : { key: 'editor.workerFailed' }); return; }
       if (data.op === 'ready') { ready.current = true; render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths }); return; }
       if (data.op === 'pixels') {
         if (data.renderRequestId !== rendering.current) return;
@@ -232,7 +236,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
         startNextRender();
       }
     };
-    instance.onerror = () => setPreviewError('Não foi possível carregar o processamento da prévia.');
+    instance.onerror = () => setPreviewError({ key: 'editor.workerFailed' });
     instance.postMessage({ op: 'prepare', id: photo.id, sessionId: current.sessionId, dataUrl: preview.dataUrl });
     return () => { instance.terminate(); if (worker.current === instance) worker.current = null; waiting.current = null; ready.current = false; };
   }, [loaded, preview, photo.id]);
@@ -244,7 +248,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
     beginGesture(kind); activeGesture.current!.changed = true;
     draft.current = { ...draft.current, revision: draft.current.revision + 1, exposureTenths: tenths };
     rememberGesture(false);
-    setValue(tenths); setError(''); setStatus('Alteração pendente');
+    setValue(tenths); setError(null); setStatus({ key: 'editor.pending' });
     render({ ...draft.current, exposureTenths: comparison.current ? 0 : tenths }); schedule();
   }
   function changeControl(text: string, kind: GestureKind = activeGesture.current?.kind === 'slider-pointer' ? 'slider-pointer' : 'slider-key') {
@@ -258,7 +262,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
     finishGesture();
     draft.current = { ...draft.current, revision: draft.current.revision + 1, [field]: value };
     setWhiteBalance({ temperature: draft.current.temperature, tint: draft.current.tint });
-    setError(''); setStatus('Alteração pendente');
+    setError(null); setStatus({ key: 'editor.pending' });
     render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths }); schedule();
   }
   function resetWhiteBalance() {
@@ -266,7 +270,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
     if (draft.current.temperature === 0 && draft.current.tint === 0) return;
     finishGesture();
     draft.current = { ...draft.current, revision: draft.current.revision + 1, temperature: 0, tint: 0 };
-    setWhiteBalance({ temperature: 0, tint: 0 }); setError(''); setStatus('Alteração pendente');
+    setWhiteBalance({ temperature: 0, tint: 0 }); setError(null); setStatus({ key: 'editor.pending' });
     render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths }); schedule();
   }
   function formatWhiteBalance(field: 'temperature' | 'tint') {
@@ -275,33 +279,33 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
   const disabled = !loaded || !prepared || leaving || moving || historyFailure || Boolean(previewError);
   const pendingChange = pendingGestures.current.some(item => item.exposureTenths !== confirmed.current.exposureTenths);
   return <div className="editing">
-    {preview && <figure><canvas ref={canvas} width={1} height={1} role="img" aria-label={`Prévia de edição de ${photo.name}`}/><figcaption>{photo.name} · Prévia sRGB até 2048 px</figcaption></figure>}
-    <div className="exposure" aria-label="Ajuste de exposição">
-      <label>Exposição <input aria-label="Exposição" type="range" min="-3" max="3" step="0.1" value={value / 10} disabled={disabled} onChange={event => changeControl(event.target.value)}
+    {preview && <figure><canvas ref={canvas} width={1} height={1} role="img" aria-label={t({ key: 'editor.previewLabel', params: { filename: photo.name } })}/><figcaption>{photo.name} · {t({ key: 'editor.previewCaption' })}</figcaption></figure>}
+    <div className="exposure" aria-label={t({ key: 'editor.exposureGroup' })}>
+      <label>{t({ key: 'editor.exposure' })} <input aria-label={t({ key: 'editor.exposure' })} type="range" min="-3" max="3" step="0.1" value={value / 10} disabled={disabled} onChange={event => changeControl(event.target.value)}
         onPointerDown={event => { beginGesture('slider-pointer'); event.currentTarget.setPointerCapture(event.pointerId); }} onPointerUp={() => finishGesture('slider-pointer')} onPointerCancel={() => finishGesture('slider-pointer')} onLostPointerCapture={() => finishGesture('slider-pointer')}
         onKeyDown={event => { if (isSliderKey(event.key)) { sliderKeys.current.add(event.key); if (activeGesture.current?.kind !== 'slider-pointer') beginGesture('slider-key'); } }}
         onKeyUp={event => { if (isSliderKey(event.key)) { sliderKeys.current.delete(event.key); if (!sliderKeys.current.size) finishGesture('slider-key'); } }}
         onBlur={finishSliderGesture}/>
       </label>
-      <input aria-label="Exposição em EV" type="number" min="-3" max="3" step="0.1" value={numericText} disabled={disabled} onChange={event => { setNumericText(event.target.value); change(event.target.value, 'number'); }} onBlur={() => { finishGesture('number'); setNumericText((draft.current.exposureTenths / 10).toFixed(1)); }} onKeyDown={event => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) { finishGesture('number'); setNumericText((draft.current.exposureTenths / 10).toFixed(1)); } }}/><span>EV</span>
-      <button disabled={disabled} onClick={() => { finishGesture(); changeControl('0', 'reset'); finishGesture('reset'); }}>Redefinir exposição</button>
-      <button disabled={disabled || (!history.undoSteps && !pendingChange)} onClick={() => void moveHistory('undo')}>Desfazer exposição</button>
-      <button disabled={disabled || !history.redoSteps || pendingChange} onClick={() => void moveHistory('redo')}>Refazer exposição</button>
-      <button disabled={disabled} aria-pressed={compare} onClick={() => { comparison.current = !comparison.current; setCompare(comparison.current); render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths }); }}>Comparar com 0 EV</button>
-      <span className="save-status" role="status" aria-live="polite">{status}</span>
-      {(error || previewError) && <p role="alert">{error || previewError} {error && loaded && (historyFailure ? <button disabled={leaving || moving} onClick={() => { if (historyRequest.current) void moveHistory(historyRequest.current.direction); }}>Tentar alterar histórico</button> : <button disabled={leaving} onClick={() => { cancelDelay(); void save(); }}>Tentar salvar novamente</button>)}</p>}
+      <input aria-label={t({ key: 'editor.exposureValue' })} type="number" min="-3" max="3" step="0.1" value={numericText} disabled={disabled} onChange={event => { setNumericText(event.target.value); change(event.target.value, 'number'); }} onBlur={() => { finishGesture('number'); setNumericText((draft.current.exposureTenths / 10).toFixed(1)); }} onKeyDown={event => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) { finishGesture('number'); setNumericText((draft.current.exposureTenths / 10).toFixed(1)); } }}/><span>EV</span>
+      <button disabled={disabled} onClick={() => { finishGesture(); changeControl('0', 'reset'); finishGesture('reset'); }}>{t({ key: 'editor.resetExposure' })}</button>
+      <button disabled={disabled || (!history.undoSteps && !pendingChange)} onClick={() => void moveHistory('undo')}>{t({ key: 'editor.undo' })}</button>
+      <button disabled={disabled || !history.redoSteps || pendingChange} onClick={() => void moveHistory('redo')}>{t({ key: 'editor.redo' })}</button>
+      <button disabled={disabled} aria-pressed={compare} onClick={() => { comparison.current = !comparison.current; setCompare(comparison.current); render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths }); }}>{t({ key: 'editor.compare' })}</button>
+      <span className="save-status" role="status" aria-live="polite">{t(status)}</span>
+      {(error || previewError) && <p role="alert">{t((error || previewError)!)} {error && loaded && (historyFailure ? <button disabled={leaving || moving} onClick={() => { if (historyRequest.current) void moveHistory(historyRequest.current.direction); }}>{t({ key: 'editor.retryHistory' })}</button> : <button disabled={leaving} onClick={() => { cancelDelay(); void save(); }}>{t({ key: 'editor.retrySave' })}</button>)}</p>}
     </div>
-    <div className="white-balance" aria-label="Balanço de branco">
-      <h3>Balanço de branco <small>relativo · JPEG</small></h3>
-      {([{ field: 'temperature', label: 'Temperatura', numeric: 'Temperatura relativa' }, { field: 'tint', label: 'Matiz', numeric: 'Matiz relativo' }] as const).map(({ field, label, numeric }) =>
+    <div className="white-balance" aria-label={t({ key: 'editor.whiteBalance' })}>
+      <h3>{t({ key: 'editor.whiteBalance' })} <small>{t({ key: 'editor.relative' })}</small></h3>
+      {([{ field: 'temperature', label: 'editor.temperature', numeric: 'editor.temperatureValue' }, { field: 'tint', label: 'editor.tint', numeric: 'editor.tintValue' }] as const).map(({ field, label, numeric }) =>
         <div key={field} className="balance-control">
-          <label>{label} <input aria-label={label} type="range" min="-100" max="100" step="1" value={whiteBalance[field]} disabled={disabled}
+          <label>{t({ key: label })} <input aria-label={t({ key: label })} type="range" min="-100" max="100" step="1" value={whiteBalance[field]} disabled={disabled}
             onChange={event => { const text = event.target.value; setWhiteBalanceText(current => ({ ...current, [field]: text })); changeWhiteBalance(field, text); }}/></label>
-          <input aria-label={numeric} type="number" min="-100" max="100" step="1" value={whiteBalanceText[field]} disabled={disabled}
+          <input aria-label={t({ key: numeric })} type="number" min="-100" max="100" step="1" value={whiteBalanceText[field]} disabled={disabled}
             onChange={event => { const text = event.target.value; setWhiteBalanceText(current => ({ ...current, [field]: text })); changeWhiteBalance(field, text); }}
             onBlur={() => formatWhiteBalance(field)} onKeyDown={event => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) formatWhiteBalance(field); }}/>
         </div>)}
-      <button disabled={disabled} onClick={resetWhiteBalance}>Redefinir balanço de branco</button>
+      <button disabled={disabled} onClick={resetWhiteBalance}>{t({ key: 'editor.resetWhiteBalance' })}</button>
     </div>
   </div>;
 });

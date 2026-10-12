@@ -11,7 +11,7 @@ import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcom
 
 const MAX_BYTES = 32 * 1024 * 1024;
 export type PreviewDecoder = (bytes: Buffer) => Promise<string>;
-const failure = (code: FailureCode, message: string, descriptor?: MessageDescriptor): Result<never> => ({ ok: false, code, message, ...(descriptor ? { descriptor } : {}) });
+const failure = (code: FailureCode, message: string, descriptor: MessageDescriptor): Result<never> => ({ ok: false, code, message, descriptor });
 const summary = ({ id, name }: PhotoSummary): PhotoSummary => ({ id, name });
 const digest = (bytes: Buffer): string => createHash('sha256').update(bytes).digest('hex');
 const identityDiffers = (recorded: string | null | undefined, incoming: string): boolean => Boolean(recorded && recorded !== incoming);
@@ -91,7 +91,7 @@ export class Library {
       const photo = this.catalog.find(id);
       if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
       return { ok: true, value: { photo: summary(photo), ...this.catalog.recipe(id) } };
-    } catch { return failure('catalog-error', 'Não foi possível ler o ajuste salvo.'); }
+    } catch { return failure('catalog-error', 'Não foi possível ler o ajuste salvo.', { key: 'errors.readRecipe' }); }
   }
 
   beginEditing(id: string): Promise<Result<EditSession>> {
@@ -107,7 +107,7 @@ export class Library {
   endEditing(id: string, sessionId: string): Promise<Result<null>> {
     if (!parseRequest({ op: 'end-edit', id, sessionId })) return Promise.resolve(failure('invalid-request', 'Solicitação inválida.', { key: 'errors.invalidRequest' }));
     return this.serial(async () => {
-      if (this.editing?.photo.id !== id || this.editing.sessionId !== sessionId) return failure('invalid-request', 'Sessão de edição encerrada.');
+      if (this.editing?.photo.id !== id || this.editing.sessionId !== sessionId) return failure('invalid-request', 'Sessão de edição encerrada.', { key: 'errors.sessionEnded' });
       this.editing = null;
       return { ok: true, value: null };
     });
@@ -149,21 +149,21 @@ export class Library {
         if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
         const session = this.editing;
         if (!session || session.photo.id !== id || session.sessionId !== sessionId || revision < session.revision ||
-            (revision === session.revision && operation !== this.editingOperation)) return failure('invalid-request', 'Revisão de edição obsoleta.');
+            (revision === session.revision && operation !== this.editingOperation)) return failure('invalid-request', 'Revisão de edição obsoleta.', { key: 'errors.obsoleteRevision' });
         if (revision === session.revision) return { ok: true, value: { ...session } };
-        if (!valid()) return failure('invalid-request', 'Gesto de edição obsoleto.');
-        if (!photo.sha256) return failure('identity-unverified', 'Abra o original disponível para comprovar sua identidade antes de salvar.');
+        if (!valid()) return failure('invalid-request', 'Gesto de edição obsoleto.', { key: 'errors.obsoleteGesture' });
+        if (!photo.sha256) return failure('identity-unverified', 'Abra o original disponível para comprovar sua identidade antes de salvar.', { key: 'errors.verifyBeforeSave' });
         const image = await readJpeg(photo.path);
         if (!image.ok) return image;
-        if (digest(image.value) !== photo.sha256) return failure('identity-mismatch', 'O arquivo difere do original catalogado. O ajuste salvo foi preservado.');
+        if (digest(image.value) !== photo.sha256) return failure('identity-mismatch', 'O arquivo difere do original catalogado. O ajuste salvo foi preservado.', { key: 'errors.adjustmentIdentity' });
         // The same protected queue covers session retirement, relocation and
         // identity read/commit; never admit an old revision after an await.
-        if (this.editing !== session) return failure('invalid-request', 'Sessão de edição encerrada.');
+        if (this.editing !== session) return failure('invalid-request', 'Sessão de edição encerrada.', { key: 'errors.sessionEnded' });
         const exposureTenths = commit(photo.sha256);
         this.editing = { ...session, ...this.catalog.recipe(id), revision, exposureTenths, ...this.catalog.exposureHistory(id) };
         this.editingOperation = operation;
         return { ok: true, value: { ...this.editing } };
-      } catch { return failure('catalog-error', 'Não foi possível salvar o ajuste. O último ajuste confirmado foi preservado. Tente novamente.'); }
+      } catch { return failure('catalog-error', 'Não foi possível salvar o ajuste. O último ajuste confirmado foi preservado. Tente novamente.', { key: 'errors.saveAdjustment' }); }
     });
   }
 
@@ -179,7 +179,7 @@ export class Library {
       const photo = this.catalog.find(id);
       if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
       return { ok: true, value: { photo: summary(photo), rating: photo.rating, flag: photo.flag } };
-    } catch { return failure('catalog-error', 'Não foi possível ler a classificação.'); }
+    } catch { return failure('catalog-error', 'Não foi possível ler a classificação.', { key: 'errors.readClassification' }); }
   }
 
   classify(id: string, rating: number | null, flag: PhotoFlag): Result<PhotoClassification> {
@@ -188,7 +188,7 @@ export class Library {
       if (!this.catalog.find(id)) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
       const photo = this.catalog.classify(id, rating, flag);
       return { ok: true, value: { photo: summary(photo), rating: photo.rating, flag: photo.flag } };
-    } catch { return failure('catalog-error', 'Não foi possível salvar a classificação. O estado anterior foi preservado.'); }
+    } catch { return failure('catalog-error', 'Não foi possível salvar a classificação. O estado anterior foi preservado.', { key: 'errors.saveClassification' }); }
   }
 
   // Presence is a cheap snapshot, never proof of content identity. No JPEG
@@ -203,7 +203,8 @@ export class Library {
       finally { await handle.close(); }
     } catch (error) { state = ['ENOENT', 'ENOTDIR'].includes((error as NodeJS.ErrnoException).code || '') ? 'missing' : 'unreadable'; }
     const message = state === 'present' ? 'Arquivo acessível. Conteúdo ainda não verificado.' : state === 'missing' ? 'Original ausente.' : 'Não foi possível acessar o original.';
-    return { ok: true, value: { photo: summary(photo), state, identityRecorded: photo.sha256 !== null, contentVerified: false, message } };
+    const descriptor: MessageDescriptor = { key: state === 'present' ? 'availability.present' : state === 'missing' ? 'availability.missing' : 'availability.unreadable' };
+    return { ok: true, value: { photo: summary(photo), state, identityRecorded: photo.sha256 !== null, contentVerified: false, message, descriptor } };
   }
 
   status(id: string): Promise<Result<PhotoStatus>> {
@@ -222,14 +223,17 @@ export class Library {
           catch { state = 'unreadable'; }
           if (state === 'available') {
             try { this.catalog.rememberIdentity(id, digest(image.value)); }
-            catch { return failure('catalog-error', 'Não foi possível registrar a identificação do original no catálogo.'); }
+            catch { return failure('catalog-error', 'Não foi possível registrar a identificação do original no catálogo.', { key: 'errors.rememberIdentity' }); }
           }
         }
       }
       let message = state === 'available' ? 'Original disponível.' : state === 'missing' ? 'Original ausente. Localize o arquivo para continuar.' :
         state === 'changed' ? 'O arquivo neste caminho é diferente do original catalogado.' : 'Não foi possível ler o original. Verifique sua localização e permissão.';
       if (state !== 'available' && !photo.sha256) message += ' Este registro antigo não possui identificação comprovada. Importe o arquivo como uma nova foto; o registro anterior será preservado.';
-      return { ok: true, value: { photo: summary(photo), state, canRelocate: state !== 'available' && photo.sha256 !== null, message } };
+      const descriptor: MessageDescriptor = { key: state === 'available' ? 'original.available' :
+        state === 'missing' ? (photo.sha256 ? 'original.missing' : 'original.missingLegacy') :
+        state === 'changed' ? 'original.changed' : (photo.sha256 ? 'original.unreadable' : 'original.unreadableLegacy') };
+      return { ok: true, value: { photo: summary(photo), state, canRelocate: state !== 'available' && photo.sha256 !== null, message, descriptor } };
     });
   }
 
@@ -244,7 +248,7 @@ export class Library {
       const photo = this.catalog.find(id);
       if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
       if (filename === null) return { ok: true, value: { canceled: true } };
-      if (!photo.sha256) return failure('identity-unverified', 'Este registro antigo não possui identificação comprovada. Importe o arquivo como uma nova foto; o registro anterior será preservado.');
+      if (!photo.sha256) return failure('identity-unverified', 'Este registro antigo não possui identificação comprovada. Importe o arquivo como uma nova foto; o registro anterior será preservado.', { key: 'errors.legacyIdentity' });
       let canonical: string;
       try { canonical = await realpath(filename); }
       catch { return failure('unreadable', 'Não foi possível localizar o arquivo escolhido.', { key: 'errors.locateFile' }); }
@@ -252,11 +256,11 @@ export class Library {
       const image = await readJpeg(canonical);
       if (shouldStop()) return { ok: true, value: { canceled: true } };
       if (!image.ok) return image;
-      if (digest(image.value) !== photo.sha256) return failure('identity-mismatch', 'O arquivo escolhido é diferente do original catalogado. Escolha exatamente o mesmo arquivo.');
+      if (digest(image.value) !== photo.sha256) return failure('identity-mismatch', 'O arquivo escolhido é diferente do original catalogado. Escolha exatamente o mesmo arquivo.', { key: 'errors.relocationIdentity' });
       const occupied = this.catalog.findByPath(canonical);
-      if (occupied && occupied.id !== photo.id) return failure('path-conflict', 'Este arquivo já pertence a outra foto do catálogo. Nenhum registro foi alterado.');
+      if (occupied && occupied.id !== photo.id) return failure('path-conflict', 'Este arquivo já pertence a outra foto do catálogo. Nenhum registro foi alterado.', { key: 'errors.pathConflict' });
       try { return { ok: true, value: { canceled: false, photo: summary(this.catalog.relocate(id, canonical, photo.sha256)) } }; }
-      catch { return failure('catalog-error', 'Não foi possível salvar a nova localização. O registro anterior foi preservado.'); }
+      catch { return failure('catalog-error', 'Não foi possível salvar a nova localização. O registro anterior foi preservado.', { key: 'errors.saveRelocation' }); }
     });
   }
 
@@ -306,14 +310,14 @@ export class Library {
     if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
     const image = await readJpeg(photo.path);
     if (!image.ok) return image;
-    if (identityDiffers(photo.sha256, digest(image.value))) return failure('identity-mismatch', 'O arquivo neste caminho é diferente do original catalogado. Localize o original para continuar.');
+    if (identityDiffers(photo.sha256, digest(image.value))) return failure('identity-mismatch', 'O arquivo neste caminho é diferente do original catalogado. Localize o original para continuar.', { key: 'errors.previewIdentity' });
     let dataUrl: string;
     try {
       dataUrl = await this.decoder(image.value);
-    } catch { return failure('invalid-jpeg', 'Não foi possível abrir a prévia deste JPEG.'); }
+    } catch { return failure('invalid-jpeg', 'Não foi possível abrir a prévia deste JPEG.', { key: 'errors.openPreview' }); }
     if (!photo.sha256) {
       try { this.catalog.rememberIdentity(id, digest(image.value)); }
-      catch { return failure('catalog-error', 'Não foi possível registrar a identificação do original no catálogo.'); }
+      catch { return failure('catalog-error', 'Não foi possível registrar a identificação do original no catálogo.', { key: 'errors.rememberIdentity' }); }
     }
     return { ok: true, value: { photo: summary(photo), dataUrl } };
   }

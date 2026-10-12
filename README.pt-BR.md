@@ -62,7 +62,7 @@ A imagem principal acima mostra o catálogo **A · Cobre** implementado: ambient
 
 O editor já oferece exposição, balanço de branco relativo, autosave e histórico de exposição. Esta é sua interface funcional atual; o redesenho completo do editor em Cobre continua planejado. [Detalhes da captura e créditos das fotos](docs/assets/screenshots/README.md).
 
-**Idiomas:** catálogo, importação e estrutura do aplicativo oferecem português do Brasil, inglês e espanhol com seletor persistente. A primeira abertura segue os idiomas do sistema, com fallback para inglês. Tradução do editor e da exportação permanece em fatias separadas; o aplicativo inteiro ainda não está traduzido.
+**Idiomas:** catálogo, importação, estrutura do aplicativo e editor existente oferecem português do Brasil, inglês e espanhol com seletor persistente. Inclui exposição, balanço de branco relativo, histórico, comparação, classificação, relocalização e mensagens de recuperação. A primeira abertura segue os idiomas do sistema, com fallback para inglês. Recorte e exportação permanecem funcionalidades pendentes com tradução em fatias separadas.
 
 <a id="status"></a>
 ## O que você pode fazer hoje
@@ -271,7 +271,7 @@ As primeiras etapas aprovadas usam `node:sqlite` no Electron Main para o catálo
 | Recorte | Em desenvolvimento; ainda não disponível na versão integrada |
 | Exportação JPEG | Em desenvolvimento; geração de novos arquivos ainda não disponível |
 | Redesenho visual | Catálogo Cobre implementado; redesenho completo do editor ainda planejado |
-| Idiomas do aplicativo: português do Brasil, inglês e espanhol | Seletor persistente e catálogo/importação traduzidos; editor/exportação pendentes |
+| Idiomas do aplicativo: português do Brasil, inglês e espanhol | Seletor persistente; catálogo/importação e editor existente traduzidos; recorte/exportação pendentes |
 | RAW, leitura HEIC, exportação TIFF e ajustes em lote | Planejados; dependem das próximas decisões e validações |
 | Distribuição | Instaladores, releases e validação ampliada por sistema ainda pendentes |
 

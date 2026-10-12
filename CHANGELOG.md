@@ -8,6 +8,7 @@ Base de aplicação integrada em 12/10/2026: `fbc46631502c9b00f8d667abf4f98491e6
 
 ### Adicionado
 
+- Editor existente traduzido em PT-BR/EN/ES: exposição, WB relativo, histórico, comparação, classificação, relocalização, erros e saída; troca conserva rascunhos e operações em voo. Recorte/exportação continuam pendentes. [Issue #32](https://github.com/glaucia86/revelumo/issues/32), [evidências e limites](evidence/editor-language/report.md).
 - Seletor persistente Português (Brasil)/English/Español/Seguir sistema; catálogo, importação, filtros, paginação e mensagens de preferência traduzidos. Preferência local separada do catálogo, fallback inglês e preservação do estado de edição. Editor/exportação ainda não traduzidos nesta fatia. [Issue #30](https://github.com/glaucia86/revelumo/issues/30), [evidências e limites](evidence/language-catalog/report.md).
 
 - Catálogo SQLite local, importação de JPEG por referência e prévia, preservando os originais. Importação em lote com progresso e resultado por arquivo, miniaturas persistentes orientadas e grade paginada. Reabrir preserva itens confirmados; um lote interrompido não retoma automaticamente. [PR #1](https://github.com/glaucia86/revelumo/pull/1).

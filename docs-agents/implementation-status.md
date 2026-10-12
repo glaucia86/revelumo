@@ -1,5 +1,11 @@
 # Estado da implementação
 
+## Issue #32: tradução do editor existente — 12/10/2026
+
+- Fatia parcial: exposição, WB relativo, Undo/Redo, comparação 0 EV, classificação, disponibilidade/relocalização e recuperação/saída usam o contexto PT-BR/EN/ES existente. Recorte (#18) e exportação não foram inventados; a issue continua aberta para seu escopo restante.
+- Erros/status são descritores tipados renderizados na língua ativa. Mensagens legacy do domínio continuam disponíveis; receitas, UUIDs, nomes e caminhos não são traduzidos. Nenhum algoritmo ou migração mudou.
+- [Evidência e limites por plataforma](../evidence/editor-language/report.md). Sem novas dependências, instalador/release ou promessa de macOS.
+
 ## Issue #30: idioma persistente e catálogo — 12/10/2026
 
 - Português do Brasil, inglês e espanhol no catálogo/importação e shell; escolha global em preferences.json no userData, independente do catálogo/fotos. Detecção ordenada do SO e fallback inglês, escrita atômica/serializada, arquivo futuro ou não legível preservado em modo somente leitura com tentativa após reparo.

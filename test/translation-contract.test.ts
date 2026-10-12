@@ -90,3 +90,19 @@ test('read-only preferences explain safe recovery without suggesting deletion', 
   assert.equal(translate('es', { key: 'preferences.readOnly' }), 'El archivo de preferencias no se puede modificar de forma segura. Corrige el archivo o usa una versión compatible e inténtalo de nuevo.');
   assert.equal(translate('pt-BR', { key: 'preferences.readOnly' }), 'O arquivo de preferências não pode ser alterado com segurança. Corrija o arquivo ou use uma versão compatível e tente novamente.');
 });
+
+test('editor keeps photographic units and filenames while translating accessible names and star plurals', () => {
+  assert.equal(translate('en', { key: 'editor.exposureValue' }), 'Exposure in EV');
+  assert.equal(translate('es', { key: 'editor.previewCaption' }), 'Vista previa sRGB de hasta 2048 px');
+  assert.equal(translate('pt-BR', { key: 'editor.previewLabel', params: { filename: 'ação_ñ_<img>.JPEG' } }), 'Prévia de edição de ação_ñ_<img>.JPEG');
+  for (const [locale, one, many] of [['en', '1 star', '5 stars'], ['es', '1 estrella', '5 estrellas'], ['pt-BR', '1 estrela', '5 estrelas']] as const) {
+    assert.equal(translate(locale, { key: 'classification.count', params: { count: 1 } }), one);
+    assert.equal(translate(locale, { key: 'classification.count', params: { count: 5 } }), many);
+  }
+});
+
+test('save failure translations explain that the last saved adjustment is preserved', () => {
+  assert.equal(translate('en', { key: 'errors.saveAdjustment' }), 'Could not save the adjustment. The last confirmed adjustment was preserved. Try again.');
+  assert.equal(translate('es', { key: 'errors.saveAdjustment' }), 'No se pudo guardar el ajuste. Se conservó el último ajuste confirmado. Inténtalo de nuevo.');
+  assert.equal(translate('pt-BR', { key: 'errors.saveAdjustment' }), 'Não foi possível salvar o ajuste. O último ajuste confirmado foi preservado. Tente novamente.');
+});
