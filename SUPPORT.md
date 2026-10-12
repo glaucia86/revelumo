@@ -1,6 +1,6 @@
 # Getting help
 
-Revelumo is a development preview. There is no public release or installer yet, and the current CI matrix is not a promise of end-user platform support.
+Revelumo is a development preview. The experimental [0.1.0-alpha.1 source pre-release](https://github.com/glaucia86/revelumo/releases/tag/v0.1.0-alpha.1) is available without installers. Its automatic source archives are not ready-to-run applications, and the current CI matrix is not a promise of end-user platform support.
 
 You can ask questions and report problems in **English, Brazilian Portuguese, or Spanish**.
 

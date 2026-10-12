@@ -2,11 +2,13 @@
 
 Referência da [issue #8](https://github.com/glaucia86/revelumo/issues/8). Aprovar uma PR é revisar código; integrar um commit não lança uma versão. Preparação, tag e publicação são etapas distintas, cada qual com escopo e autorização próprios.
 
-## Estado da candidata em preparação
+## Estado publicado — 12/10/2026
 
-`package.json.version`, `package-lock.json.version` e `package-lock.json.packages[""].version` declaram `0.1.0-alpha.1`. O conteúdo foi selecionado na base integrada `aa77bb8af6f865167f2e62f66cb1c76d57e9cf23` (PR #47); esta preparação sincroniza versões, changelog e [notas da candidata](releases/0.1.0-alpha.1.md). Isso **não é uma versão publicada**: a tag futura `v0.1.0-alpha.1` e a GitHub Release não são criadas nesta PR.
+A [pré-release experimental `0.1.0-alpha.1`](https://github.com/glaucia86/revelumo/releases/tag/v0.1.0-alpha.1) foi publicada em **2026-10-12T23:28:59Z**, somente fonte/notas. A tag `v0.1.0-alpha.1` resolve para `bdb51e6c6eb78c5ad522639ff06ac76317c0a609`; [CI de push 38319815423](https://github.com/glaucia86/revelumo/actions/runs/38319815423) verde em Windows/Ubuntu. Windows passou os gates empacotados de engine/circuito/UI; Ubuntu mantém docs/núcleo/tipos/package, com smokes gráficos omitidos intencionalmente. Release marcada **pre-release**, sem assets enviados: apenas archives automáticos ZIP/tar.gz de fonte.
 
-`private: true` permanece; `makers: []` significa que `npm run package` gera uma pasta de desenvolvimento, não instaladores. Não publicar ao npm, anexar `out/`, configurar makers/assinatura/notarização ou atualizar dependências nesta preparação. Código e documentação originais estão sob MIT; avisos de terceiros permanecem separados em THIRD_PARTY_NOTICES.md.
+Os três campos package/lockfile declaram `0.1.0-alpha.1`. A base funcional selecionada foi `aa77bb8af6f865167f2e62f66cb1c76d57e9cf23` (PR #47); a [PR #48](https://github.com/glaucia86/revelumo/pull/48) integrou a preparação e registra os resultados finais. As [notas da candidata](releases/0.1.0-alpha.1.md) e [relatório de preparação](../evidence/alpha-preparation/report.md) ficam preservados como históricos anteriores à publicação. Esta atualização na main não move a tag nem cria outra versão.
+
+`private: true` permanece; `makers: []` permanece; `npm run package` gera uma pasta de desenvolvimento, não instaladores. Não houve publicação npm, anexação de `out/`, assinatura/notarização ou upgrade de dependências. MIT cobre código/documentação originais; avisos de terceiros permanecem separados em THIRD_PARTY_NOTICES.md.
 
 ## SemVer durante o desenvolvimento inicial
 
@@ -14,9 +16,9 @@ Usar o formato [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html). `0.y.z` indi
 
 A versão do aplicativo não substitui `schemaVersion` do catálogo nem `processingVersion` das receitas. Mudanças nesses contratos exigem validação própria e notas de migração, preservação de originais e limites de compatibilidade. Estar em alpha não dispensa esses cuidados.
 
-## Primeira alpha selecionada: código-fonte experimental
+## Escopo da primeira alpha: código-fonte experimental
 
-A entrega proposta é um marco para pessoas desenvolvedoras que queiram estudar e compilar o projeto. Uma release agrupa entregas integradas, notas, evidências e limitações; sua tag deve resolver para um único SHA integrado com CI terminal verde. [Archives de código-fonte gerados pelo GitHub](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) (`zip`/`tar.gz`) são cópias do código versionado, **não instaladores, executáveis prontos ou prova de suporte multiplataforma**. Publicar o site também não publica uma versão do aplicativo.
+A entrega publicada é um marco para pessoas desenvolvedoras que queiram estudar e compilar o projeto. Uma release agrupa entregas integradas, notas, evidências e limitações; sua tag deve resolver para um único SHA integrado com CI terminal verde. [Archives de código-fonte gerados pelo GitHub](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) (`zip`/`tar.gz`) são cópias do código versionado, **não instaladores, executáveis prontos ou prova de suporte multiplataforma**. Publicar o site também não publica uma versão do aplicativo.
 
 Escopo selecionado em `aa77bb8af6f865167f2e62f66cb1c76d57e9cf23` (PR #47 integrada em 12/10/2026):
 
@@ -26,9 +28,9 @@ Escopo selecionado em `aa77bb8af6f865167f2e62f66cb1c76d57e9cf23` (PR #47 integra
 - Exportação de um JPEG full-frame sRGB com revisão EV/WB v2 confirmada, orientação aplicada, créditos selecionados, GPS removido e gravação exclusiva. Qualidade fixa 0,90 do encoder Chromium; entrada até 32 MiB/40 MP e saída até 32 MiB, sem redução silenciosa de qualidade/resolução.
 - Documentação, licença MIT do código original, avisos de terceiros e site do projeto.
 
-Recorte na interface, RAW/HEIC/TIFF, edição em lote, redesenho completo do editor e distribuição de binários ficam fora desse marco de referência. Componentes internos ou trabalho em branches não tornam esses fluxos disponíveis. Se o escopo mudar antes de preparar a candidata, atualizar esta lista e as evidências; não incorporar trabalho em andamento por antecipação.
+Recorte na interface, RAW/HEIC/TIFF, edição em lote, redesenho completo do editor e distribuição de binários ficam fora desse marco de referência. Componentes internos ou trabalho em branches não tornam esses fluxos disponíveis. Em futuras candidatas, atualizar o escopo e as evidências conforme o conteúdo integrado; não incorporar trabalho em andamento por antecipação.
 
-A candidata está **em preparação**, não publicada: conteúdo, changelog e versões estão definidos nesta alteração; faltam revisão/integração da preparação, validação do SHA integrado final e futura tag/publicação autorizada. Os testes do snapshot de referência não validam o futuro commit de preparação. A publicação proposta usa somente código-fonte e notas, com marcação **pre-release**, sem anexar a pasta `out/` ou outros binários.
+A preparação, integração e publicação desta alpha foram concluídas conforme o registro acima. Testes de um snapshot não validam futuras candidatas: cada nova versão precisa de seus próprios gates. Os passos a seguir continuam sendo o procedimento para futuras preparações, sem reescrever a tag já publicada.
 
 Binários exigirão uma fatia separada: formatos e makers por plataforma, proveniência e integridade dos artefatos, avisos/licenças redistribuídos, testes de instalação/abertura/desinstalação e política explícita de assinatura/notarização e seus custos. Não contratar serviços, criar certificados ou ampliar permissões nesta preparação.
 

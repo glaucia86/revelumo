@@ -35,7 +35,7 @@
 - [Licencia y terceros](#license)
 - [Sobre la creadora](#creator)
 
-> **Versión preliminar de desarrollo.** Revelumo ya tiene una interfaz de escritorio funcional: biblioteca, valoraciones, filtros, edición de exposición con historial persistente y balance de blancos relativo. Todavía no hay una versión publicada ni un instalador para el público. Para probarlo, es necesario ejecutar el proyecto desde el código fuente. El MVP y la validación multiplataforma siguen en desarrollo.
+> **Versión preliminar de desarrollo.** Revelumo ya tiene una interfaz de escritorio funcional: biblioteca, valoraciones, filtros, edición de exposición con historial persistente y balance de blancos relativo. La [pre-release experimental 0.1.0-alpha.1 de código fuente](https://github.com/glaucia86/revelumo/releases/tag/v0.1.0-alpha.1) está publicada; todavía no hay instaladores públicos. Para probarlo, es necesario ejecutar el proyecto desde el código fuente. El MVP y la validación multiplataforma siguen en desarrollo.
 
 <a id="visao"></a>
 ## La fotografía se queda contigo
@@ -295,7 +295,7 @@ Las primeras etapas aprobadas usan `node:sqlite` en Electron Main para el catál
 | Rediseño visual | Catálogo Cobre implementado; rediseño completo del editor todavía planificado |
 | Idiomas de la aplicación: portugués de Brasil, inglés y español | Selector persistente; catálogo/importación y editor existente traducidos; recorte pendiente; exportación JPEG traducida |
 | RAW, lectura HEIC, exportación TIFF y ajustes por lotes | Planificados; dependen de nuevas decisiones y validaciones |
-| Distribución | Instaladores, versiones publicadas y validación ampliada por sistema todavía pendientes |
+| Distribución | Pre-release experimental 0.1.0-alpha.1 de código fuente publicada; instaladores y validación ampliada por sistema todavía pendientes |
 
 HDR y exportación HEIC quedan fuera del primer MVP. La hoja de ruta indica una dirección, sin fechas de entrega prometidas.
 

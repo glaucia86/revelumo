@@ -74,17 +74,28 @@ test('Pages deployment is main-only after successful build with job-local permis
  assert.doesNotMatch(workflow,/pull_request_target|contents: write|secrets\./);
 });
 
-test('language documentation reflects the integrated catalog without claiming a fully translated editor', async()=>{
+test('published source alpha is linked without installer claims in every language', async()=>{
  const {locales}=await import('../content.mjs');
- for(const locale of Object.values(locales)){
+ const release='https://github.com/glaucia86/revelumo/releases/tag/v0.1.0-alpha.1';
+ for(const [lang,locale] of Object.entries(locales)){
+  assert.match(locale.downloadCopy,/0\.1\.0-alpha\.1/);
+  assert.match(locale.guideIntro,/0\.1\.0-alpha\.1/);
   assert.match(locale.guideIntro,/PT-BR\/EN\/ES/);
-  assert.match(locale.guideIntro,/persist/);
-  assert.match(locale.guideIntro,/editor/);
-  assert.match(locale.roadmapItems[0][1],/PT-BR\/EN\/ES/);
+  assert.match(locale.roadmapItems[0][1],/export/i);
+  assert.doesNotMatch(locale.guideIntro,/partial|parcia/);
+  assert.doesNotMatch(locale.roadmapItems[1][1],/export/i);
+  assert.match(locale.unavailable,/Installer not published|Instalador n[ãa]o publicado|Instalador no publicado/);
+  const home=readFileSync(join(out,locale.path,'index.html'),'utf8');
+  const guide=readFileSync(join(out,locale.path,'guide/index.html'),'utf8');
+  assert.ok(home.includes(release),lang+' release link');
+  const readme={en:'README.md','pt-BR':'README.pt-BR.md',es:'README.es.md'}[lang];
+  assert.ok(readFileSync(readme,'utf8').includes(release),lang+' README publication link');
+  assert.ok(home.includes('0.1.0-alpha.1'),lang+' source version');
+  assert.ok(guide.includes('0.1.0-alpha.1'),lang+' guide version');
+    assert.ok(guide.includes('git clone --branch v0.1.0-alpha.1 --depth 1 '),lang+' pinned source clone');
+    assert.ok(guide.includes('/blob/v0.1.0-alpha.1/'+readme+'#instalacao'),lang+' pinned source guide');
+  assert.doesNotMatch(home, /href="[^"]+\.(?:exe|dmg|AppImage|msi|deb|rpm)"/i);
  }
- assert.match(locales.en.guideIntro,/partial/);
- assert.match(locales['pt-BR'].guideIntro,/parcia/);
- assert.match(locales.es.guideIntro,/parcia/);
  assert.match(locales.en.screenshot,/shown in Portuguese/);
  assert.match(locales.en.guideSteps[1][1],/Import JPEGs/);
 });
