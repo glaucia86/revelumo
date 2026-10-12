@@ -33,3 +33,11 @@ O requisito “resumo compacto de evidências com data, SHA, ambiente, comandos,
 Revisão somente leitura de `git diff --cached b350629da67bde5cc7a625e9d34d7ed42ea96716`, workflow, documentação, evidências e scripts existentes. **0 achados Spec; aceite remoto ainda aberto.**
 
 Totais: Standards 0 achados; Spec 0 defeitos implementáveis, com aceite de execução remota pendente.
+
+## Revisão focal após o primeiro run GitHub
+
+O primeiro run falhou no Windows por alias de TEMP 8.3, e passou no Ubuntu. A correção foi revisada por ambos os mesmos agentes, independentemente e somente leitura, sobre `git diff HEAD` após `b7a209d` e antes do commit `f16451f`.
+
+**Standards:** aprovado, sem achados. O ajuste limita-se a `TEMP`/`TMP` do step `npm test` usando `runner.temp` e documentação correspondente. Mantém isolamento, padrões e escopo; não modifica testes, produto, permissões, dependências ou custo. Nenhum smell relevante.
+
+**Spec:** zero achados. O ajuste preserva as asserções e os checks críticos que falham o job; não adiciona retries, skips, `continue-on-error`, cache, serviços ou permissões. Os quatro processos de smoke permanecem iguais. A revisão exigiu nova execução real para confirmar a correção, pois actionlint não comprova comportamento do runner.
