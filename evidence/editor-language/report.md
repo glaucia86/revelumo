@@ -1,6 +1,6 @@
 # Tradução do editor existente — issue #32
 
-Base inicial: `ab4c6965c63d68da512b32b144d487bc2735ea7c`; reconciliada por fast-forward com `0065ee156cf2e24b03fde11cb172d11368e7f983` (PR #39 documental). Data: 12/10/2026.
+Base inicial: `ab4c6965c63d68da512b32b144d487bc2735ea7c`; reconciliada por fast-forward com `0065ee156cf2e24b03fde11cb172d11368e7f983` (PR #39 documental), depois integrada sem conflitos com `3d92c31bd7ccad2a0dcafee0e2991162876dceb1` (PR #40: fonte readonly para exportação, sem UI). Data: 12/10/2026.
 
 ## Escopo desta fatia
 
@@ -17,7 +17,7 @@ Descritores tipados no Library, IPC e worker são traduzidos ao renderizar. Fras
 
 ## Verificação local Linux
 
-- Node 24; `npm run typecheck`, `npm test` (155 aprovados, nenhum skip), `npm run check:docs`, `git diff --check` e `npm run package` aprovados.
+- Node 24; `npm run typecheck`, `npm test` (171 aprovados, nenhum skip), `npm run check:docs`, `git diff --check` e `npm run package` aprovados.
 - Regressões Electron aprovadas: catálogo idiomas first/reopen, Cobre, filtros first/reopen, importação/grade first/reopen, relocalização first/reopen, disponibilidade first, exposição first/reopen, WB first/reopen, histórico first/reopen.
 - Novo `test:editor-language`: PT/EN/ES nos rótulos/aria/status, plurais de estrelas, teclado CDP Chromium com `-` e `1.` atravessando troca de contexto sem blur forçado, continuação decimal canônica e WB incompleto. Sem formatação Intl em value; nenhum suporte universal a vírgula foi adicionado ou alegado.
 - Save e Undo em voo reexibem resposta na língua ativa, sem nova sessão ou operação duplicada. Redo continua disponível após troca; novo ramo elimina Redo; Undo conserva WB. Frame antigo do worker não sobrescreve preview mais novo.

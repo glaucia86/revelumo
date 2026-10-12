@@ -1,0 +1,10 @@
+✔ returns authenticated original bytes without changing source content or inode (7.793978ms)
+✔ rejects content that differs from the already recorded identity (3.298829ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 134.079231

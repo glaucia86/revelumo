@@ -1,0 +1,13 @@
+✔ returns authenticated original bytes without changing source content or inode (8.415497ms)
+✔ rejects content that differs from the already recorded identity (2.894721ms)
+✔ does not enroll a missing or malformed recorded identity (1.677441ms)
+✔ requires an explicit positive safe-integer byte budget and rejects oversized source (2.720644ms)
+✔ rejects non-regular source paths instead of treating them as image bytes (2.506357ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 136.833715

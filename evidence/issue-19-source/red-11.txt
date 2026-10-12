@@ -1,0 +1,35 @@
+✔ returns authenticated original bytes without changing source content or inode (14.298839ms)
+✔ rejects content that differs from the already recorded identity (3.396984ms)
+✔ does not enroll a missing or malformed recorded identity (2.00814ms)
+✔ requires an explicit positive safe-integer byte budget and rejects oversized source (2.946658ms)
+✔ rejects non-regular source paths instead of treating them as image bytes (3.708886ms)
+✔ cancellation before opening wins even when the original is absent (1.971666ms)
+✔ mid-read cancellation closes the descriptor and never returns bytes (1.460099ms)
+✔ changing the request during I/O cannot replace the identity being authenticated (2.139645ms)
+✔ reports an unavailable original without returning a partial snapshot (1.35873ms)
+✔ rejects growth or truncation during the read even when the resulting hash is recorded (2.736387ms)
+✖ checks cancellation between bounded 64 KiB filesystem reads (2.33989ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 10
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 171.880702
+
+✖ failing tests:
+
+test at test/export-source.test.ts:98:1
+✖ checks cancellation between bounded 64 KiB filesystem reads (2.33989ms)
+  AssertionError [ERR_ASSERTION]: read 262144 bytes before honoring cancellation
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/export-source.test.ts:111:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

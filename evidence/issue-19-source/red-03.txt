@@ -1,0 +1,42 @@
+✔ returns authenticated original bytes without changing source content or inode (7.86268ms)
+✔ rejects content that differs from the already recorded identity (2.782936ms)
+✖ does not enroll a missing or malformed recorded identity (3.1366ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 129.307958
+
+✖ failing tests:
+
+test at test/export-source.test.ts:29:1
+✖ does not enroll a missing or malformed recorded identity (3.1366ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    Comparison {
+  +   code: 'IDENTITY_MISMATCH'
+  -   code: 'IDENTITY_UNVERIFIED'
+    }
+
+      at async TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/export-source.test.ts:32:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: ExportSourceError: The source differs from the recorded original.
+        at readVerifiedExportSource (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/src/main/export-source.ts:18:11)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/export-source.test.ts:32:5)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+      [cause]: undefined
+    },
+    expected: { code: 'IDENTITY_UNVERIFIED' },
+    operator: 'rejects',
+    diff: 'simple'
+  }

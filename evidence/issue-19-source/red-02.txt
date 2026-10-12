@@ -1,0 +1,26 @@
+✔ returns authenticated original bytes without changing source content or inode (7.68711ms)
+✖ rejects content that differs from the already recorded identity (3.297457ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 131.541968
+
+✖ failing tests:
+
+test at test/export-source.test.ts:25:1
+✖ rejects content that differs from the already recorded identity (3.297457ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/export-source.test.ts:27:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'IDENTITY_MISMATCH' },
+    operator: 'rejects',
+    diff: 'simple'
+  }
