@@ -1,0 +1,39 @@
+npm notice run revelumo@0.0.1 package
+npm notice run electron-forge package
+> Checking your system
+> Checking package manager version
+ÔêÜ Found npm@12.0.2
+ÔêÜ Checking your system
+> Preparing to package application
+ÔêÜ Preparing to package application
+> Running packaging hooks
+> Running generateAssets hook
+ÔêÜ Running generateAssets hook
+> Running prePackage hook
+> [plugin-vite] Building production Vite bundles
+> Building main and preload targets...
+> Building renderer targets...
+> Building src/main/index.ts
+> Building src/preload.ts
+> Building main_window
+ÔêÜ Built target src/preload.ts
+ÔêÜ Built target src/main/index.ts
+ÔêÜ Building main and preload targets...
+ÔêÜ Built target main_window
+ÔêÜ Building renderer targets...
+ÔêÜ [plugin-vite] Building production Vite bundles
+ÔêÜ Running prePackage hook
+ÔêÜ Running packaging hooks
+> Packaging application
+ÔÇ║ Determining targets...
+> Packaging for x64 on win32
+> Copying files
+ÔêÜ Copying files
+> Preparing native dependencies
+ÔêÜ Preparing native dependencies
+> Finalizing package
+ÔêÜ Finalizing package
+ÔêÜ Packaging for x64 on win32
+ÔêÜ Packaging application
+> Running postPackage hook
+ÔêÜ Running postPackage hook

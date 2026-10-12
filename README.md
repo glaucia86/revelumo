@@ -43,6 +43,7 @@ A referência funcional é o fluxo de um editor como Lightroom Classic. O Revelu
 | Importação JPEG | Seleção múltipla por referência, progresso e falhas por arquivo; mesmo caminho canônico reaproveita o registro |
 | Prévia | Bytes JPEG, EXIF e ICC preservados; exibição e orientação EXIF 6/8 verificadas com fixtures sintéticas no Electron Linux |
 | Interface desktop | Grade paginada com miniaturas derivadas; lote misto, prévia, reinício e interrupção testados no pacote Linux |
+| Original ausente e relocalização | Indicação na grade/prévia; localizar uma foto por SHA-256, preservando ID/dados; fluxo automatizado Windows, com limites nativos descritos abaixo |
 | Edição e exportação | Planejadas, ainda não implementadas |
 | Distribuição | Pacote de desenvolvimento Linux x64 testado; sem instaladores ou releases; Windows/macOS pendentes |
 
@@ -50,7 +51,9 @@ A referência funcional é o fluxo de um editor como Lightroom Classic. O Revelu
 
 **Verificação adicional Windows:** 39 testes aprovados, três skips com motivos explícitos, typecheck e pacote x64 passaram. Smoke automatizado com o código empacotado verificou acessibilidade da grade, importação, miniaturas, paginação, prévia e persistência em dois processos Electron. O seletor nativo foi substituído no teste; não houve inspeção visual Windows. [Resultados, dependências e limites](evidence/missing-originals-windows/review-windows.md).
 
-Nesta fatia, cada JPEG pode ter até **32 MiB e 40 megapixels**, dentro dos tipos de frame aceitos pelo preflight. Orientações EXIF 6 e 8 foram verificadas em imagens sintéticas; fidelidade de cor e compatibilidade ampla ainda precisam de avaliação. Arquivos ausentes permanecem no catálogo e retornam erro ao abrir a prévia; relocalização vem depois.
+Nesta fatia, cada JPEG pode ter até **32 MiB e 40 megapixels**, dentro dos tipos de frame aceitos pelo preflight. Orientações EXIF 6 e 8 foram verificadas em imagens sintéticas; fidelidade de cor e compatibilidade ampla ainda precisam de avaliação.
+
+Se o original mudar de lugar, a foto continua no catálogo com sua miniatura. Ao abrir, verificar a página ou retornar ao aplicativo, o Revelumo verifica a referência e indica a ausência. **Localizar original** permite escolher uma foto por vez e só aceita exatamente os mesmos bytes, comprovados por SHA-256. ID, nome catalogado e dados associados são preservados. O aplicativo não move nem regrava arquivos. Um registro antigo sem identificação cujo original já esteja ausente não pode ser religado; é possível importar o arquivo como um novo registro, mantendo o anterior. Reimportar conteúdo diferente no mesmo caminho não substitui silenciosamente a identidade registrada. [Política aprovada](docs-agents/adr/0003-original-identity-relocation.md) · [Verificações Windows da #4](evidence/relocation-windows/report.md).
 
 <a id="arquitetura"></a>
 ## Arquitetura
@@ -96,9 +99,9 @@ flowchart TB
 ### As fronteiras de hoje
 
 - **Renderer:** apresenta a biblioteca e a prévia. Não recebe caminhos dos originais nem acesso direto a Node, filesystem ou SQLite.
-- **Preload:** expõe somente `importJpeg`, `importProgress`, `thumbnailPhoto`, `listPhotos` e `previewPhoto` pelo `contextBridge`. As operações IPC são `import`, `progress`, `thumbnail`, `list` e `preview`; miniaturas e prévias exigem UUID, sem receber caminhos livres.
+- **Preload:** expõe somente `importJpeg`, `importProgress`, `thumbnailPhoto`, `listPhotos`, `previewPhoto`, `originalStatus` e `relocatePhoto` pelo `contextBridge`. As operações IPC são `import`, `progress`, `thumbnail`, `list`, `preview`, `status` e `relocate`; consulta e relocalização exigem UUID, sem receber caminhos livres ou hashes do renderer.
 - **Main:** controla o diálogo nativo, valida as requisições e concentra o acesso ao catálogo e aos arquivos. A janela usa isolamento de contexto, sandbox e Node desabilitado no renderer.
-- **SQLite:** guarda o catálogo em `app.getPath('userData')/catalog.sqlite`. Fotos continuam no local original; o catálogo não é uma cópia de segurança delas.
+- **SQLite:** guarda o catálogo em `app.getPath('userData')/catalog.sqlite`, agora com schema v3 e hash do original. A migração preserva registros e cache; identidade do legado é obtida somente do original acessível, sob demanda. Fotos continuam no local original; o catálogo não é uma cópia de segurança delas. Versões anteriores que não conhecem v3 recusam abrir o banco atualizado, sem apagá-lo.
 - **Prévia atual:** usa o JPEG original em memória, sem re-encode ou redução de resolução. O cache persistente de miniaturas derivadas já está implementado no SQLite; processamento em worker permanece planejado.
 
 **Decisões abertas:** o worker nativo poderá ser em Rust ou C++; o motor RAW ainda não foi escolhido. O motor do RawTherapee é um candidato a investigar, sujeito a avaliação técnica e de licença. Essas opções não são dependências da primeira fatia.
@@ -174,7 +177,7 @@ Os fluxos Linux da primeira e segunda fatias foram verificados; o alvo de 8 GB a
 | Etapa | Entrega pretendida | Situação |
 | :--- | :--- | :--- |
 | 01 · Encontrar suas fotos | Importação por referência, catálogo e prévia JPEG; reencontrar fotos ao reabrir | Validada no fluxo Linux x64 |
-| 02 · Organizar o olhar | Grade, relocalização de arquivos e classificação por estrelas | Planejada |
+| 02 · Organizar o olhar | Grade, relocalização de arquivos e classificação por estrelas | Grade e relocalização implementadas; estrelas planejadas |
 | 03 · Revelar | Edição não destrutiva e cópia de ajustes em lote | Planejada |
 | 04 · Compartilhar | Exportação de novos arquivos JPEG e TIFF | Planejada |
 

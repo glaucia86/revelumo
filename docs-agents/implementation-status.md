@@ -1,5 +1,13 @@
 # Estado da implementação
 
+## Issue #4: relocalização por identidade - 12/10/2026
+
+- Decisão SHA-256/legado aprovada e registrada na [ADR 0003](adr/0003-original-identity-relocation.md) e na [issue #4](https://github.com/glaucia86/revelumo/issues/4), que permanece aberta. Base funcional `b82e1f2`; preparação oficial Matt Pocock separada em `ce3cbdc`; feature em `feat/issue-4-relocate`, sem publicação.
+- Schema v3, hash imutável por registro, estado de ausência/diferença, relocalização de uma foto por diálogo no main, atualização atômica da referência e UI/IPC restritos implementados. Legado sem hash e já ausente é bloqueado com opção de nova importação; candidato não vira prova retroativa.
+- Windows: 58 testes do núcleo, 55 aprovados/zero falhas/três skips, typecheck e pacote passaram. Electron real verificou migração v2, ausência no renderer, cancelamento, JPEG diferente com nome/tamanho iguais, conflito, sucesso por conteúdo, preservação de ID/nome/cache e reabertura em segundo processo. Cinco arquivos sintéticos mantiveram hashes.
+- Regressão do lote/grade/teclado anteriores também passou em dois processos, com 52 arquivos sintéticos inalterados. Diálogo nativo substituído na fronteira do teste; sem inspeção visual Windows, leitor de tela ou Linux/macOS desta nova fatia. [Evidências e limites](../evidence/relocation-windows/report.md).
+- Revisão oficial independente concluída sobre diff WIP indexado desde `ce3cbdc`, antes do commit: Standards encontrou uma divergência documental baixa e dois julgamentos de manutenção, resolvidos e reconferidos; Spec não encontrou falhas funcionais ou aumento indevido de escopo. [Relatórios por eixo](../evidence/relocation-windows/code-review.md). Suíte/typecheck e integração reverificados após as correções; #5 não iniciada.
+
 ## Preparação da terceira fatia e review Windows - 12/10/2026
 
 - Base autoritativa `main` em `9fcef67`; PR #1 confirmado integrado. Relocalização aguarda coordenação do critério de identidade SHA-256 e de registros antigos sem hash.

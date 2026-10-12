@@ -24,3 +24,13 @@ test('accepts progress and UUID-scoped thumbnails but rejects paths and excess f
   assert.equal(parseRequest({ op: 'progress', path: '/tmp' }), null);
   assert.equal(parseRequest({ op: 'thumbnail', id, dataUrl: 'untrusted' }), null);
 });
+
+test('status and relocation accept only a UUID-scoped operation without file paths or identity supplied by the renderer', () => {
+  for (const op of ['status', 'relocate']) {
+    assert.deepEqual(parseRequest({ op, id }), { op, id });
+    for (const input of [{ op }, { op, id: '/private/original.jpg' }, { op, id, path: '/private/original.jpg' },
+      { op, id, sha256: 'a'.repeat(64) }, { op, id, confirmed: true }, { op, id: { id } }]) {
+      assert.equal(parseRequest(input), null);
+    }
+  }
+});

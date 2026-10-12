@@ -1,14 +1,17 @@
-import { open, realpath } from 'node:fs/promises';
+import { open, realpath, stat } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { basename } from 'node:path';
+import { createHash } from 'node:crypto';
 import { setImmediate } from 'node:timers/promises';
 import { Catalog } from './catalog.ts';
-import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcome, PhotoSummary, Preview, Result } from '../shared/contracts.ts';
+import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcome, PhotoSummary, PhotoStatus, Preview, Result } from '../shared/contracts.ts';
 
 const MAX_BYTES = 32 * 1024 * 1024;
 export type PreviewDecoder = (bytes: Buffer) => Promise<string>;
 const failure = (code: FailureCode, message: string): Result<never> => ({ ok: false, code, message });
 const summary = ({ id, name }: PhotoSummary): PhotoSummary => ({ id, name });
+const digest = (bytes: Buffer): string => createHash('sha256').update(bytes).digest('hex');
+const identityDiffers = (recorded: string | null | undefined, incoming: string): boolean => Boolean(recorded && recorded !== incoming);
 
 async function readJpeg(filename: string): Promise<Result<Buffer>> {
   try {
@@ -76,8 +79,58 @@ export class Library {
 
   list(): PhotoSummary[] { return this.catalog.list().map(summary); }
 
+  status(id: string): Promise<Result<PhotoStatus>> {
+    return this.serial(async () => {
+      const photo = this.catalog.find(id);
+      if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
+      let state: PhotoStatus['state'];
+      try { state = (await stat(photo.path)).isFile() ? 'available' : 'unreadable'; }
+      catch (error) { state = ['ENOENT', 'ENOTDIR'].includes((error as NodeJS.ErrnoException).code || '') ? 'missing' : 'unreadable'; }
+      if (state === 'available') {
+        const image = await readJpeg(photo.path);
+        if (!image.ok) state = 'unreadable';
+        else if (identityDiffers(photo.sha256, digest(image.value))) state = 'changed';
+        else if (!photo.sha256) {
+          try { await this.decoder(image.value); }
+          catch { state = 'unreadable'; }
+          if (state === 'available') {
+            try { this.catalog.rememberIdentity(id, digest(image.value)); }
+            catch { return failure('catalog-error', 'Não foi possível registrar a identificação do original no catálogo.'); }
+          }
+        }
+      }
+      let message = state === 'available' ? 'Original disponível.' : state === 'missing' ? 'Original ausente. Localize o arquivo para continuar.' :
+        state === 'changed' ? 'O arquivo neste caminho é diferente do original catalogado.' : 'Não foi possível ler o original. Verifique sua localização e permissão.';
+      if (state !== 'available' && !photo.sha256) message += ' Este registro antigo não possui identificação comprovada. Importe o arquivo como uma nova foto; o registro anterior será preservado.';
+      return { ok: true, value: { photo: summary(photo), state, canRelocate: state !== 'available' && photo.sha256 !== null, message } };
+    });
+  }
+
+
   importSelected(filename: string | null): Promise<Result<ImportOutcome>> {
     return this.serial(() => this.importOne(filename));
+  }
+
+  relocateSelected(id: string, filename: string | null, shouldStop: () => boolean = () => false): Promise<Result<ImportOutcome>> {
+    return this.serial(async () => {
+      if (shouldStop()) return { ok: true, value: { canceled: true } };
+      const photo = this.catalog.find(id);
+      if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
+      if (filename === null) return { ok: true, value: { canceled: true } };
+      if (!photo.sha256) return failure('identity-unverified', 'Este registro antigo não possui identificação comprovada. Importe o arquivo como uma nova foto; o registro anterior será preservado.');
+      let canonical: string;
+      try { canonical = await realpath(filename); }
+      catch { return failure('unreadable', 'Não foi possível localizar o arquivo escolhido.'); }
+      if (shouldStop()) return { ok: true, value: { canceled: true } };
+      const image = await readJpeg(canonical);
+      if (shouldStop()) return { ok: true, value: { canceled: true } };
+      if (!image.ok) return image;
+      if (digest(image.value) !== photo.sha256) return failure('identity-mismatch', 'O arquivo escolhido é diferente do original catalogado. Escolha exatamente o mesmo arquivo.');
+      const occupied = this.catalog.findByPath(canonical);
+      if (occupied && occupied.id !== photo.id) return failure('path-conflict', 'Este arquivo já pertence a outra foto do catálogo. Nenhum registro foi alterado.');
+      try { return { ok: true, value: { canceled: false, photo: summary(this.catalog.relocate(id, canonical, photo.sha256)) } }; }
+      catch { return failure('catalog-error', 'Não foi possível salvar a nova localização. O registro anterior foi preservado.'); }
+    });
   }
 
   private async importOne(filename: string | null, shouldStop: () => boolean = () => false): Promise<Result<ImportOutcome>> {
@@ -87,13 +140,16 @@ export class Library {
     catch { return failure('unreadable', 'Não foi possível localizar o arquivo escolhido.'); }
     const image = await readJpeg(canonical);
     if (!image.ok) return image;
+    const sha256 = digest(image.value);
+    const existing = this.catalog.findByPath(canonical);
+    if (identityDiffers(existing?.sha256, sha256)) return failure('identity-mismatch', 'O arquivo é diferente do original catalogado. O registro anterior foi preservado.');
     if (shouldStop()) return { ok: true, value: { canceled: true } };
     let thumbnail: string | undefined;
     try { if (this.thumbnailDecoder) thumbnail = await this.thumbnailDecoder(image.value); else await this.decoder(image.value); }
     catch { return failure('invalid-jpeg', 'Não foi possível decodificar este JPEG dentro dos limites desta versão.'); }
     if (shouldStop()) return { ok: true, value: { canceled: true } };
     try {
-      return { ok: true, value: { canceled: false, photo: summary(this.catalog.add(canonical, thumbnail)) } };
+      return { ok: true, value: { canceled: false, photo: summary(this.catalog.add(canonical, thumbnail, sha256)) } };
     } catch { return failure('catalog-error', 'Não foi possível salvar a referência no catálogo.'); }
   }
 
@@ -106,10 +162,11 @@ export class Library {
       if (!this.thumbnailDecoder) return failure('not-found', 'Miniatura indisponível.');
       const image = await readJpeg(photo.path);
       if (!image.ok) return image;
+      if (identityDiffers(photo.sha256, digest(image.value))) return failure('identity-mismatch', 'O arquivo neste caminho é diferente do original catalogado. A miniatura anterior não foi substituída.');
       let dataUrl: string;
       try { dataUrl = await this.thumbnailDecoder(image.value); }
       catch { return failure('invalid-jpeg', 'Não foi possível criar a miniatura.'); }
-      try { this.catalog.add(photo.path, dataUrl); }
+      try { this.catalog.add(photo.path, dataUrl, digest(image.value)); }
       catch { return failure('catalog-error', 'Não foi possível salvar a miniatura.'); }
       return { ok: true, value: { photo: summary(photo), dataUrl } };
     });
@@ -122,8 +179,15 @@ export class Library {
     if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.');
     const image = await readJpeg(photo.path);
     if (!image.ok) return image;
+    if (identityDiffers(photo.sha256, digest(image.value))) return failure('identity-mismatch', 'O arquivo neste caminho é diferente do original catalogado. Localize o original para continuar.');
+    let dataUrl: string;
     try {
-      return { ok: true, value: { photo: summary(photo), dataUrl: await this.decoder(image.value) } };
+      dataUrl = await this.decoder(image.value);
     } catch { return failure('invalid-jpeg', 'Não foi possível abrir a prévia deste JPEG.'); }
+    if (!photo.sha256) {
+      try { this.catalog.rememberIdentity(id, digest(image.value)); }
+      catch { return failure('catalog-error', 'Não foi possível registrar a identificação do original no catálogo.'); }
+    }
+    return { ok: true, value: { photo: summary(photo), dataUrl } };
   }
 }

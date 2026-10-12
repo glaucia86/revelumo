@@ -1,14 +1,17 @@
 export type PhotoSummary = { id: string; name: string };
-export type FailureCode = 'invalid-request' | 'invalid-jpeg' | 'too-large' | 'unreadable' | 'not-found' | 'catalog-error' | 'busy';
+export type FailureCode = 'invalid-request' | 'invalid-jpeg' | 'too-large' | 'unreadable' | 'not-found' | 'catalog-error' | 'busy' | 'identity-mismatch' | 'identity-unverified' | 'path-conflict';
 export type Result<T> = { ok: true; value: T } | { ok: false; code: FailureCode; message: string };
 export type ImportOutcome = { canceled: true } | { canceled: false; photo: PhotoSummary };
 export type Preview = { photo: PhotoSummary; dataUrl: string };
+export type PhotoStatus = { photo: PhotoSummary; state: 'available' | 'missing' | 'unreadable' | 'changed'; canRelocate: boolean; message: string };
 export interface RevelumoApi {
   importJpeg(): Promise<Result<BatchOutcome>>;
   importProgress(): Promise<Result<ImportProgress>>;
   thumbnailPhoto(id: string): Promise<Result<Preview>>;
   listPhotos(): Promise<Result<PhotoSummary[]>>;
   previewPhoto(id: string): Promise<Result<Preview>>;
+  originalStatus(id: string): Promise<Result<PhotoStatus>>;
+  relocatePhoto(id: string): Promise<Result<ImportOutcome>>;
 }
 
 export type BatchItem = { name: string; result: Result<PhotoSummary> };

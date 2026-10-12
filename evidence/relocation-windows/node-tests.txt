@@ -1,0 +1,68 @@
+npm notice run revelumo@0.0.1 test
+npm notice run node --test test/*.test.ts
+Ô£ö serves only packaged assets under the app origin (1.2226ms)
+Ô£ö rejects foreign origins, escapes and non-asset extensions (0.3813ms)
+Ô£ö mixed batch commits valid references, reports each failure and emits monotonic progress (63.4916ms)
+´╣ú canonical path deduplication includes symlink aliases and preserves identifier (21.6741ms) # Windows requires symlink permission for this alias case
+Ô£ö decoding stays serial even with overlapping service requests (126.9034ms)
+Ô£ö stopping a batch preserves committed photos and cached thumbnails after reopening (31.3566ms)
+Ô£ö canceling multiple selection creates nothing; a missing legacy cache is generated once (28.0804ms)
+Ô£ö closing while an import waits behind a preview does not start or commit the queued item (24.889ms)
+Ô£ö closing during derivative generation prevents a later commit of that unfinished item (17.4528ms)
+Ô£ö photo reference survives closing and reopening the SQLite catalog (28.5971ms)
+Ô£ö reimporting the same path reuses its reference (31.5849ms)
+Ô£ö unknown identifiers never return another photo (20.7804ms)
+Ô£ö a newer schema is refused without overwriting its version or data (18.8978ms)
+Ô£ö thumbnail is derived data persisted with the reference and survives reopening (21.7147ms)
+Ô£ö migrates a version-one catalog without changing photo identity (31.7459ms)
+Ô£ö gallery bounds each page and retains photo identity for preview selection (1.5737ms)
+Ô£ö gallery clamps pages when the library shrinks and handles an empty library (0.1871ms)
+Ô£ö reads dimensions from an actual JPEG before invoking a decoder (1.7361ms)
+Ô£ö refuses malformed JPEG and excessive pixel dimensions before decoding (0.6261ms)
+´╣ú import rejects a named pipe without waiting for a writer (1.0531ms) # SKIP
+´╣ú preview rejects a named pipe without waiting for a writer (0.3315ms) # SKIP
+Ô£ö imports by reference, returns no private path and leaves original bytes/location unchanged (41.4002ms)
+Ô£ö canceling selection leaves the catalog empty (22.535ms)
+Ô£ö non-JPEG content cannot enter the catalog even with a .jpg suffix (21.0071ms)
+Ô£ö decoder rejection prevents storing malformed JPEG-shaped content (13.873ms)
+Ô£ö missing files and directories return readable errors without a record (14.6622ms)
+Ô£ö oversized JPEG is rejected before preview decoding (13.8305ms)
+Ô£ö a missing original stays cataloged and reports an unavailable preview (27.7965ms)
+Ô£ö preview lookup cannot use an arbitrary filesystem path (15.6287ms)
+Ô£ö preview carries the original JPEG bytes including EXIF orientation to the renderer (2.2566ms)
+Ô£ö decoder failures cannot create a preview (0.5481ms)
+Ô£ö reimporting distinct content at the same name and size cannot replace the cataloged original or cache (37.6065ms)
+Ô£ö a second catalog connection never previews a replacement at the original path as the cataloged photo (25.0925ms)
+Ô£ö an externally moved original is marked missing while its photo and cached thumbnail remain available (20.6141ms)
+Ô£ö relocating identical bytes with a new filename preserves the photo and cache after reopening (38.2288ms)
+Ô£ö a readable version-two original acquires identity before a later external move without changing legacy data (58.5167ms)
+Ô£ö previewing an accessible version-one original establishes identity before it is moved (42.6309ms)
+Ô£ö a legacy original missing before identification cannot be relinked using the candidate as retroactive proof (57.4297ms)
+Ô£ö canceling relocation leaves the missing reference, identity and cached data unchanged (17.7223ms)
+Ô£ö a different JPEG with the original name and byte length cannot be relinked (20.9465ms)
+Ô£ö a destination already owned by another record is refused even when its bytes are identical (24.0123ms)
+Ô£ö a real SQLite write lock cannot partially commit a new reference (31.991ms)
+Ô£ö an invalid candidate and an unknown record never change the catalog (21.4917ms)
+Ô£ö closing while relocation waits behind a preview prevents a later reference update (17.1268ms)
+Ô£ö a missing thumbnail is never regenerated from a replacement original (22.5035ms)
+Ô£ö generating a legacy thumbnail from the accessible original establishes its identity for relocation (37.6987ms)
+Ô£ö accepts the initial three typed operations (1.5311ms)
+Ô£ö rejects malformed, unknown and overprivileged IPC payloads (0.3432ms)
+Ô£ö accepts progress and UUID-scoped thumbnails but rejects paths and excess fields (0.1849ms)
+Ô£ö status and relocation accept only a UUID-scoped operation without file paths or identity supplied by the renderer (0.1944ms)
+Ô£ö a second Node process reopens the persisted photo reference and original (232.7965ms)
+Ô£ö thumbnail is bounded and carries orientation rather than replacing the original (2.0861ms)
+Ô£ö all eight EXIF orientation values survive derivative encoding (0.5373ms)
+Ô£ö missing or malformed orientation falls back safely without out-of-range reads (0.2288ms)
+Ô£ö thumbnail rejects over-budget originals before decoding and oversized derivatives (0.5195ms)
+Ô£ö orientation survives legal JPEG fill bytes and standalone markers (1.1592ms)
+Ô£ö normalizes the development URL trailing slash without weakening document identity (0.8611ms)
+Ô£ö rejects foreign ports, hosts, documents, credentials and malformed URLs (0.2328ms)
+Ôä╣ tests 58
+Ôä╣ suites 0
+Ôä╣ pass 55
+Ôä╣ fail 0
+Ôä╣ cancelled 0
+Ôä╣ skipped 3
+Ôä╣ todo 0
+Ôä╣ duration_ms 742.8093

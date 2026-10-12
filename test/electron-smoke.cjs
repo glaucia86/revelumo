@@ -49,7 +49,7 @@ require(path.join(archive, '.vite', 'build', 'index.cjs'));
   check('packaged origin and limited bridge', () => assert.equal(win.webContents.getURL(), 'app://revelumo/index.html'));
   const exposed = await js('({keys:Object.keys(window.revelumo).sort(),node:typeof require})');
   check('renderer exposes only approved bridge operations', () => {
-    assert.deepEqual(exposed.keys, ['importJpeg','importProgress','listPhotos','previewPhoto','thumbnailPhoto'].sort());
+    assert.deepEqual(exposed.keys, ['importJpeg','importProgress','listPhotos','previewPhoto','thumbnailPhoto','originalStatus','relocatePhoto'].sort());
     assert.equal(exposed.node, 'undefined');
   });
   const listed = await js('window.revelumo.listPhotos()'); assert.equal(listed.ok, true);
