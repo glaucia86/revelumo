@@ -1,0 +1,54 @@
+✖ returns authenticated original bytes without changing source content or inode (6.66002ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 119.52866
+
+✖ failing tests:
+
+test at test/export-source.test.ts:18:1
+✖ returns authenticated original bytes without changing source content or inode (6.66002ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + Buffer(0) [Uint8Array] []
+  - Buffer(23) [Uint8Array] [
+  -   118,
+  -   101,
+  -   114,
+  -   105,
+  -   102,
+  -   105,
+  -   101,
+  -   100,
+  -   32,
+  -   111,
+  -   114,
+  -   105,
+  -   103,
+  -   105,
+  -   110,
+  -   97,
+  -   108,
+  -   32,
+  -   98,
+  -   121,
+  -   116,
+  -   101,
+  -   115
+  - ]
+
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/export-source.test.ts:21:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: <Buffer >,
+    expected: <Buffer 76 65 72 69 66 69 65 64 20 6f 72 69 67 69 6e 61 6c 20 62 79 74 65 73>,
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

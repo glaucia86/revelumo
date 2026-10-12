@@ -1,0 +1,44 @@
+✔ returns authenticated original bytes without changing source content or inode (8.75564ms)
+✔ rejects content that differs from the already recorded identity (2.301625ms)
+✔ does not enroll a missing or malformed recorded identity (1.37902ms)
+✔ requires an explicit positive safe-integer byte budget and rejects oversized source (2.031595ms)
+✔ rejects non-regular source paths instead of treating them as image bytes (2.59635ms)
+✖ cancellation before opening wins even when the original is absent (2.215647ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 128.141393
+
+✖ failing tests:
+
+test at test/export-source.test.ts:47:1
+✖ cancellation before opening wins even when the original is absent (2.215647ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    Comparison {
+  +   code: 'ENOENT'
+  -   code: 'CANCELED'
+    }
+
+      at async TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/export-source.test.ts:49:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: ENOENT: no such file or directory, open '/tmp/revelumo-export-source-dRajFJ/missing.jpg'
+        at async open (node:internal/fs/promises:697:25)
+        at async readVerifiedExportSource (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/src/main/export-source.ts:23:18)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/export-source.test.ts:49:3)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: { code: 'CANCELED' },
+    operator: 'rejects',
+    diff: 'simple'
+  }

@@ -1,0 +1,47 @@
+✔ returns authenticated original bytes without changing source content or inode (11.193005ms)
+✔ rejects content that differs from the already recorded identity (3.385567ms)
+✔ does not enroll a missing or malformed recorded identity (1.99414ms)
+✔ requires an explicit positive safe-integer byte budget and rejects oversized source (2.588057ms)
+✔ rejects non-regular source paths instead of treating them as image bytes (3.193833ms)
+✔ cancellation before opening wins even when the original is absent (1.899359ms)
+✔ mid-read cancellation closes the descriptor and never returns bytes (3.558874ms)
+✔ changing the request during I/O cannot replace the identity being authenticated (2.211421ms)
+✖ reports an unavailable original without returning a partial snapshot (3.805829ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 8
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 240.437131
+
+✖ failing tests:
+
+test at test/export-source.test.ts:76:1
+✖ reports an unavailable original without returning a partial snapshot (3.805829ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    Comparison {
+  +   code: 'ENOENT'
+  -   code: 'SOURCE_UNREADABLE'
+    }
+
+      at async TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/export-source.test.ts:78:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: ENOENT: no such file or directory, open '/tmp/revelumo-export-source-reziit/missing.jpg'
+        at async Object.open (node:internal/fs/promises:697:25)
+        at async readVerifiedExportSource (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/src/main/export-source.ts:25:18)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/export-source.test.ts:78:3)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: { code: 'SOURCE_UNREADABLE' },
+    operator: 'rejects',
+    diff: 'simple'
+  }

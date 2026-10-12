@@ -1,0 +1,44 @@
+✔ returns authenticated original bytes without changing source content or inode (7.642313ms)
+✔ rejects content that differs from the already recorded identity (2.254604ms)
+✔ does not enroll a missing or malformed recorded identity (1.464766ms)
+✔ requires an explicit positive safe-integer byte budget and rejects oversized source (1.955413ms)
+✖ rejects non-regular source paths instead of treating them as image bytes (3.506406ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 129.489012
+
+✖ failing tests:
+
+test at test/export-source.test.ts:43:1
+✖ rejects non-regular source paths instead of treating them as image bytes (3.506406ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    Comparison {
+  +   code: 'EISDIR'
+  -   code: 'NOT_REGULAR_FILE'
+    }
+
+      at async TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/export-source.test.ts:45:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: EISDIR: illegal operation on a directory, read
+        at async read (node:internal/fs/promises:754:22)
+        at async fsCall (node:internal/fs/promises:470:12)
+        at async readVerifiedExportSource (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/src/main/export-source.ts:31:22)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/export-source.test.ts:45:3)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: { code: 'NOT_REGULAR_FILE' },
+    operator: 'rejects',
+    diff: 'simple'
+  }

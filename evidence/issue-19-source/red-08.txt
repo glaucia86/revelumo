@@ -1,0 +1,32 @@
+✔ returns authenticated original bytes without changing source content or inode (9.802648ms)
+✔ rejects content that differs from the already recorded identity (2.973949ms)
+✔ does not enroll a missing or malformed recorded identity (1.618514ms)
+✔ requires an explicit positive safe-integer byte budget and rejects oversized source (2.021389ms)
+✔ rejects non-regular source paths instead of treating them as image bytes (2.485035ms)
+✔ cancellation before opening wins even when the original is absent (1.79899ms)
+✔ mid-read cancellation closes the descriptor and never returns bytes (2.269627ms)
+✖ changing the request during I/O cannot replace the identity being authenticated (2.322235ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 150.78578
+
+✖ failing tests:
+
+test at test/export-source.test.ts:68:1
+✖ changing the request during I/O cannot replace the identity being authenticated (2.322235ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/export-source.test.ts:74:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'IDENTITY_MISMATCH' },
+    operator: 'rejects',
+    diff: 'simple'
+  }

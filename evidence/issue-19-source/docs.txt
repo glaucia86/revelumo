@@ -1,0 +1,6 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> revelumo@0.0.1 check:docs
+> node scripts/check-docs.mjs
+
+Local documentation checks passed. External URLs were not requested.

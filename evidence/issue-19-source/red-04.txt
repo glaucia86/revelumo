@@ -1,0 +1,28 @@
+✔ returns authenticated original bytes without changing source content or inode (6.866485ms)
+✔ rejects content that differs from the already recorded identity (2.097303ms)
+✔ does not enroll a missing or malformed recorded identity (1.571895ms)
+✖ requires an explicit positive safe-integer byte budget and rejects oversized source (1.972548ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 127.098365
+
+✖ failing tests:
+
+test at test/export-source.test.ts:35:1
+✖ requires an explicit positive safe-integer byte budget and rejects oversized source (1.972548ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/export-source.test.ts:38:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'INVALID_BUDGET' },
+    operator: 'rejects',
+    diff: 'simple'
+  }

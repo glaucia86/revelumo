@@ -1,0 +1,16 @@
+✔ returns authenticated original bytes without changing source content or inode (9.963987ms)
+✔ rejects content that differs from the already recorded identity (2.579986ms)
+✔ does not enroll a missing or malformed recorded identity (1.395073ms)
+✔ requires an explicit positive safe-integer byte budget and rejects oversized source (2.347091ms)
+✔ rejects non-regular source paths instead of treating them as image bytes (2.5554ms)
+✔ cancellation before opening wins even when the original is absent (1.253664ms)
+✔ mid-read cancellation closes the descriptor and never returns bytes (1.450535ms)
+✔ changing the request during I/O cannot replace the identity being authenticated (1.524274ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 143.615286
