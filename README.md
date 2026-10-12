@@ -30,7 +30,7 @@ O Revelumo nasce para reunir biblioteca e edição em um fluxo desktop acessíve
 - **Local por princípio.** Catálogo no seu computador, sem processamento de fotos ou sincronização em nuvem.
 - **Originais preservados.** A importação atual registra uma referência ao arquivo, sem mover ou regravar a fotografia.
 - **Um fluxo completo como destino.** Organizar, selecionar, editar e exportar fazem parte do plano; a primeira etapa começa no catálogo JPEG.
-- **Construção independente.** Custo zero e ausência de assinatura orientam o projeto. O repositório é privado nesta fase; abertura do código e licença ainda precisam ser definidas.
+- **Construção independente.** Custo zero e ausência de assinatura orientam o projeto. O repositório é público; a licença ainda precisa ser definida.
 
 A referência funcional é o fluxo de um editor como Lightroom Classic. O Revelumo tem identidade própria, sem vínculo com a Adobe ou promessa de paridade de recursos.
 
@@ -111,7 +111,7 @@ Veja a [decisão de catálogo e IPC](docs-agents/adr/0001-local-catalog-ipc.md),
 <a id="instalacao"></a>
 ## Instalação por sistema operacional
 
-**Ainda não há arquivos para baixar.** Os passos abaixo descrevem a experiência de distribuição pretendida, quando houver uma release validada no [repositório oficial](https://github.com/glaucia86/revelumo). O acesso depende das permissões enquanto ele for privado.
+**Ainda não há arquivos para baixar.** Os passos abaixo descrevem a experiência de distribuição pretendida, quando houver uma release validada no [repositório público oficial](https://github.com/glaucia86/revelumo).
 
 ### Windows
 
@@ -169,6 +169,10 @@ npm run package
 
 O `package-lock.json` registra as versões instaladas. O comando `install:electron` baixa o binário oficial do Electron necessário para executar o aplicativo; esta versão não o instala automaticamente junto com o pacote npm. Se o cache padrão não for gravável, use um diretório de cache autorizado com `npm --cache <diretório>` e `electron_config_cache=<diretório>` para instalação/empacotamento. O Forge está sem makers configurados: `package` gera a pasta do aplicativo; **não há geração de instaladores pronta**.
 
+### CI de verificação
+
+O [workflow](.github/workflows/ci.yml) verifica PRs, pushes em `main` e execuções manuais em runners standard Windows e Ubuntu, com Node 24, instalação pelo lockfile, typecheck, testes e pacote. Windows também executa os smokes sobre o pacote, em dois processos por cenário e com fixtures sintéticas. Resultados ficam nos logs e no job summary, sem cache persistente ou upload de artefatos. Essa matriz não estabelece suporte ao usuário final, instaladores ou validação macOS. [Reprodução e limites](docs-agents/ci.md) · [Evidências da issue #7](evidence/ci/report.md).
+
 Os fluxos Linux da primeira e segunda fatias foram verificados; o alvo de 8 GB ainda não foi medido. Permanecem pendentes validação em Windows/macOS, o modo de desenvolvimento, distribuição e uma matriz maior de fotografias reais. O [checkpoint técnico](docs-agents/implementation-status.md) detalha resultados e limites.
 
 <a id="roadmap"></a>
@@ -185,7 +189,7 @@ RAW e leitura HEIC dependem de uma matriz de compatibilidade e da validação do
 
 ## Acompanhe a construção
 
-Decisões e trabalho do projeto serão organizados em [GitHub Issues](https://github.com/glaucia86/revelumo/issues), com acesso restrito nesta fase. O mapa de trabalho e os tickets ainda não foram publicados. A abertura do repositório e as condições para contribuições públicas serão definidas antes dessa transição.
+Decisões e trabalho do projeto estão organizados em [GitHub Issues](https://github.com/glaucia86/revelumo/issues), disponíveis publicamente. As condições para contribuições públicas ainda precisam ser definidas.
 
 **Licença:** pendente de escolha. Ainda não há licença open source concedida pelo projeto.
 

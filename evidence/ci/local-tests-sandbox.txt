@@ -1,0 +1,239 @@
+npm notice run revelumo@0.0.1 test
+npm notice run node --test test/*.test.ts
+Ô£ö serves only packaged assets under the app origin (0.756ms)
+Ô£ö rejects foreign origins, escapes and non-asset extensions (0.2175ms)
+Ô£û probing an accessible cached legacy original reports unverified presence without enrolling identity (46.0487ms)
+Ô£ö mixed batch commits valid references, reports each failure and emits monotonic progress (55.0239ms)
+´╣ú canonical path deduplication includes symlink aliases and preserves identifier (23.9285ms) # Windows requires symlink permission for this alias case
+Ô£ö decoding stays serial even with overlapping service requests (128.304ms)
+Ô£ö stopping a batch preserves committed photos and cached thumbnails after reopening (32.2028ms)
+Ô£ö canceling multiple selection creates nothing; a missing legacy cache is generated once (24.505ms)
+Ô£ö closing while an import waits behind a preview does not start or commit the queued item (25.7524ms)
+Ô£ö closing during derivative generation prevents a later commit of that unfinished item (17.8304ms)
+Ô£ö photo reference survives closing and reopening the SQLite catalog (28.5142ms)
+Ô£ö reimporting the same path reuses its reference (21.2396ms)
+Ô£ö unknown identifiers never return another photo (22.9155ms)
+Ô£ö a newer schema is refused without overwriting its version or data (22.7743ms)
+Ô£ö thumbnail is derived data persisted with the reference and survives reopening (23.7992ms)
+Ô£ö migrates a version-one catalog without changing photo identity (29.5161ms)
+Ô£ö gallery bounds each page and retains photo identity for preview selection (1.7685ms)
+Ô£ö gallery clamps pages when the library shrinks and handles an empty library (0.2516ms)
+Ô£ö reads dimensions from an actual JPEG before invoking a decoder (1.5428ms)
+Ô£ö refuses malformed JPEG and excessive pixel dimensions before decoding (0.4804ms)
+´╣ú import rejects a named pipe without waiting for a writer (0.9247ms) # SKIP
+´╣ú preview rejects a named pipe without waiting for a writer (0.1246ms) # SKIP
+Ô£ö imports by reference, returns no private path and leaves original bytes/location unchanged (39.3251ms)
+Ô£ö canceling selection leaves the catalog empty (19.3499ms)
+Ô£ö non-JPEG content cannot enter the catalog even with a .jpg suffix (20.7337ms)
+Ô£ö decoder rejection prevents storing malformed JPEG-shaped content (18.1693ms)
+Ô£ö missing files and directories return readable errors without a record (19.2209ms)
+Ô£ö oversized JPEG is rejected before preview decoding (19.4237ms)
+Ô£ö a missing original stays cataloged and reports an unavailable preview (20.2734ms)
+Ô£ö preview lookup cannot use an arbitrary filesystem path (15.5862ms)
+Ô£ö preview carries the original JPEG bytes including EXIF orientation to the renderer (2.1715ms)
+Ô£ö decoder failures cannot create a preview (0.6454ms)
+Ô£ö reimporting distinct content at the same name and size cannot replace the cataloged original or cache (40.5529ms)
+Ô£ö a second catalog connection never previews a replacement at the original path as the cataloged photo (31.0516ms)
+Ô£û an externally moved original is marked missing while its photo and cached thumbnail remain available (19.4532ms)
+Ô£û relocating identical bytes with a new filename preserves the photo and cache after reopening (23.4184ms)
+Ô£û a readable version-two original acquires identity before a later external move without changing legacy data (40.9057ms)
+Ô£û previewing an accessible version-one original establishes identity before it is moved (36.18ms)
+Ô£û a legacy original missing before identification cannot be relinked using the candidate as retroactive proof (31.2359ms)
+Ô£û canceling relocation leaves the missing reference, identity and cached data unchanged (16.9487ms)
+Ô£û a different JPEG with the original name and byte length cannot be relinked (17.3524ms)
+Ô£û a destination already owned by another record is refused even when its bytes are identical (21.6582ms)
+Ô£û a real SQLite write lock cannot partially commit a new reference (17.8939ms)
+Ô£ö an invalid candidate and an unknown record never change the catalog (18.9125ms)
+Ô£û closing while relocation waits behind a preview prevents a later reference update (16.8631ms)
+Ô£ö a missing thumbnail is never regenerated from a replacement original (21.0364ms)
+Ô£û generating a legacy thumbnail from the accessible original establishes its identity for relocation (32.8998ms)
+Ô£ö accepts the initial three typed operations (1.4748ms)
+Ô£ö rejects malformed, unknown and overprivileged IPC payloads (0.3394ms)
+Ô£ö accepts progress and UUID-scoped thumbnails but rejects paths and excess fields (0.1797ms)
+Ô£ö availability, status and relocation accept only a UUID-scoped operation without file paths or identity supplied by the renderer (0.2165ms)
+Ô£ö a second Node process reopens the persisted photo reference and original (265.2392ms)
+Ô£ö thumbnail is bounded and carries orientation rather than replacing the original (2.4925ms)
+Ô£ö all eight EXIF orientation values survive derivative encoding (0.8507ms)
+Ô£ö missing or malformed orientation falls back safely without out-of-range reads (0.3398ms)
+Ô£ö thumbnail rejects over-budget originals before decoding and oversized derivatives (0.8807ms)
+Ô£ö orientation survives legal JPEG fill bytes and standalone markers (0.4856ms)
+Ô£ö normalizes the development URL trailing slash without weakening document identity (0.8664ms)
+Ô£ö rejects foreign ports, hosts, documents, credentials and malformed URLs (0.2894ms)
+Ôä╣ tests 59
+Ôä╣ suites 0
+Ôä╣ pass 44
+Ôä╣ fail 12
+Ôä╣ cancelled 0
+Ôä╣ skipped 3
+Ôä╣ todo 0
+Ôä╣ duration_ms 745.9668
+
+Ô£û failing tests:
+
+test at test\availability.test.ts:10:1
+Ô£û probing an accessible cached legacy original reports unverified presence without enrolling identity (46.0487ms)
+  Error: EPERM: operation not permitted, rename 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-probe-ebM92T\legacy.jpg' -> 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-probe-ebM92T\moved.jpg'
+      at async rename (node:internal/fs/promises:842:10)
+      at async TestContext.<anonymous> (file:///C:/Users/glauc/Documents/Codex/2026-10-12/task/revelumo-issue-7/test/availability.test.ts:27:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'rename',
+    path: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-probe-ebM92T\\legacy.jpg',
+    dest: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-probe-ebM92T\\moved.jpg'
+  }
+
+test at test\relocation.test.ts:85:1
+Ô£û an externally moved original is marked missing while its photo and cached thumbnail remain available (19.4532ms)
+  Error: EPERM: operation not permitted, rename 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-sabyPU\original.jpg' -> 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-sabyPU\moved.jpg'
+      at async rename (node:internal/fs/promises:842:10)
+      at async TestContext.<anonymous> (file:///C:/Users/glauc/Documents/Codex/2026-10-12/task/revelumo-issue-7/test/relocation.test.ts:91:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'rename',
+    path: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-sabyPU\\original.jpg',
+    dest: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-sabyPU\\moved.jpg'
+  }
+
+test at test\relocation.test.ts:103:1
+Ô£û relocating identical bytes with a new filename preserves the photo and cache after reopening (23.4184ms)
+  Error: EPERM: operation not permitted, rename 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-oG6tWv\original.jpg' -> 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-oG6tWv\new-name.jpg'
+      at async rename (node:internal/fs/promises:842:10)
+      at async TestContext.<anonymous> (file:///C:/Users/glauc/Documents/Codex/2026-10-12/task/revelumo-issue-7/test/relocation.test.ts:110:44)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'rename',
+    path: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-oG6tWv\\original.jpg',
+    dest: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-oG6tWv\\new-name.jpg'
+  }
+
+test at test\relocation.test.ts:127:1
+Ô£û a readable version-two original acquires identity before a later external move without changing legacy data (40.9057ms)
+  Error: EPERM: operation not permitted, rename 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-p7ZWT1\original.jpg' -> 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-p7ZWT1\legacy-moved.jpg'
+      at async rename (node:internal/fs/promises:842:10)
+      at async TestContext.<anonymous> (file:///C:/Users/glauc/Documents/Codex/2026-10-12/task/revelumo-issue-7/test/relocation.test.ts:132:48)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'rename',
+    path: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-p7ZWT1\\original.jpg',
+    dest: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-p7ZWT1\\legacy-moved.jpg'
+  }
+
+test at test\relocation.test.ts:139:1
+Ô£û previewing an accessible version-one original establishes identity before it is moved (36.18ms)
+  Error: EPERM: operation not permitted, rename 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-oPEwXP\original.jpg' -> 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-oPEwXP\v1-moved.jpg'
+      at async rename (node:internal/fs/promises:842:10)
+      at async TestContext.<anonymous> (file:///C:/Users/glauc/Documents/Codex/2026-10-12/task/revelumo-issue-7/test/relocation.test.ts:142:44)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'rename',
+    path: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-oPEwXP\\original.jpg',
+    dest: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-oPEwXP\\v1-moved.jpg'
+  }
+
+test at test\relocation.test.ts:147:1
+Ô£û a legacy original missing before identification cannot be relinked using the candidate as retroactive proof (31.2359ms)
+  Error: EPERM: operation not permitted, rename 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-SVrlZb\original.jpg' -> 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-SVrlZb\legacy-already-moved.jpg'
+      at async rename (node:internal/fs/promises:842:10)
+      at async TestContext.<anonymous> (file:///C:/Users/glauc/Documents/Codex/2026-10-12/task/revelumo-issue-7/test/relocation.test.ts:149:56)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'rename',
+    path: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-SVrlZb\\original.jpg',
+    dest: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-SVrlZb\\legacy-already-moved.jpg'
+  }
+
+test at test\relocation.test.ts:164:1
+Ô£û canceling relocation leaves the missing reference, identity and cached data unchanged (16.9487ms)
+  Error: EPERM: operation not permitted, rename 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-asDtiy\original.jpg' -> 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-asDtiy\canceled-move.jpg'
+      at async rename (node:internal/fs/promises:842:10)
+      at async TestContext.<anonymous> (file:///C:/Users/glauc/Documents/Codex/2026-10-12/task/revelumo-issue-7/test/relocation.test.ts:168:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'rename',
+    path: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-asDtiy\\original.jpg',
+    dest: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-asDtiy\\canceled-move.jpg'
+  }
+
+test at test\relocation.test.ts:176:1
+Ô£û a different JPEG with the original name and byte length cannot be relinked (17.3524ms)
+  Error: EPERM: operation not permitted, rename 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-7pXx4d\original.jpg' -> 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-7pXx4d\real-original.jpg'
+      at async rename (node:internal/fs/promises:842:10)
+      at async TestContext.<anonymous> (file:///C:/Users/glauc/Documents/Codex/2026-10-12/task/revelumo-issue-7/test/relocation.test.ts:181:49)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'rename',
+    path: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-7pXx4d\\original.jpg',
+    dest: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-7pXx4d\\real-original.jpg'
+  }
+
+test at test\relocation.test.ts:191:1
+Ô£û a destination already owned by another record is refused even when its bytes are identical (21.6582ms)
+  Error: EPERM: operation not permitted, rename 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-R6rxTy\original.jpg' -> 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-R6rxTy\unregistered-move.jpg'
+      at async rename (node:internal/fs/promises:842:10)
+      at async TestContext.<anonymous> (file:///C:/Users/glauc/Documents/Codex/2026-10-12/task/revelumo-issue-7/test/relocation.test.ts:197:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'rename',
+    path: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-R6rxTy\\original.jpg',
+    dest: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-R6rxTy\\unregistered-move.jpg'
+  }
+
+test at test\relocation.test.ts:205:1
+Ô£û a real SQLite write lock cannot partially commit a new reference (17.8939ms)
+  Error: EPERM: operation not permitted, rename 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-uzhsV3\original.jpg' -> 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-uzhsV3\write-locked.jpg'
+      at async rename (node:internal/fs/promises:842:10)
+      at async TestContext.<anonymous> (file:///C:/Users/glauc/Documents/Codex/2026-10-12/task/revelumo-issue-7/test/relocation.test.ts:209:48)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'rename',
+    path: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-uzhsV3\\original.jpg',
+    dest: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-uzhsV3\\write-locked.jpg'
+  }
+
+test at test\relocation.test.ts:235:1
+Ô£û closing while relocation waits behind a preview prevents a later reference update (16.8631ms)
+  Error: EPERM: operation not permitted, rename 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-CMpT74\original.jpg' -> 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-CMpT74\queued-move.jpg'
+      at async rename (node:internal/fs/promises:842:10)
+      at async TestContext.<anonymous> (file:///C:/Users/glauc/Documents/Codex/2026-10-12/task/revelumo-issue-7/test/relocation.test.ts:242:47)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'rename',
+    path: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-CMpT74\\original.jpg',
+    dest: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-CMpT74\\queued-move.jpg'
+  }
+
+test at test\relocation.test.ts:265:1
+Ô£û generating a legacy thumbnail from the accessible original establishes its identity for relocation (32.8998ms)
+  Error: EPERM: operation not permitted, rename 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-l5eLkw\original.jpg' -> 'C:\Users\glauc\AppData\Local\Packages\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\AC\Temp\revelumo-relocation-l5eLkw\thumbnail-legacy-moved.jpg'
+      at async rename (node:internal/fs/promises:842:10)
+      at async TestContext.<anonymous> (file:///C:/Users/glauc/Documents/Codex/2026-10-12/task/revelumo-issue-7/test/relocation.test.ts:268:58)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'rename',
+    path: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-l5eLkw\\original.jpg',
+    dest: 'C:\\Users\\glauc\\AppData\\Local\\Packages\\sandbox.{30707b1b-b71f-4272-92a3-8dce94a92a95}\\AC\\Temp\\revelumo-relocation-l5eLkw\\thumbnail-legacy-moved.jpg'
+  }

@@ -1,0 +1,148 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Node 24 without persistent cache
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Versions
+        id: versions
+        run: |
+          node --version
+          npm --version
+          node -p 'JSON.stringify({platform:process.platform,arch:process.arch,versions:process.versions})' |
+            Tee-Object -FilePath (Join-Path $env:RUNNER_TEMP 'node-versions.txt')
+
+      - name: npm ci
+        id: install
+        run: npm ci
+
+      - name: npm run install:electron
+        id: electron
+        run: npm run install:electron
+
+      - name: npm run typecheck
+        id: typecheck
+        run: npm run typecheck
+
+      - name: npm test
+        id: tests
+        # Windows' default TEMP can use an 8.3 username alias while realpath
+        # returns the long name. Use the isolated runner directory consistently.
+        env:
+          TEMP: ${{ runner.temp }}
+          TMP: ${{ runner.temp }}
+        run: |
+          npm test 2>&1 | Tee-Object -FilePath (Join-Path $env:RUNNER_TEMP 'core-tests.txt')
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: npm run package
+        id: package
+        run: npm run package
+
+      - name: Create fresh synthetic Windows smoke directories
+        if: runner.os == 'Windows'
+        id: smoke_dirs
+        run: |
+          $root = Join-Path $env:RUNNER_TEMP ('revelumo-smokes-' + [guid]::NewGuid())
+          $electron = Join-Path $root 'electron'
+          $relocation = Join-Path $root 'relocation'
+          New-Item -ItemType Directory -Path $electron, $relocation | Out-Null
+          "ELECTRON_SMOKE_DIR=$electron" >> $env:GITHUB_ENV
+          "RELOCATION_SMOKE_DIR=$relocation" >> $env:GITHUB_ENV
+
+      - name: 'npm run test:electron -- <fresh directory> first'
+        if: runner.os == 'Windows'
+        id: electron_first
+        run: npm run test:electron -- "$env:ELECTRON_SMOKE_DIR" first
+
+      - name: 'npm run test:electron -- <same directory> reopen'
+        if: runner.os == 'Windows'
+        id: electron_reopen
+        run: npm run test:electron -- "$env:ELECTRON_SMOKE_DIR" reopen
+
+      - name: 'npm run test:relocation -- <separate fresh directory> first'
+        if: runner.os == 'Windows'
+        id: relocation_first
+        run: npm run test:relocation -- "$env:RELOCATION_SMOKE_DIR" first
+
+      - name: 'npm run test:relocation -- <same relocation directory> reopen'
+        if: runner.os == 'Windows'
+        id: relocation_reopen
+        run: npm run test:relocation -- "$env:RELOCATION_SMOKE_DIR" reopen
+
+      - name: Results and limits
+        if: always()
+        env:
+          STEP_RESULTS: ${{ toJSON(steps) }}
+          CHECKED_SHA: ${{ github.sha }}
+        run: |
+          "## CI — $env:RUNNER_OS / $(Get-Date -AsUTC -Format o)" >> $env:GITHUB_STEP_SUMMARY
+          "Checked SHA: $env:CHECKED_SHA" >> $env:GITHUB_STEP_SUMMARY
+          'PR runs check the GitHub merge ref; push/manual runs check their selected ref.' >> $env:GITHUB_STEP_SUMMARY
+          '| Step | Outcome |' >> $env:GITHUB_STEP_SUMMARY
+          '| --- | --- |' >> $env:GITHUB_STEP_SUMMARY
+          $results = $env:STEP_RESULTS | ConvertFrom-Json -AsHashtable
+          foreach ($id in @('versions', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen')) {
+            "| $id | $($results[$id].outcome) |" >> $env:GITHUB_STEP_SUMMARY
+          }
+          if ($env:RUNNER_OS -ne 'Windows') {
+            'Electron smokes skipped on Ubuntu: this slice validates their packaged runtime on Windows only.' >> $env:GITHUB_STEP_SUMMARY
+          } else {
+            'Core FIFO import/preview tests skip on Windows because they require POSIX mkfifo. Symlink alias tests may skip when Windows denies symlink creation; the test log records whether that happened.' >> $env:GITHUB_STEP_SUMMARY
+          }
+          'Other skipped steps did not run because a prerequisite failed or the job was cancelled; consult the step logs.' >> $env:GITHUB_STEP_SUMMARY
+          foreach ($file in @('node-versions.txt', 'core-tests.txt')) {
+            $path = Join-Path $env:RUNNER_TEMP $file
+            if (Test-Path -LiteralPath $path) {
+              "### $file (includes actual test totals and skip reasons)" >> $env:GITHUB_STEP_SUMMARY
+              '```text' >> $env:GITHUB_STEP_SUMMARY
+              Get-Content -LiteralPath $path >> $env:GITHUB_STEP_SUMMARY
+              '```' >> $env:GITHUB_STEP_SUMMARY
+            }
+          }
+          foreach ($dir in @($env:ELECTRON_SMOKE_DIR, $env:RELOCATION_SMOKE_DIR)) {
+            if (!$dir) { continue }
+            foreach ($file in @('first-result.json', 'reopen-result.json', 'first-failure.txt', 'reopen-failure.txt')) {
+              $path = Join-Path $dir $file
+              if (Test-Path -LiteralPath $path) {
+                "### $(Split-Path $dir -Leaf) / $file" >> $env:GITHUB_STEP_SUMMARY
+                '```text' >> $env:GITHUB_STEP_SUMMARY
+                Get-Content -LiteralPath $path >> $env:GITHUB_STEP_SUMMARY
+                '```' >> $env:GITHUB_STEP_SUMMARY
+              }
+            }
+          }
+          'Synthetic fixtures only. Native dialog replaced; no visual, physical keyboard, screen reader or executable double-click validation. makers: [] means no installers. No macOS check or end-user platform support claim. Package and local download caches disappear with the runner; no cache action or artifact upload.' >> $env:GITHUB_STEP_SUMMARY
