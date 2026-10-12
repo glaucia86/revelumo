@@ -14,13 +14,14 @@ npm test
 npm run package
 ```
 
-Depois, em PowerShell no Windows, use duas pastas novas de teste (em CI, `$env:RUNNER_TEMP`; localmente, uma pasta temporária autorizada):
+Depois, em PowerShell no Windows, use três pastas novas de teste (em CI, `$env:RUNNER_TEMP`; localmente, uma pasta temporária autorizada):
 
 ```powershell
 $root = Join-Path $env:TEMP ('revelumo-smokes-' + [guid]::NewGuid())
 $electron = Join-Path $root 'electron'
 $relocation = Join-Path $root 'relocation'
-New-Item -ItemType Directory -Path $electron, $relocation | Out-Null
+$exposure = Join-Path $root 'exposure'
+New-Item -ItemType Directory -Path $electron, $relocation, $exposure | Out-Null
 npm run test:electron -- "$electron" first
 if ($LASTEXITCODE -ne 0) { throw 'electron first failed' }
 npm run test:electron -- "$electron" reopen
@@ -29,6 +30,13 @@ npm run test:relocation -- "$relocation" first
 if ($LASTEXITCODE -ne 0) { throw 'relocation first failed' }
 npm run test:relocation -- "$relocation" reopen
 if ($LASTEXITCODE -ne 0) { throw 'relocation reopen failed' }
+npm run test:exposure -- "$exposure" first
+if ($LASTEXITCODE -ne 0) { throw 'exposure first failed' }
+# Sequência intencional: race salva 1.7 EV; race-reopen verifica esse valor.
+foreach ($mode in @('reopen', 'interrupt', 'reopen', 'discard-race', 'reopen', 'race', 'race-reopen')) {
+  npm run test:exposure -- "$exposure" $mode
+  if ($LASTEXITCODE -ne 0) { throw "exposure $mode failed" }
+}
 ```
 
 Cada comando inicia outro processo Electron. `first` exige um catálogo novo; `reopen` reutiliza somente a pasta do seu cenário. Os scripts carregam `out/Revelumo-<platform>-<arch>/resources/app.asar`, validam o renderer/IPC real e preservam sandbox, contextIsolation e webSecurity. A reexecução exige um novo `$root`. Não use catálogos ou fotografias pessoais.
