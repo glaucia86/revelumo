@@ -1,7 +1,7 @@
 {
   "name": "revelumo",
   "productName": "Revelumo",
-  "version": "0.0.1",
+  "version": "0.1.0-alpha.1",
   "private": true,
   "description": "Editor fotográfico local — primeira fatia JPEG em desenvolvimento",
   "type": "module",

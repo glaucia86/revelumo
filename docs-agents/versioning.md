@@ -2,11 +2,11 @@
 
 Referência da [issue #8](https://github.com/glaucia86/revelumo/issues/8). Aprovar uma PR é revisar código; integrar um commit não lança uma versão. Preparação, tag e publicação são etapas distintas, cada qual com escopo e autorização próprios.
 
-## Estado e candidata proposta
+## Estado da candidata em preparação
 
-`package.json`, `package-lock.json` (campo superior `version` e `packages[""].version`) continuam em `0.0.1`. A primeira candidata proposta é `0.1.0-alpha.1`, com tag futura `v0.1.0-alpha.1`. São nomes propostos, não uma versão lançada, reservada ou preparada para distribuição. Conteúdo e validação da candidata ainda precisam ser definidos; não incrementar versão para uma candidata vazia ou sem conteúdo validado.
+`package.json.version`, `package-lock.json.version` e `package-lock.json.packages[""].version` declaram `0.1.0-alpha.1`. O conteúdo foi selecionado na base integrada `aa77bb8af6f865167f2e62f66cb1c76d57e9cf23` (PR #47); esta preparação sincroniza versões, changelog e [notas da candidata](releases/0.1.0-alpha.1.md). Isso **não é uma versão publicada**: a tag futura `v0.1.0-alpha.1` e a GitHub Release não são criadas nesta PR.
 
-Esta issue entrega documentos. Não cria tag/release, envia ao npm, configura makers/assinatura/notarização ou muda app/workflow. `private: true` permanece; `makers: []` significa que `npm run package` gera uma pasta de desenvolvimento, não instaladores. Código e documentação originais agora estão sob MIT; avisos de terceiros permanecem separados em THIRD_PARTY_NOTICES.md.
+`private: true` permanece; `makers: []` significa que `npm run package` gera uma pasta de desenvolvimento, não instaladores. Não publicar ao npm, anexar `out/`, configurar makers/assinatura/notarização ou atualizar dependências nesta preparação. Código e documentação originais estão sob MIT; avisos de terceiros permanecem separados em THIRD_PARTY_NOTICES.md.
 
 ## SemVer durante o desenvolvimento inicial
 
@@ -14,20 +14,21 @@ Usar o formato [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html). `0.y.z` indi
 
 A versão do aplicativo não substitui `schemaVersion` do catálogo nem `processingVersion` das receitas. Mudanças nesses contratos exigem validação própria e notas de migração, preservação de originais e limites de compatibilidade. Estar em alpha não dispensa esses cuidados.
 
-## Primeira alpha proposta: código-fonte experimental
+## Primeira alpha selecionada: código-fonte experimental
 
 A entrega proposta é um marco para pessoas desenvolvedoras que queiram estudar e compilar o projeto. Uma release agrupa entregas integradas, notas, evidências e limitações; sua tag deve resolver para um único SHA integrado com CI terminal verde. [Archives de código-fonte gerados pelo GitHub](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) (`zip`/`tar.gz`) são cópias do código versionado, **não instaladores, executáveis prontos ou prova de suporte multiplataforma**. Publicar o site também não publica uma versão do aplicativo.
 
-Escopo de referência em `d3a56d94042f7011ec1b157771c4eb9055fbd307` (12/10/2026), ainda sujeito à seleção da candidata:
+Escopo selecionado em `aa77bb8af6f865167f2e62f66cb1c76d57e9cf23` (PR #47 integrada em 12/10/2026):
 
 - Catálogo JPEG/SQLite, importação em lote, miniaturas, identidade e relocalização, classificação e filtros.
 - Exposição não destrutiva, histórico de exposição, WB relativo, comparação, autosave e reabertura.
-- Catálogo Cobre e traduções do catálogo/editor existente em PT-BR/EN/ES.
+- Catálogo Cobre e traduções do catálogo/editor/exportação em PT-BR/EN/ES.
+- Exportação de um JPEG full-frame sRGB com revisão EV/WB v2 confirmada, orientação aplicada, créditos selecionados, GPS removido e gravação exclusiva. Qualidade fixa 0,90 do encoder Chromium; entrada até 32 MiB/40 MP e saída até 32 MiB, sem redução silenciosa de qualidade/resolução.
 - Documentação, licença MIT do código original, avisos de terceiros e site do projeto.
 
-Recorte na interface, exportação JPEG utilizável, RAW/HEIC/TIFF, edição em lote, redesenho completo do editor e distribuição de binários ficam fora desse marco de referência. Componentes internos ou trabalho em branches não tornam esses fluxos disponíveis. Se o escopo mudar antes de preparar a candidata, atualizar esta lista e as evidências; não incorporar trabalho em andamento por antecipação.
+Recorte na interface, RAW/HEIC/TIFF, edição em lote, redesenho completo do editor e distribuição de binários ficam fora desse marco de referência. Componentes internos ou trabalho em branches não tornam esses fluxos disponíveis. Se o escopo mudar antes de preparar a candidata, atualizar esta lista e as evidências; não incorporar trabalho em andamento por antecipação.
 
-A candidata continua **proposta**, não pronta: faltam seleção final do conteúdo, preparação do changelog/versões, integração e validação do SHA final e publicação autorizada. Os testes do snapshot de referência não validam o futuro commit de preparação. A publicação proposta usa somente código-fonte e notas, com marcação **pre-release**, sem anexar a pasta `out/` ou outros binários.
+A candidata está **em preparação**, não publicada: conteúdo, changelog e versões estão definidos nesta alteração; faltam revisão/integração da preparação, validação do SHA integrado final e futura tag/publicação autorizada. Os testes do snapshot de referência não validam o futuro commit de preparação. A publicação proposta usa somente código-fonte e notas, com marcação **pre-release**, sem anexar a pasta `out/` ou outros binários.
 
 Binários exigirão uma fatia separada: formatos e makers por plataforma, proveniência e integridade dos artefatos, avisos/licenças redistribuídos, testes de instalação/abertura/desinstalação e política explícita de assinatura/notarização e seus custos. Não contratar serviços, criar certificados ou ampliar permissões nesta preparação.
 
@@ -92,4 +93,4 @@ O push integrado acima está verde: Windows 57 aprovados, zero falhas, dois skip
 
 ## Segurança de eventual automação futura
 
-CI de PR permanece somente leitura (`contents: read`, checkout sem credenciais persistidas). Publicação futura deve ficar em workflow/job separado, manual, restrito ao commit confiável integrado e validado; conferir o SHA alvo, gates e autorização antes de executar. Conceder `contents: write` somente onde necessário para publicação e usar `GITHUB_TOKEN`, sem PAT novo. Não executar código de PR não confiável em contexto com escrita/secrets, nem converter aprovação de review em lançamento. Esta issue não cria esse workflow, secrets ou serviços pagos; mantém o objetivo de custo zero e não altera budgets, cobrança, branch protection ou permissões do repositório.
+CI de PR permanece somente leitura (`contents: read`, checkout sem credenciais persistidas). Publicação futura deve ficar em workflow/job separado, manual, restrito ao commit confiável integrado e validado; conferir o SHA alvo, gates e autorização antes de executar. Conceder `contents: write` somente onde necessário para publicação e usar `GITHUB_TOKEN`, sem PAT novo. Não executar código de PR não confiável em contexto com escrita/secrets, nem converter aprovação de review em lançamento. Esta preparação não cria esse workflow, secrets ou serviços pagos; mantém o objetivo de custo zero e não altera budgets, cobrança, branch protection ou permissões do repositório.
