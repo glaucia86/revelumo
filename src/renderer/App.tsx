@@ -1,3 +1,5 @@
+import { exportFailureMessage } from '../shared/jpeg-export-messages.ts';
+import type { ExportJobState } from '../shared/jpeg-export-contract.ts';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { BatchItem, ImportProgress, PhotoSummary, PhotoStatus, PhotoAvailability, Preview, LibraryFilters } from '../shared/contracts.ts';
 import { lastPage, pagePhotos } from './gallery.ts';
@@ -39,6 +41,11 @@ export function App() {
   const [thumbnailErrors, setThumbnailErrors] = useState<Record<string, MessageDescriptor>>({});
   const openSequence = useRef(0);
   const editor = useRef<ExposureHandle>(null);
+  const [exportReceipt, setExportReceipt] = useState<ExportJobState | null>(null);
+  const [exportExit, setExportExit] = useState(false), exportExitPending = useRef(false);
+  const exportContinue = useRef<HTMLButtonElement>(null);
+  useEffect(() => { if (exportExit) exportContinue.current?.focus(); }, [exportExit]);
+  function rememberExport(result: ExportJobState) { if (result.state === 'succeeded' || result.error === 'UNKNOWN_JOB') setExportReceipt(result); }
   const catalogSection = useRef<HTMLElement>(null);
   const returnFocusId = useRef<string | null>(null);
   const transitioning = useRef(false), pendingExit = useRef<(() => void | Promise<void>) | null>(null);
@@ -46,16 +53,20 @@ export function App() {
   const [exitFailed, setExitFailed] = useState(false), [exiting, setExiting] = useState(false);
   const closeHandler = useRef<() => void>(() => {});
   closeHandler.current = () => {
+    if (exportExitPending.current) { exportContinue.current?.focus(); return; }
     if (transitioning.current) { pendingClose.current = true; return; }
     void leave(async () => { await window.revelumo.confirmClose(); });
   };
   useEffect(() => window.revelumo.onCloseRequested(() => closeHandler.current()), []);
 
   async function leave(action: () => void | Promise<void>, discard = false) {
-    if (transitioning.current) return;
+    if (transitioning.current || exportExitPending.current) return;
     transitioning.current = true; pendingExit.current = action; setExiting(true);
     try {
-      await editor.current?.leave(discard);
+      const exportResult = await editor.current?.leave(discard);
+      if (exportResult?.state === 'succeeded') {
+        rememberExport(exportResult); exportExitPending.current = true; setExportExit(true); return;
+      }
       setExitFailed(false); pendingExit.current = null;
       await action();
     } catch { setExitFailed(true); }
@@ -234,6 +245,8 @@ export function App() {
       <LanguageSelector/>
       <button className="catalog-import" disabled={loading || importing || relocating || classifying || exiting} onClick={() => { if (viewing) void leave(async () => { resetViewer(); await importPhotos(); }); else void importPhotos(); }}><Icon name="import"/>{t({ key: 'shell.import' })}</button>
     </header>
+    {exportReceipt?.error === 'UNKNOWN_JOB' && <div className="export-receipt" role="alert">{t(exportFailureMessage('UNKNOWN_JOB'))}</div>}
+    {exportReceipt?.result && <div className="export-receipt" role="status"><strong>{t({ key: 'export.receipt', params: { filename: exportReceipt.result.path.split(/[\\/]/).pop() ?? exportReceipt.result.path } })}</strong><details><summary>{t({ key: 'export.showPath' })}</summary><span>{exportReceipt.result.path}</span></details>{exportReceipt.result.cleanupPending && <p>{t({ key: 'export.cleanup' })}</p>}</div>}
     <div className="workspace">
       <aside className="catalog-sidebar"><h2>{t({ key: 'shell.library' })}</h2>
         <button className="photo" disabled={relocating || classifying || exiting} onClick={showGrid} aria-label={t({ key: 'shell.allPhotos' })} aria-pressed={!viewing}><Icon name="grid"/><span>{t({ key: 'shell.allPhotos' })}</span><span className="catalog-count">{formatNumber(locale, total)}</span></button>
@@ -259,7 +272,7 @@ export function App() {
         </div>}
       </aside>
       <section ref={catalogSection} className={viewing ? 'viewer' : 'gallery'} aria-label={viewing ? t({ key: 'viewer.label' }) : t({ key: 'catalog.grid' })} aria-busy={loading}>
-        {viewing ? <><button className="back" disabled={relocating || classifying || exiting} onClick={showGrid}>{t({ key: 'viewer.back' })}</button>{currentStatus && currentStatus.state !== 'available' ? <div className="original-notice" role="status"><h2>{selectedPhoto?.name}</h2><p>{t(currentStatus.descriptor ?? { key: 'errors.generic' })}</p>{preview && <p>{t({ key: 'viewer.draftPreserved' })}</p>}{currentStatus.canRelocate && <button disabled={relocating || importing || classifying || exiting} onClick={() => void relocatePhoto()} aria-label={t({ key: 'viewer.locateNamed', params: { filename: selectedPhoto?.name ?? '' } })}>{t({ key: relocating ? 'viewer.locating' : 'viewer.locate' })}</button>}</div> : !preview && <p className="quiet">{renderMessage(message) || t({ key: 'viewer.opening' })}</p>}{selectedPhoto && <><ExposureEditor key={`exposure-${selectedPhoto.id}`} ref={editor} photo={selectedPhoto} preview={preview}/><ClassificationControls key={selectedPhoto.id} photo={selectedPhoto} onBusyChange={setClassifying} onMessage={setMessage}/></>}</> :
+        {viewing ? <><button className="back" disabled={relocating || classifying || exiting} onClick={showGrid}>{t({ key: 'viewer.back' })}</button>{currentStatus && currentStatus.state !== 'available' ? <div className="original-notice" role="status"><h2>{selectedPhoto?.name}</h2><p>{t(currentStatus.descriptor ?? { key: 'errors.generic' })}</p>{preview && <p>{t({ key: 'viewer.draftPreserved' })}</p>}{currentStatus.canRelocate && <button disabled={relocating || importing || classifying || exiting} onClick={() => void relocatePhoto()} aria-label={t({ key: 'viewer.locateNamed', params: { filename: selectedPhoto?.name ?? '' } })}>{t({ key: relocating ? 'viewer.locating' : 'viewer.locate' })}</button>}</div> : !preview && <p className="quiet">{renderMessage(message) || t({ key: 'viewer.opening' })}</p>}{selectedPhoto && <><ExposureEditor key={`exposure-${selectedPhoto.id}`} ref={editor} photo={selectedPhoto} preview={preview} onExportResult={rememberExport}/><ClassificationControls key={selectedPhoto.id} photo={selectedPhoto} onBusyChange={setClassifying} onMessage={setMessage}/></>}</> :
           <><div className="catalog-heading"><h1 tabIndex={-1}>{t({ key: filtered ? 'catalog.filtered' : 'shell.allPhotos' })}</h1><p>{t({ key: 'catalog.description' })}</p></div>{failures.length > 0 && <details className="failures"><summary>{t({ key: 'import.failedFiles', params: { count: failures.length } })}</summary><ul>{failures.map((item, index) => <li key={index}>{item.name}: {!item.result.ok && t(item.result.descriptor ?? { key: 'errors.generic' })}</li>)}</ul></details>}
             {loading ? <p role="status">{t({ key: 'catalog.loading' })}</p> : queryError ? <div className="query-error" role="alert"><p>{t(queryError)}</p><button onClick={() => setQueryRefresh(current => current + 1)}>{t({ key: 'preferences.retry' })}</button></div> : photos.length ? <><p className="quiet" role="status">{t({ key: filtered ? 'catalog.filteredSummary' : 'catalog.summary', params: { count: photos.length, total } })}</p><div className="grid" role="list" aria-label={t({ key: 'catalog.imported' })}>{visible.map(photo => <div role="listitem" key={photo.id}><button className="tile" data-photo-id={photo.id} onClick={() => void openPhoto(photo)} aria-label={t({ key: 'catalog.openNamed', params: { filename: photo.name } })} aria-describedby={statuses[photo.id] && statuses[photo.id].state !== 'present' ? `original-${photo.id}` : undefined}>
               <span className="thumbnail">{thumbnails[photo.id] ? <img src={thumbnails[photo.id]} alt=""/> : <span title={thumbnailErrors[photo.id] ? t(thumbnailErrors[photo.id]) : undefined}>{t({ key: thumbnailErrors[photo.id] ? 'catalog.thumbnailUnavailable' : 'catalog.thumbnailLoading' })}</span>}</span><span className="filename" title={photo.name}>{photo.name}</span><span className="tile-meta"><span>JPEG</span><span>{t({ key: 'catalog.openPhoto' })} <Icon name="arrow"/></span></span>
@@ -269,6 +282,10 @@ export function App() {
           </>}
       </section>
     </div>
+    {exportExit && <div className="export-close-confirm" role="alert"><p>{t({ key: 'export.closeCommitted' })}</p>
+      <button ref={exportContinue} className="export-continue" onClick={() => { const action = pendingExit.current; exportExitPending.current = false; setExportExit(false); if (action) void leave(action); }}>{t({ key: 'export.continue' })}</button>
+      <button className="export-stay" onClick={() => { pendingExit.current = null; exportExitPending.current = false; setExportExit(false); }}>{t({ key: 'export.stay' })}</button>
+    </div>}
     {exitFailed && <div className="exit-failure" role="alert"><p>{t({ key: 'viewer.exitFailed' })}</p><button disabled={exiting} onClick={() => { const action = pendingExit.current; if (action) void leave(action); }}>{t({ key: 'viewer.retryExit' })}</button><button disabled={exiting} onClick={() => { pendingExit.current = null; setExitFailed(false); }}>{t({ key: 'viewer.stay' })}</button><button disabled={exiting} onClick={() => { const action = pendingExit.current; if (action) void leave(action, true); }}>{t({ key: 'viewer.discardExit' })}</button></div>}
     <footer className="catalog-footer"><span role="status" aria-live="polite">{renderMessage(message) || t({ key: 'shell.footer' })}</span><span>{t({ key: 'shell.development' })}</span></footer>
   </main>;

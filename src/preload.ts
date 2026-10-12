@@ -4,6 +4,10 @@ const closeListeners = new Set<() => void>();
 let closePending = false;
 ipcRenderer.on('revelumo:close-request', () => { closePending = true; for (const callback of closeListeners) callback(); });
 const api: RevelumoApi = {
+  startJpegExport: (id, sessionId, revision, attemptId) => ipcRenderer.invoke('revelumo:export', { op: 'start', id, sessionId, revision, attemptId }),
+  recoverJpegExport: (id, sessionId, revision, attemptId) => ipcRenderer.invoke('revelumo:export', { op: 'recover', id, sessionId, revision, attemptId }),
+  jpegExportStatus: jobId => ipcRenderer.invoke('revelumo:export', { op: 'status', jobId }),
+  cancelJpegExport: jobId => ipcRenderer.invoke('revelumo:export', { op: 'cancel', jobId }),
   recipePhoto: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'recipe', id }),
   beginEditingPhoto: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'begin-edit', id }),
   saveAdjustments: (id, sessionId, revision, adjustments, processingVersion, gestures) => ipcRenderer.invoke('revelumo:invoke', { op: 'adjustments', id, sessionId, revision, adjustments, processingVersion, gestures }),

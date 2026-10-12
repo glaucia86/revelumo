@@ -1,14 +1,20 @@
 # Estado da implementação
 
+## Issue #19: primeira interface de exportação JPEG — 12/10/2026
+
+- Botão do editor confirma a revisão v2 visível, aguarda autosave/histórico, escolhe destino no main e publica um novo JPEG sRGB/qualidade 90 em resolução original com EV/WB, orientação, créditos selecionados e GPS removido. Saída limitada a 32 MiB nesta versão, sem redução silenciosa de qualidade.
+- Cancelar/voltar/fechar reconciliam o resultado real. Falhas de confirmação IPC recuperam somente a mesma tentativa, vinculada a owner/frame/generation/sessão/revisão; não reiniciam exportação automaticamente. Recibo e erros traduzidos em PT-BR/EN/ES. Quando a consulta retorna UNKNOWN_JOB, mostra resultado incerto e orienta conferir o destino, sem apagar arquivos; encerramento abrupto não tem recuperação transacional.
+- [Evidências, capturas 760×540 e limites](../evidence/issue-19-ui/report.md). Sem suporte a recorte/receitas desconhecidas, nova dependência, instalador, version bump, tag ou release. Os registros abaixo são históricos das fatias anteriores.
+
 ## Issue #19: circuito técnico de publicação — 12/10/2026
 
 - Serviço main-only une snapshot autenticado, engine full-frame v2, créditos EXIF/XMP/IPTC selecionados sem GPS e novo arquivo exclusivo. Mantém originais/aliases e resultado real após o ponto de publicação, com cleanupPending explícito.
-- [Reabertura independente, testes e custo de memória](../evidence/issue-19-circuit/report.md). Ainda sem UI, diálogo, integração de autosave ou suporte a crop; exportação não está disponível e issue #19 permanece aberta.
+- [Reabertura independente, testes e custo de memória](../evidence/issue-19-circuit/report.md). Naquele snapshot preparatório ainda não havia UI/diálogo/autosave; a interface foi conectada na fatia acima. Crop segue fora do suporte.
 
 ## Issue #19: engine JPEG preparatória — 12/10/2026
 
 - Engine main-only recebe bytes privados do snapshot, rejeita versões/recorte desconhecidos e produz JPEG sRGB em resolução original com exposição/WB v2 e qualidade Canvas 0,90. Renderer descartável isolado, sem Node, serializado e com cancelamento/encerramento observado.
-- Ainda não conectada à aplicação: metadados selecionados, gravação sem sobrescrever, diálogo e UI seguem o circuito seguinte. Exportação não está disponível; issue #19 permanece aberta.
+- Snapshot histórico da engine: metadados/gravação vieram no circuito posterior e diálogo/UI na fatia acima. Não usar esta nota histórica como estado atual.
 - [Evidências, recursos medidos e limites](../evidence/issue-19-engine/report.md). Nenhuma dependência nova, release ou alteração no crop.
 
 ## Issue #32: tradução do editor existente — 12/10/2026

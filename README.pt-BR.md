@@ -62,7 +62,7 @@ A imagem principal acima mostra o catálogo **A · Cobre** implementado: ambient
 
 O editor já oferece exposição, balanço de branco relativo, autosave e histórico de exposição. Esta é sua interface funcional atual; o redesenho completo do editor em Cobre continua planejado. [Detalhes da captura e créditos das fotos](docs/assets/screenshots/README.md).
 
-**Idiomas:** catálogo, importação, estrutura do aplicativo e editor existente oferecem português do Brasil, inglês e espanhol com seletor persistente. Inclui exposição, balanço de branco relativo, histórico, comparação, classificação, relocalização e mensagens de recuperação. A primeira abertura segue os idiomas do sistema, com fallback para inglês. Recorte e exportação permanecem funcionalidades pendentes com tradução em fatias separadas.
+**Idiomas:** catálogo, importação, estrutura do aplicativo e editor existente oferecem português do Brasil, inglês e espanhol com seletor persistente. Inclui exposição, balanço de branco relativo, histórico, comparação, classificação, relocalização e mensagens de recuperação. A primeira abertura segue os idiomas do sistema, com fallback para inglês. A exportação JPEG também está traduzida; recorte permanece pendente.
 
 <a id="status"></a>
 ## O que você pode fazer hoje
@@ -98,7 +98,8 @@ Um arraste completo ou uma edição numérica concluída representa um passo do 
 - **Persistência:** uma interrupção recupera o último estado realmente salvo. Alterações posteriores ainda não persistidas podem ser perdidas.
 - **Originais:** o catálogo não é uma cópia de segurança. Mantenha seus próprios backups das fotos e do catálogo.
 - **Balanço de branco relativo:** ajusta um JPEG já renderizado, sem representar a temperatura da câmera ou revelação RAW. Não há conta-gotas, presets ou balanço automático. [Comportamento e verificação](docs-agents/adr/0005-jpeg-white-balance.md).
-- **Ainda em desenvolvimento:** recorte e exportação JPEG. Esses recursos não estão disponíveis nesta versão integrada.
+- **Exportação JPEG:** use **Exportar JPEG** no editor. O aplicativo confirma os ajustes atuais e pede um novo nome de arquivo local. Cria um JPEG em resolução original, qualidade Chromium 0,90 e sRGB, com exposição/balanço de branco e orientação aplicados. Preserva autoria/copyright selecionados e remove metadados GPS. Arquivos existentes e originais nunca são substituídos. Esta versão limita a saída a 32 MiB e recusa resultados maiores sem reduzir qualidade ou resolução. “Qualidade 90” significa o parâmetro fixo 0,90 do encoder Chromium; não garante qualidade ou subamostragem de cor equivalentes entre encoders.
+- **Ainda em desenvolvimento:** recorte. Receitas desconhecidas, inclusive com recorte, são recusadas em vez de exportadas silenciosamente sem seus ajustes.
 
 <details>
 <summary>Como funciona a relocalização de um original</summary>
@@ -193,7 +194,7 @@ O executável Windows dentro dessa pasta é um pacote de desenvolvimento, não u
 | `npm start` | Abrir o modo de desenvolvimento do Electron Forge |
 | `npm run package` | Gerar o aplicativo local em `out/`, sem instalador |
 
-Para executar somente os testes do núcleo, com Node.js 24, não é necessário instalar as dependências:
+Após `npm ci`, execute somente os testes do núcleo com Node.js 24 (Electron não é necessário):
 
 ```sh
 node --test test/*.test.ts
@@ -203,7 +204,7 @@ A remoção de tipos feita pelo Node não substitui o typecheck. Os testes do n�
 
 ### CI e evidências
 
-O [workflow de CI](.github/workflows/ci.yml) verifica PRs, pushes em `main` e execuções manuais em **Windows e Ubuntu**, com Node 24, verificação documental offline, instalação pelo lockfile, typecheck, testes e empacotamento. O Windows também executa os cenários de importação, relocalização, filtros, exposição, histórico e balanço de branco no Electron empacotado, incluindo reabertura em processos separados.
+O [workflow de CI](.github/workflows/ci.yml) verifica PRs, pushes em `main` e execuções manuais em **Windows e Ubuntu**, com Node 24, verificação documental offline, instalação pelo lockfile, typecheck, testes e empacotamento. O Windows também executa os cenários de importação, relocalização, filtros, exposição, histórico e balanço de branco no Electron empacotado, incluindo reabertura em processos separados. O Windows também verifica o motor JPEG isolado, o circuito completo e a interface de exportação do editor, incluindo cancelamento e recuperação de IPC.
 
 - [Execuções atuais no GitHub Actions](https://github.com/glaucia86/revelumo/actions/workflows/ci.yml)
 - [Reprodução do CI e limites de cada sistema](docs-agents/ci.md)
@@ -213,6 +214,9 @@ O [workflow de CI](.github/workflows/ci.yml) verifica PRs, pushes em `main` e ex
 - [Histórico persistente, retenção e QA visual Linux](evidence/issue-16/report.md)
 - [Balanço de branco relativo, persistência da receita e verificações de cor](evidence/issue-17/report.md)
 - [Catálogo Cobre, verificações de interação empacotada e limites visuais](evidence/cobre-catalog/report.md)
+- [Motor isolado em resolução original e corpus](evidence/issue-19-engine/report.md)
+- [Metadados, writer exclusivo e recursos medidos](evidence/issue-19-circuit/report.md)
+- [Interface de exportação e recuperação](evidence/issue-19-ui/report.md)
 
 Os relatórios registram a revisão e o ambiente de cada etapa; referências a publicação ou CI pendentes nesses registros são históricas. O estado remoto deve ser consultado nos PRs e no Actions. Os testes automatizados de regressão usam imagens sintéticas e substituem o diálogo nativo na fronteira de seleção de arquivos. Fotografias licenciadas também foram importadas para as capturas da interface; essa conferência visual limitada não comprova ampla compatibilidade com arquivos de câmeras nem validação com leitores de tela, hardware de 8 GB ou macOS.
 
@@ -240,14 +244,32 @@ flowchart TB
     LIB --> DEC
     FILES -->|"leitura por referência"| LIB
 
+    JOB["Job de exportação no main · revisão confirmada"]
+    SNAP["Snapshot autenticado · somente leitura"]
+    ENGINE["Renderer + preload isolados · JPEG sRGB em resolução original"]
+    META["Main · créditos selecionados, sem GPS"]
+    WRITE["Main · gravação exclusiva"]
+    OUTPUT["Arquivo JPEG separado"]
+    MAIN --> JOB
+    LIB --> JOB
+    JOB --> SNAP
+    FILES --> SNAP
+    SNAP --> ENGINE
+    SNAP --> META
+    ENGINE --> META
+    META --> WRITE
+    WRITE --> OUTPUT
+
     classDef local fill:#202020,stroke:#efb28a,color:#f1f1f1;
-    class UI,EDIT,PRE,MAIN,LIB,DB,DEC,FILES local;
+    class UI,EDIT,PRE,MAIN,LIB,DB,DEC,FILES,JOB,SNAP,ENGINE,META,WRITE,OUTPUT local;
 ```
 
 - **Interface:** biblioteca, filtros, classificação e controles de edição. O renderer não recebe caminhos dos originais nem acesso direto a Node, arquivos ou SQLite.
 - **Preload e main:** a [API tipada](src/shared/contracts.ts) e a [validação de requisições](src/shared/requests.ts) restringem as operações. Diálogos e acesso a arquivos pertencem ao main; a janela mantém isolamento de contexto, sandbox e Node desabilitado no renderer.
 - **Catálogo:** `app.getPath('userData')/catalog.sqlite` guarda referências, identidade, miniaturas, classificação, receitas e histórico. O schema atual é **v7**, com migração transacional de v6; versões antigas que não conhecem o novo schema recusam o banco, sem apagá-lo.
 - **Edição:** a API entrega o JPEG original para preparar a prévia; o worker deriva uma imagem sRGB reduzida e compõe exposição e balanço de branco relativo em RGB linear. O histórico armazena valores e metadados, sem uma imagem por passo. Receita, cursor e checkpoint são persistidos de forma transacional.
+
+- **Exportação:** O job no main autentica um original, envia os bytes verificados ao motor isolado, adiciona os créditos selecionados e grava exclusivamente um JPEG separado. O renderer de exportação não tem acesso a Node nem ao sistema de arquivos. [Fluxo implementado e verificações](evidence/issue-19-ui/report.md). O [parser de requisições](src/shared/jpeg-export-request.ts) verifica chaves permitidas, UUIDs e limites de revisão. O [handler IPC](src/main/jpeg-export-ipc.ts) autentica o dono/frame principal e a origem; o token de geração do main delimita os jobs, e [Library.captureExport](src/main/library.ts) verifica a sessão de edição atual e a revisão confirmada. Caminhos de entrada pertencem ao main. Apenas o recibo revela o caminho de saída escolhido. Consulte o [contrato da interface](docs-agents/jpeg-export-ui-design.md). O processamento em faixas não limita toda a RAM: o motor ainda decodifica uma imagem em resolução original. A [medição histórica do circuito completo](evidence/issue-19-circuit/report.md) registra uma carga, sem garantir suporte a 8 GB.
 
 **Stack implementada:** Electron, React, TypeScript, Vite/Electron Forge e SQLite. Não há código Rust integrado nem requisito de instalar Rust nesta versão.
 
@@ -269,9 +291,9 @@ As primeiras etapas aprovadas usam `node:sqlite` no Electron Main para o catálo
 | Primeira edição não destrutiva | Exposição, autosave e histórico persistente de 100 passos implementados |
 | Balanço de branco relativo | Temperatura, matiz, redefinição e autosave implementados; histórico exclusivo de exposição preservado |
 | Recorte | Em desenvolvimento; ainda não disponível na versão integrada |
-| Exportação JPEG | Em desenvolvimento; geração de novos arquivos ainda não disponível |
+| Exportação JPEG | Um novo JPEG sRGB, qualidade Chromium 0,90 e resolução original; exposição/WB confirmados, créditos selecionados, remoção de GPS; saída até 32 MiB |
 | Redesenho visual | Catálogo Cobre implementado; redesenho completo do editor ainda planejado |
-| Idiomas do aplicativo: português do Brasil, inglês e espanhol | Seletor persistente; catálogo/importação e editor existente traduzidos; recorte/exportação pendentes |
+| Idiomas do aplicativo: português do Brasil, inglês e espanhol | Seletor persistente; catálogo/importação e editor existente traduzidos; recorte pendente; exportação JPEG traduzida |
 | RAW, leitura HEIC, exportação TIFF e ajustes em lote | Planejados; dependem das próximas decisões e validações |
 | Distribuição | Instaladores, releases e validação ampliada por sistema ainda pendentes |
 
