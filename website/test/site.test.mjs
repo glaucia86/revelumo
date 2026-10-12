@@ -63,3 +63,13 @@ test('guide explicitly preserves white-balance redo and links complete localized
  const expected=[['','white-balance edits neither','README.md'],['pt-BR/','ajustes de balanço de branco não','README.pt-BR.md'],['es/','cambios de balance de blancos no','README.es.md']];
  for(const [route,phrase,readme] of expected){const html=readFileSync(join(out,route,'guide/index.html'),'utf8');assert.ok(html.toLowerCase().includes(phrase));assert.ok(html.includes(readme+'#instalacao'));assert.ok(html.includes('SQLite'));}
 });
+
+test('Pages deployment is main-only after successful build with job-local permissions',()=>{
+ const workflow=readFileSync('.github/workflows/website.yml','utf8');
+ assert.match(workflow,/deploy:\n    if: github\.ref == 'refs\/heads\/main' && github\.event_name != 'pull_request'/);
+ assert.match(workflow,/needs: check/);
+ assert.match(workflow,/permissions:\n      pages: write\n      id-token: write/);
+ assert.match(workflow,/environment:\n      name: github-pages/);
+ assert.match(workflow,/path: website\/dist/);
+ assert.doesNotMatch(workflow,/pull_request_target|contents: write|secrets\./);
+});

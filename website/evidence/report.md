@@ -26,3 +26,8 @@ A temporary QA-only page rendered real 320px EN/ES and 390px PT-BR guide iframes
 Short hover/focus and entrance effects remain. Native anchor scrolling is immediate after the observed smooth-scroll behavior made automated section positioning nondeterministic. Reduced motion is enforced by CSS and covered by the source contract; runtime OS preference emulation was not available through the supported browser API. Measured key color pairs are in contrast.json; this is not full WCAG certification or a screen-reader audit.
 
 Independent content review corrected the overbroad redo statement: only a new exposure change discards redo; white-balance edits preserve it. Added the specified SQLite mention and locale-specific links to complete source setup. Regression passed RED→GREEN.
+
+## Authorized publication gate
+Owner explicitly approved GitHub Pages via Actions and pages:write/id-token:write only for the main-branch publication job on 2026-10-12. Settings → Pages confirmed “GitHub Pages source saved” and “Source GitHub Actions”; default-domain HTTPS remains enforced. A separate deploy job depends on the successful check/build, uses the github-pages environment, and receives only those two elevated scopes. PRs do not upload publication artifacts or deploy. Pinned official action refs were verified from GitHub API (upload-pages-artifact v4, configure-pages v5, deploy-pages v4). No secret, personal token or product-CI change.
+
+A regression for the main-only condition, job-local scopes, dependency and artifact path passed RED→GREEN (website suite now 8/8). Deployment review, exact-head CI and live URL checks follow before completion; earlier pending notes above are chronological.

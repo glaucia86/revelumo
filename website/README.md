@@ -16,4 +16,4 @@ The homepage before/after is an explicitly labeled original vector illustration 
 
 Design tokens were imported and normalized by the real local OpenDesign importer and validated against its manifest schema offline. The implementation uses those color tokens while composing a distinct editorial layout with manual CSS. Original product assets remain under their existing licenses.
 
-The website check workflow is intentionally read-only and separate from product CI. GitHub Pages activation and a narrowly scoped deployment job need a separate authorization/review gate before publication. This PR alone does not deploy or modify repository settings.
+The website build job is read-only and separate from product CI. After explicit owner approval, a separate deploy job publishes only on main, after a successful build, using pages:write and id-token:write scoped to that job and the github-pages environment. Pull requests never upload a Pages artifact or deploy. Official actions are pinned to verified commit SHAs. No personal token, new secret or product-CI permission is used.
