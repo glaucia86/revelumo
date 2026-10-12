@@ -1,0 +1,14 @@
+
+
+7-Zip 26.02 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-06-25
+ERROR: experiment\raw14\RawTherapee_5.13_win64_x86_64_release.exe : Cannot open the file as archive
+
+Scanning the drive for archives:
+
+1 file, 47304123 bytes (46 MiB)
+
+
+Listing archive: experiment\raw14\RawTherapee_5.13_win64_x86_64_release.exe
+
+
+Errors: 1

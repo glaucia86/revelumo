@@ -1,0 +1,76 @@
+{
+  "base": "5aa6693d05bbfea1c538a9360c84ee69ce195a68",
+  "dateUtc": "2026-10-12T05:29:20.0863733Z",
+  "rawtherapeeSourceCommit": "1924179107995b01b73cdc7f4fe91e44fc8227a7",
+  "fixtureCatalogRow": [
+    "Nikon",
+    "D200",
+    "12bit compressed (Lossy (type 1)) (3:2)",
+    10.21,
+    "",
+    "<a href='https://creativecommons.org/publicdomain/zero/1.0/' title='Creative Commons 0 - Public Domain' class='cc'>co</a>",
+    "2025-06-08",
+    "<a href='https://raw.pixls.us/getfile.php/8079/nice/Nikon - D200 - 12bit compressed (Lossy (type 1)) (3:2).nef'>Nikon - D200 - 12bit compressed (Lossy (type 1)) (3:2).nef</a><div class='checksumdata'><span title='sha256 Checksum'>b0800a1166b952430b255600373573e1d528adf8de98857781e06a98472b3c35</span>&nbsp;(8.54MB)</div>",
+    "<a target='_blank' href='https://raw.pixls.us/getfile.php/8079/exif/20071013-10273016-NIKON_D200.nef.exif.txt'>exifdata</a>"
+  ],
+  "files": [
+    {
+      "name": "nikon-d200.nef",
+      "bytes": 8949599,
+      "sha256": "b0800a1166b952430b255600373573e1d528adf8de98857781e06a98472b3c35"
+    },
+    {
+      "name": "RawTherapee_5.13_win64_x86_64_release.exe",
+      "bytes": 47304123,
+      "sha256": "d27df7ebde717c5efa114338a4b1cf1c426a439e5a1a92e142e87868cbe45383"
+    },
+    {
+      "name": "main-cli.cc",
+      "bytes": 36787,
+      "sha256": "f4295f3df22660f78b95b49a4c81dd81693abd0d470bba206e8e51c570e0e2ac"
+    },
+    {
+      "name": "options.cc",
+      "bytes": 150062,
+      "sha256": "c33a4206f4db7287fa5c33b37ea216baaa9d31061c1ede0d20189e4ad4f75fcb"
+    },
+    {
+      "name": "wininstaller.iss.in",
+      "bytes": 11430,
+      "sha256": "0895cd12f294bf43bafedab5f3d94979d62aef36dd0074970a07e2f13d27d0df"
+    },
+    {
+      "name": "LICENSE-RawTherapee.txt",
+      "bytes": 32473,
+      "sha256": "8c75a9231db8906865e29706ed63aad18fd918c92c15dbefbb13c25fe42850b4"
+    },
+    {
+      "name": "licenses-README",
+      "bytes": 700,
+      "sha256": "d92023202973e3e52ed0b94050c8687c778e1b2da188752b95b28355de3e7786"
+    },
+    {
+      "name": "source-tree.json",
+      "bytes": 411575,
+      "sha256": "112a8c24b217f0e05d9fc8b4545479089dd433c4d1146a40d52046b154cf47e6"
+    },
+    {
+      "name": "repository.json",
+      "bytes": 1246029,
+      "sha256": "8dc5f5c74e20cc3a38f4548d53bba4bb516835e2a859e80bf86e7ac6283b3aa3"
+    }
+  ],
+  "originalAfterInvestigation": "b0800a1166b952430b255600373573e1d528adf8de98857781e06a98472b3c35",
+  "engineExecuted": false,
+  "installerExecuted": false,
+  "extractor": {
+    "url": "https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip",
+    "version": "1.9",
+    "license": "zlib/libpng (see bundled third-party notices)",
+    "archiveBytes": 520705,
+    "archiveSha256": "6989342c9b026a00a72a38f23b62a8e6a22cc5de69805cf47d68ac2fec993065",
+    "exeSha256": "946bd06d8b3722a791fea4d84f496139eef6faef61640924cb72f5f1998a68e1",
+    "listExitCode": 2,
+    "setupExecuted": false
+  }
+}
