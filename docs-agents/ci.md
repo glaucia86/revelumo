@@ -14,13 +14,19 @@ npm test
 npm run package
 ```
 
-Depois, em PowerShell no Windows, use duas pastas novas de teste (em CI, `$env:RUNNER_TEMP`; localmente, uma pasta temporária autorizada):
+Depois, em PowerShell no Windows, use quatro pastas novas de teste (em CI, `$env:RUNNER_TEMP`; localmente, uma pasta temporária autorizada):
 
 ```powershell
 $root = Join-Path $env:TEMP ('revelumo-smokes-' + [guid]::NewGuid())
 $electron = Join-Path $root 'electron'
 $relocation = Join-Path $root 'relocation'
-New-Item -ItemType Directory -Path $electron, $relocation | Out-Null
+$exposure = Join-Path $root 'exposure'
+$filters = Join-Path $root 'filters'
+New-Item -ItemType Directory -Path $electron, $relocation, $exposure, $filters | Out-Null
+npm run test:filters -- "$filters" first
+if ($LASTEXITCODE -ne 0) { throw 'filters first failed' }
+npm run test:filters -- "$filters" reopen
+if ($LASTEXITCODE -ne 0) { throw 'filters reopen failed' }
 npm run test:electron -- "$electron" first
 if ($LASTEXITCODE -ne 0) { throw 'electron first failed' }
 npm run test:electron -- "$electron" reopen
@@ -29,6 +35,13 @@ npm run test:relocation -- "$relocation" first
 if ($LASTEXITCODE -ne 0) { throw 'relocation first failed' }
 npm run test:relocation -- "$relocation" reopen
 if ($LASTEXITCODE -ne 0) { throw 'relocation reopen failed' }
+npm run test:exposure -- "$exposure" first
+if ($LASTEXITCODE -ne 0) { throw 'exposure first failed' }
+# Sequência intencional: race salva 1.7 EV; race-reopen verifica esse valor.
+foreach ($mode in @('reopen', 'interrupt', 'reopen', 'discard-race', 'reopen', 'race', 'race-reopen')) {
+  npm run test:exposure -- "$exposure" $mode
+  if ($LASTEXITCODE -ne 0) { throw "exposure $mode failed" }
+}
 ```
 
 Cada comando inicia outro processo Electron. `first` exige um catálogo novo; `reopen` reutiliza somente a pasta do seu cenário. Os scripts carregam `out/Revelumo-<platform>-<arch>/resources/app.asar`, validam o renderer/IPC real e preservam sandbox, contextIsolation e webSecurity. A reexecução exige um novo `$root`. Não use catálogos ou fotografias pessoais.
@@ -52,6 +65,6 @@ Consulte [evidências e pendências](../evidence/ci/report.md). Relatórios hist
 
 ## Exposição JPEG — issue #12
 
-O CI Windows executa agora `npm run test:exposure` first e a sequência reopen/interruption/reopen/discard-race/reopen/race/race-reopen no pacote real, em processos separados e janelas ocultas. Inclui pixels lineares, sRGB/P3, EXIF1–8, IPC, autosave, flush, falhas e corridas; timeouts por etapa de 3 e 5 minutos dentro do job de 25 minutos. Cada erro interrompe a sequência e o summary always registra resultados/falhas.
+O CI Windows executa agora `npm run test:exposure` first e a sequência reopen/interrupt/reopen/discard-race/reopen/race/race-reopen no pacote real, em processos separados e janelas ocultas. Inclui pixels lineares, sRGB/P3, EXIF1–8, IPC, autosave, flush, falhas e corridas; timeouts por etapa de 3 e 5 minutos dentro do job de 25 minutos. Cada erro interrompe a sequência e o summary always registra resultados/falhas.
 
 As [fixtures sintéticas e sua proveniência](../test/fixtures/exposure-provenance.md) estão no checkout; Python/Pillow/LittleCMS não são dependências de CI ou produto. Mantêm-se runners padrão, permissions contents:read, sem cache persistente, artifacts ou benchmark 36MP automático. [Recursos medidos manualmente](../evidence/issue-12/report.md). Ubuntu verifica core/types/pacote; o harness Electron de exposição é Windows. Não retirar asserts de cor/pixels por diferenças de runner: registrar/diagnosticar eventual falha.
