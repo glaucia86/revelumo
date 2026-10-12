@@ -1,0 +1,21 @@
+✔ uses fixed .90 JPEG, EXIF decode orientation and explicit sRGB Canvas, then releases surfaces (3.095468ms)
+✔ codec failure also closes the bitmap and drops Canvas dimensions (0.961412ms)
+✔ accepts and detaches the complete current JPEG recipe (1.914211ms)
+✔ rejects unknown recipe versions, crop, missing and extra keys without discarding edits (0.33784ms)
+✔ rejects coercion, fractions and controls beyond their existing canonical ranges (0.423136ms)
+✔ accepts a bounded JPEG response for the owning job without copying it (1.77867ms)
+✔ rejects wrong job and malformed result schema before inspecting image bytes (0.28406ms)
+✔ rejects oversized views or hidden oversized backing storage and shared memory (0.199335ms)
+✔ rejects non-JPEG, truncated output and dimension lies without decoding an unbounded payload (0.325782ms)
+✔ applies the existing scalar WB oracle to every full-resolution canvas pixel (2.763247ms)
+✔ caps strip readback at 1 MiB and includes the final partial rows without seams (29.004888ms)
+✔ rejects invalid geometry instead of looping or silently processing nothing (0.496574ms)
+✔ one wide row is preserved even when wider than the target strip budget (11.357988ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 197.024929

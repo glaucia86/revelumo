@@ -1,0 +1,42 @@
+✔ accepts a bounded JPEG response for the owning job without copying it (0.752433ms)
+✔ rejects wrong job and malformed result schema before inspecting image bytes (0.161279ms)
+✔ rejects oversized views or hidden oversized backing storage and shared memory (0.206295ms)
+✖ rejects non-JPEG, truncated output and dimension lies without decoding an unbounded payload (1.202178ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 121.553874
+
+✖ failing tests:
+
+test at test/jpeg-export-response.test.ts:20:1
+✖ rejects non-JPEG, truncated output and dimension lies without decoding an unbounded payload (1.202178ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + {
+  +   bytes: Uint8Array(0) [],
+  +   height: 2,
+  +   jobId: 'owned-job',
+  +   width: 2
+  + }
+  - null
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/jpeg-export-response.test.ts:21:115)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { jobId: 'owned-job', bytes: Uint8Array(0) [], width: 2, height: 2 },
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

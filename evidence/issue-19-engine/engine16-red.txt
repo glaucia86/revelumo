@@ -1,0 +1,14 @@
+[167098:1012/163716.757212:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[167098:1012/163716.838844:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[167098:1012/163716.838962:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+PASS basic full-resolution encoding
+PASS single-flight rejects overlap
+PASS cancel before launch creates no window
+PASS active cancellation preserves editor and permits next job
+PASS distinct auxiliary PIDs disappear before settlement
+PASS invalid recipes/crop, sources and budgets rejected before launch
+PASS async job owns its bytes, recipe and output budget snapshot
+PASS constructor failure with no PID cannot latch the engine busy
+PASS load failure before PID cleans up and permits retry
+AssertionError [ERR_ASSERTION]: Failed load renderer must disappear before rejection
+    at /workspace/scratch/827b15a15839/revelumo-export-snapshot/test/electron-jpeg-engine.cjs:124:10

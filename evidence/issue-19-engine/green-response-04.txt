@@ -1,0 +1,15 @@
+✔ accepts and detaches the complete current JPEG recipe (1.806492ms)
+✔ rejects unknown recipe versions, crop, missing and extra keys without discarding edits (0.329107ms)
+✔ rejects coercion, fractions and controls beyond their existing canonical ranges (0.384839ms)
+✔ accepts a bounded JPEG response for the owning job without copying it (1.285311ms)
+✔ rejects wrong job and malformed result schema before inspecting image bytes (0.22991ms)
+✔ rejects oversized views or hidden oversized backing storage and shared memory (0.319532ms)
+✔ rejects non-JPEG, truncated output and dimension lies without decoding an unbounded payload (0.410918ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 156.922113

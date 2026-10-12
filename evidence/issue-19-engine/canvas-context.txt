@@ -1,0 +1,11 @@
+✔ uses fixed .90 JPEG, EXIF decode orientation and explicit sRGB Canvas, then releases surfaces (3.127939ms)
+✔ codec failure also closes the bitmap and drops Canvas dimensions (0.842467ms)
+✔ unavailable Canvas context closes decoded bitmap and releases surface (0.395826ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 119.649399

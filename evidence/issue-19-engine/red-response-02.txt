@@ -1,0 +1,33 @@
+✔ accepts a bounded JPEG response for the owning job without copying it (0.840963ms)
+✖ rejects wrong job and malformed result schema before inspecting image bytes (0.816788ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 121.365531
+
+✖ failing tests:
+
+test at test/jpeg-export-response.test.ts:12:1
+✖ rejects wrong job and malformed result schema before inspecting image bytes (0.816788ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  [] !== null
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/jpeg-export-response.test.ts:13:174)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

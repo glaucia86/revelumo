@@ -1,0 +1,7 @@
+[154549:1012/162241.950153:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[154549:1012/162242.019498:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[154549:1012/162242.019535:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+PASS basic full-resolution encoding
+PASS single-flight rejects overlap
+AssertionError [ERR_ASSERTION]: Missing expected rejection.
+    at async /workspace/scratch/827b15a15839/revelumo-export-snapshot/test/electron-jpeg-engine.cjs:28:3

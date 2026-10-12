@@ -1,0 +1,33 @@
+✔ accepts and detaches the complete current JPEG recipe (1.17046ms)
+✖ rejects unknown recipe versions, crop, missing and extra keys without discarding edits (1.073356ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 126.00144
+
+✖ failing tests:
+
+test at test/jpeg-export-contract.test.ts:9:1
+✖ rejects unknown recipe versions, crop, missing and extra keys without discarding edits (1.073356ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  {} !== null
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-export-snapshot/test/jpeg-export-contract.test.ts:10:219)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: {},
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

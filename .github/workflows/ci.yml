@@ -204,6 +204,15 @@ jobs:
           npm run test:editor-language -- "$editorLanguage"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
+      - name: 'JPEG engine: isolated packaged full-resolution lifecycle'
+        if: runner.os == 'Windows'
+        id: jpeg_engine
+        timeout-minutes: 3
+        run: |
+          $jpegEngine = Join-Path $env:RUNNER_TEMP ('revelumo-jpeg-engine-' + [guid]::NewGuid())
+          npm run test:jpeg-engine -- "$jpegEngine" full
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
       - name: Results and limits
         if: always()
         env:
@@ -216,7 +225,7 @@ jobs:
           '| Step | Outcome |' >> $env:GITHUB_STEP_SUMMARY
           '| --- | --- |' >> $env:GITHUB_STEP_SUMMARY
           $results = $env:STEP_RESULTS | ConvertFrom-Json -AsHashtable
-          foreach ($id in @('versions', 'docs', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'cobre_catalog', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history', 'white_balance', 'language', 'editor_language')) {
+          foreach ($id in @('versions', 'docs', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'cobre_catalog', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history', 'white_balance', 'language', 'editor_language', 'jpeg_engine')) {
             "| $id | $($results[$id].outcome) |" >> $env:GITHUB_STEP_SUMMARY
           }
           if ($env:RUNNER_OS -ne 'Windows') {

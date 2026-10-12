@@ -1,0 +1,27 @@
+PASS srgb-neutral: [80, 40], max channel error 0/6
+PASS srgb-wb-ev: [80, 40], max channel error 0/8
+PASS p3-neutral: [80, 40], max channel error 1/6
+PASS p3-wb-ev: [80, 40], max channel error 0/8
+PASS orientation-1-neutral: [80, 40], max channel error 3/6
+PASS orientation-1-wb-ev: [80, 40], max channel error 3/8
+PASS orientation-2-neutral: [80, 40], max channel error 3/6
+PASS orientation-2-wb-ev: [80, 40], max channel error 3/8
+PASS orientation-3-neutral: [80, 40], max channel error 3/6
+PASS orientation-3-wb-ev: [80, 40], max channel error 3/8
+PASS orientation-4-neutral: [80, 40], max channel error 3/6
+PASS orientation-4-wb-ev: [80, 40], max channel error 3/8
+PASS orientation-5-neutral: [40, 80], max channel error 3/6
+PASS orientation-5-wb-ev: [40, 80], max channel error 3/8
+PASS orientation-6-neutral: [40, 80], max channel error 3/6
+PASS orientation-6-wb-ev: [40, 80], max channel error 3/8
+PASS orientation-7-neutral: [40, 80], max channel error 3/6
+PASS orientation-7-wb-ev: [40, 80], max channel error 3/8
+PASS orientation-8-neutral: [40, 80], max channel error 3/6
+PASS orientation-8-wb-ev: [40, 80], max channel error 3/8
+PASS 40mp-neutral: [8000, 5000], max channel error 0/6
+PASS 40mp-wb-ev: [8000, 5000], max channel error 1/8
+PASS noise40mp-neutral: [8000, 5000], color pixels not asserted (high-frequency JPEG)
+PASS noise40mp-wb-ev: [8000, 5000], color pixels not asserted (high-frequency JPEG)
+PASS elongated-neutral: [10000, 4], max channel error 0/6
+PASS elongated-wb-ev: [10000, 4], max channel error 1/8
+Independent oracle passed: .test-temp/jpeg-engine-corpus/engine23-final-corpus-174582-R1Z9X7/oracle-report.json
