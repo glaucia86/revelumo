@@ -1,9 +1,11 @@
+import type { JpegAdjustments } from '../processing/jpeg-adjustments.ts';
 export type PhotoSummary = { id: string; name: string };
 export type PhotoFlag = 'neutral' | 'selected' | 'rejected';
 export type LibraryFilters = { rating: 'all' | 'unrated' | 1 | 2 | 3 | 4 | 5; flag: 'all' | PhotoFlag };
 export type LibraryResults = { photos: PhotoSummary[]; total: number };
 export type PhotoClassification = { photo: PhotoSummary; rating: number | null; flag: PhotoFlag };
-export type PhotoRecipe = { photo: PhotoSummary; exposureTenths: number; processingVersion: 1 };
+export type PhotoAdjustments = JpegAdjustments;
+export type PhotoRecipe = PhotoAdjustments & { photo: PhotoSummary; processingVersion: 2 };
 // Transport cap, independent of the separately decided history-retention policy.
 export const MAX_EXPOSURE_CHECKPOINT_GESTURES = 1024;
 export type ExposureGesture = { id: number; exposureTenths: number; complete: boolean };
@@ -17,6 +19,7 @@ export type PhotoAvailability = { photo: PhotoSummary; state: 'present' | 'missi
 export interface RevelumoApi {
   recipePhoto(id: string): Promise<Result<PhotoRecipe>>;
   beginEditingPhoto(id: string): Promise<Result<EditSession>>;
+  saveAdjustments(id: string, sessionId: string, revision: number, adjustments: PhotoAdjustments, processingVersion: number, gestures: ExposureGesture[]): Promise<Result<EditSession>>;
   saveExposure(id: string, sessionId: string, revision: number, exposureTenths: number, processingVersion: number, gestures?: ExposureGesture[]): Promise<Result<EditSession>>;
   moveExposureHistory(id: string, sessionId: string, revision: number, direction: 'undo' | 'redo'): Promise<Result<EditSession>>;
   endEditingPhoto(id: string, sessionId: string): Promise<Result<null>>;

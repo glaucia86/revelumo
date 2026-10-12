@@ -148,6 +148,19 @@ jobs:
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
 
+      - name: 'White balance: full recipe, preview, restart, keyboard and queue races'
+        if: runner.os == 'Windows'
+        id: white_balance
+        timeout-minutes: 5
+        run: |
+          $wb = Join-Path $env:RUNNER_TEMP ('revelumo-wb-' + [guid]::NewGuid())
+          "WB_SMOKE_DIR=$wb" >> $env:GITHUB_ENV
+          foreach ($mode in @('first', 'reopen', 'controls', 'preview-race', 'save-race', 'history-ack', 'keyboard', 'many-pending', 'close-race', 'close-reopen', 'color', 'layout')) {
+            Write-Output "White balance mode: $mode"
+            npm run test:wb -- "$wb" $mode
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+
       - name: Results and limits
         if: always()
         env:
@@ -160,7 +173,7 @@ jobs:
           '| Step | Outcome |' >> $env:GITHUB_STEP_SUMMARY
           '| --- | --- |' >> $env:GITHUB_STEP_SUMMARY
           $results = $env:STEP_RESULTS | ConvertFrom-Json -AsHashtable
-          foreach ($id in @('versions', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history')) {
+          foreach ($id in @('versions', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history', 'white_balance')) {
             "| $id | $($results[$id].outcome) |" >> $env:GITHUB_STEP_SUMMARY
           }
           if ($env:RUNNER_OS -ne 'Windows') {
@@ -193,6 +206,14 @@ jobs:
           if ($env:HISTORY_SMOKE_DIR -and (Test-Path -LiteralPath $env:HISTORY_SMOKE_DIR)) {
             Get-ChildItem -LiteralPath $env:HISTORY_SMOKE_DIR -Filter 'history-*' -File | ForEach-Object {
               "### History / $($_.Name)" >> $env:GITHUB_STEP_SUMMARY
+              '```text' >> $env:GITHUB_STEP_SUMMARY
+              Get-Content -LiteralPath $_.FullName >> $env:GITHUB_STEP_SUMMARY
+              '```' >> $env:GITHUB_STEP_SUMMARY
+            }
+          }
+          if ($env:WB_SMOKE_DIR -and (Test-Path -LiteralPath $env:WB_SMOKE_DIR)) {
+            Get-ChildItem -LiteralPath $env:WB_SMOKE_DIR -Filter 'wb-*' -File | ForEach-Object {
+              "### White balance / $($_.Name)" >> $env:GITHUB_STEP_SUMMARY
               '```text' >> $env:GITHUB_STEP_SUMMARY
               Get-Content -LiteralPath $_.FullName >> $env:GITHUB_STEP_SUMMARY
               '```' >> $env:GITHUB_STEP_SUMMARY

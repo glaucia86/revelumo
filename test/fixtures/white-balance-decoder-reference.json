@@ -1,0 +1,44 @@
+{
+  "oracle": "LittleCMS baseline + Python Decimal 60 digits; T100 M100 EV-1",
+  "profiles": {
+    "srgb": {
+      "expected": [
+        117,
+        39,
+        17
+      ],
+      "tolerance": 4
+    },
+    "p3": {
+      "expected": [
+        126,
+        36,
+        10
+      ],
+      "tolerance": 4
+    }
+  },
+  "quadrants": {
+    "R": [
+      234,
+      0,
+      0
+    ],
+    "G": [
+      0,
+      172,
+      0
+    ],
+    "B": [
+      0,
+      0,
+      172
+    ],
+    "Y": [
+      234,
+      172,
+      0
+    ]
+  },
+  "quadrantTolerance": 6
+}
