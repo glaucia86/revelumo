@@ -59,6 +59,11 @@ jobs:
 
       - name: npm test
         id: tests
+        # Windows' default TEMP can use an 8.3 username alias while realpath
+        # returns the long name. Use the isolated runner directory consistently.
+        env:
+          TEMP: ${{ runner.temp }}
+          TMP: ${{ runner.temp }}
         run: |
           npm test 2>&1 | Tee-Object -FilePath (Join-Path $env:RUNNER_TEMP 'core-tests.txt')
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
