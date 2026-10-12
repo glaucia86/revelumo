@@ -93,6 +93,7 @@ test('published source alpha is linked without installer claims in every languag
   assert.ok(home.includes('0.1.0-alpha.1'),lang+' source version');
   assert.ok(guide.includes('0.1.0-alpha.1'),lang+' guide version');
     assert.ok(guide.includes('git clone --branch v0.1.0-alpha.1 --depth 1 '),lang+' pinned source clone');
+    assert.ok(guide.includes('/blob/v0.1.0-alpha.1/'+readme+'#instalacao'),lang+' pinned source guide');
   assert.doesNotMatch(home, /href="[^"]+\.(?:exe|dmg|AppImage|msi|deb|rpm)"/i);
  }
  assert.match(locales.en.screenshot,/shown in Portuguese/);
