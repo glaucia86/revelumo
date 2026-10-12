@@ -15,14 +15,16 @@ Cancel/navigation/close wait for actual completion. Once publication is submitte
 ## Executed verification
 
 - **290 Node tests passed**, zero failures/skips locally; typecheck, documentation checks and Linux package passed.
-- Actual packaged editor→main→engine→credits→exclusive writer produced the expected40×80/2,000-byte JPEG. [Independent reopen](independent-reopen.json) validates EV−1, temperature/tint100, oriented pixels (1,536 checks, max RGB error4/8), sRGB ICC, exact Unicode credits and no old GPS. Original identity/hash and catalog/history content remain unchanged after the confirmed edit save.
-- [Packaged scenario result](result.json): save failure/retry; delayed acknowledgement; comparison exit; held native destination; keyboard cancel; language change while active; collision; accepted/unaccepted start acknowledgement loss; status rejection with navigation and held committed link; cancel rejection with native close; renderer crash and cleanup.
+- Actual packaged editor→main→engine→credits→exclusive writer produced the expected40×80/2,000-byte JPEG. [Independent reopen](independent-reopen.json) validates EV−1, temperature/tint100, oriented pixels (1,536 checks, max RGB error4/8), sRGB ICC, exact Unicode credits and no old GPS. Original identity/hash remain unchanged. Catalog/history hashes are checked before the deliberate recovery-time WB edit and again after that edit autosaves, so export-only periods do not mutate the catalog.
+- [Packaged scenario result](result.json): save failure/retry; delayed acknowledgement; comparison exit; held native destination; keyboard cancel; language change while active; collision; accepted/unaccepted start acknowledgement loss; status rejection, a new WB edit that must autosave during result lookup, navigation and held committed link; cancel rejection with native close; renderer crash and cleanup.
 - [Review and TDD summary](review.md). Independent Standards and Spec reviews approved after the IPC lifecycle findings were fixed and rechecked.
 - Viewport explicitly asserted760×540. No horizontal document overflow; Tab reaches Cancel inside the scroll region, focus is visible and Enter cancels. PT-BR/EN/ES success/active/error screens remain readable. Parent reviewed and approved the final three-language layout before publication.
 
+The committed `result.json` is byte-for-byte the final harness output from `ui-review-autosave-green`; every PNG named by it is committed. The earlier six-image curated list was not the raw harness manifest and has been replaced. The independent oracle JSON normalizes only local source/output paths.
+
 ## Screenshots
 
-[English success](export-en-760.png) · [Português success](export-pt-BR-760.png) · [Español success](export-es-760.png) · [Português active/cancel](choosing-pt-BR-760.png) · [Español collision](collision-es-760.png) · [Keyboard focus](cancel-keyboard-en-760.png).
+[English success](export-en-760.png) · [Português success](export-pt-BR-760.png) · [Español success](export-es-760.png) · [Português active/cancel](choosing-pt-BR-760.png) · [Español collision](collision-es-760.png) · [Keyboard focus](cancel-keyboard-en-760.png). Additional locale artifacts: [English choosing](choosing-en-760.png), [Español choosing](choosing-es-760.png), [English collision](collision-en-760.png), [Português collision](collision-pt-BR-760.png).
 
 ## Reproduce and limits
 

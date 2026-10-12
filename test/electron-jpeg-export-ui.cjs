@@ -71,7 +71,7 @@ const timer = setTimeout(() => { console.error('UI export timeout'); app.exit(1)
   assert.equal(crypto.createHash('sha256').update(fs.readFileSync(source)).digest('hex'), originalHash);
   await until(() => js('document.querySelector(".export-jpeg")?.disabled===false'), 'export unlocked');
   assert.equal(await js('document.querySelector(".export-receipt")?.textContent.includes("published.jpg")'), true, 'committed result is visible above the editor');
-  const confirmedCatalogHash = catalogHash();
+  let confirmedCatalogHash = catalogHash();
   win.showInactive(); await delay(100); win.unmaximize(); win.setContentSize(760, 540);
   await until(() => js('innerWidth===760 && innerHeight===540'), '760x540 viewport');
   assert.deepEqual(await js('[innerWidth,innerHeight]'), [760,540]);
@@ -120,6 +120,10 @@ const timer = setTimeout(() => { console.error('UI export timeout'); app.exit(1)
   await click('.export-jpeg'); await until(() => heldLink.entered, 'publication submitted');
   failStatusOnce = true;
   await until(() => js('document.querySelector(".export-controls [role=alert]")?.textContent.includes("could not be confirmed")'), 'uncertain status outcome');
+  assert.equal(catalogHash(), confirmedCatalogHash, 'exports before the next deliberate edit leave catalog unchanged');
+  await js(`(()=>{const e=document.querySelector('.balance-control:first-of-type input[type=number]');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(e,'99');e.dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('.export-jpeg').click();})()`);
+  await until(() => { const { DatabaseSync } = require('node:sqlite'); const db = new DatabaseSync(path.join(run,'userData','catalog.sqlite')); try { return db.prepare('SELECT temperature FROM recipes').all().some(row => row.temperature === 99); } finally { db.close(); } }, 'new adjustment autosaves while checking existing export');
+  confirmedCatalogHash = catalogHash();
   await click('.back'); await delay(75);
   assert.equal(await js('Boolean(document.querySelector(".editing"))'), true, 'known job must be reconciled before navigation after IPC rejection');
   releaseLink(); heldLink = null; await delay(250);
@@ -151,7 +155,7 @@ const timer = setTimeout(() => { console.error('UI export timeout'); app.exit(1)
   assert.equal(catalogHash(), confirmedCatalogHash, 'export never changes the confirmed catalog or history');
   fs.writeFileSync(path.join(run, 'result.json'), JSON.stringify({ passed: true, viewport: [760,540], sourceSha256: originalHash, originalIdentityPreserved: true,
     catalogContentSha256: confirmedCatalogHash, catalogUnchangedAfterConfirmedSave: true, publishedSha256: crypto.createHash('sha256').update(fs.readFileSync(output)).digest('hex'),
-    publishedBytes: fs.statSync(output).size, scenarios: ['save failure and retry','exact revision acknowledgement','exit comparison','dialog cancellation via keyboard','languages during active job','destination collision','accepted start acknowledgement loss','unaccepted attempt does not reuse old receipt','navigation cancellation','status rejection then navigation joins committed result','cancel rejection then native close presents success','renderer crash cancellation and dead-renderer close'],
+    publishedBytes: fs.statSync(output).size, scenarios: ['save failure and retry','exact revision acknowledgement','exit comparison','dialog cancellation via keyboard','languages during active job','destination collision','accepted start acknowledgement loss','unaccepted attempt does not reuse old receipt','navigation cancellation','checking existing export preserves new adjustment autosave','status rejection then navigation joins committed result','cancel rejection then native close presents success','renderer crash cancellation and dead-renderer close'],
     screenshotFiles: fs.readdirSync(run).filter(file => file.endsWith('.png')) }, null, 2));
   console.log('PASS editor export, cancel/navigation and renderer loss'); clearTimeout(timer); app.exit(0);
 })().catch(error => { console.error(error); clearTimeout(timer); app.exit(1); });

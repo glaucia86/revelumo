@@ -6,7 +6,7 @@
   ],
   "sourceSha256": "74de376dd0e0a4c5b256173dda643828fabfee728f9912ede2280ec4f593650f",
   "originalIdentityPreserved": true,
-  "catalogContentSha256": "fc547ff749e9c2aadf1f804548c3eb20bb0edb3104ce9d4b11e137641125d6c4",
+  "catalogContentSha256": "9a831c7573c7e9b40cd93dd1788d4dbb5b972f2c20dc5a40f4e1716015eaa610",
   "catalogUnchangedAfterConfirmedSave": true,
   "publishedSha256": "8938b5a524d33dbe86f2262a360b15fe5eee7fad0d878e2d163835e89f78992c",
   "publishedBytes": 2000,
@@ -20,16 +20,21 @@
     "accepted start acknowledgement loss",
     "unaccepted attempt does not reuse old receipt",
     "navigation cancellation",
+    "checking existing export preserves new adjustment autosave",
     "status rejection then navigation joins committed result",
     "cancel rejection then native close presents success",
     "renderer crash cancellation and dead-renderer close"
   ],
   "screenshotFiles": [
-    "export-en-760.png",
-    "export-pt-BR-760.png",
-    "export-es-760.png",
+    "cancel-keyboard-en-760.png",
+    "choosing-en-760.png",
+    "choosing-es-760.png",
     "choosing-pt-BR-760.png",
+    "collision-en-760.png",
     "collision-es-760.png",
-    "cancel-keyboard-en-760.png"
+    "collision-pt-BR-760.png",
+    "export-en-760.png",
+    "export-es-760.png",
+    "export-pt-BR-760.png"
   ]
 }

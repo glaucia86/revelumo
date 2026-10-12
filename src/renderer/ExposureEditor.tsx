@@ -33,11 +33,11 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
   }
   async function performExport() {
     if (exportGuard.current || ending.current || leavingNow.current || !session.current) return;
-    finishGesture(); cancelDelay(); comparison.current = false; setCompare(false);
     exportGuard.current = true; exportCanceled.current = false; setExporting(true); lastExport.current = null; setExportProblem(false); setExportCleanup(false); setExportStatus({ key: 'export.preparing' });
     try {
       if (pendingExportStart.current) { const recovered = await recoverExportStart(); await observeExport(recovered.jobId, recovered); return; }
       if (exportJobId.current) { await observeExport(exportJobId.current); return; }
+      finishGesture(); cancelDelay(); comparison.current = false; setCompare(false);
       if (historyFlight.current) await historyFlight.current;
       if (historyRequest.current) {
         await moveHistory(historyRequest.current.direction);
