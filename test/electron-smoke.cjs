@@ -39,7 +39,7 @@ require('./hidden-electron.cjs')(path.join(archive, '.vite', 'build', 'index.cjs
 (async () => {
   await app.whenReady();
   win = await until(() => BrowserWindow.getAllWindows().find(window => window.webContents.getURL() === 'app://revelumo/index.html'), 'packaged window');
-  await until(() => js('Boolean(window.revelumo && document.querySelector("header button") && !document.querySelector("header button").disabled)'), 'renderer ready');
+  await until(() => js('Boolean(window.revelumo && Array.from(document.querySelectorAll("header button")).find(b=>b.textContent==="Importar JPEGs") && !Array.from(document.querySelectorAll("header button")).find(b=>b.textContent==="Importar JPEGs").disabled)'), 'renderer ready');
   win.hide();
   const preferences = win.webContents.getLastWebPreferences();
   check('renderer isolation and sandbox remain enabled', () => {
@@ -62,8 +62,8 @@ require('./hidden-electron.cjs')(path.join(archive, '.vite', 'build', 'index.cjs
     const oriented = path.join(photosDir, 'orientation-6.jpg'); fs.copyFileSync(path.join(repo,'test','fixtures','qa-orientation-6.jpg'), oriented);
     const before = Object.fromEntries([...files, bad, oriented].map(file => [file, hash(file)]));
     selection = { canceled: false, filePaths: [...files, bad, oriented] };
-    await js('document.querySelector("header button").click()');
-    await until(() => js('!document.querySelector("header button").disabled && document.querySelectorAll(".tile").length === 48'), 'batch and first page');
+    await js('Array.from(document.querySelectorAll("header button")).find(b=>b.textContent==="Importar JPEGs").click()');
+    await until(() => js('!Array.from(document.querySelectorAll("header button")).find(b=>b.textContent==="Importar JPEGs").disabled && document.querySelectorAll(".tile").length === 48'), 'batch and first page');
     assert.equal((await js('window.revelumo.listPhotos()')).value.length, 51);
     assert.match(await js('document.querySelector(".failures").textContent'), /invalid.jpg/);
     log.push('mixed batch has 51 photos and one per-file failure');

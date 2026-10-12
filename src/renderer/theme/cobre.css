@@ -1,0 +1,93 @@
+@import './cobre-tokens.css';
+
+@font-face {
+  font-family: Geist;
+  src: url('./fonts/geist-latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+/* Scope shell and catalog presentation. The editor's controls and canvas keep
+   their existing rules until the separate editor slice (#31). */
+.catalog-shell { background: var(--bg); }
+.catalog-header, .catalog-sidebar, .catalog-shell .gallery, .catalog-footer {
+  font-family: var(--font-body);
+  color: var(--fg);
+  font-size: var(--text-base);
+}
+.catalog-shell .catalog-icon { width: 18px; height: 18px; flex: none; }
+.catalog-header {
+  height: 70px; min-height: 70px; padding: 0 24px; gap: 18px;
+  background: var(--surface); border-bottom: 1px solid #414141;
+}
+.catalog-brand { display: flex; align-items: center; gap: 11px; font-size: 25px; font-weight: 650; letter-spacing: -1.2px; }
+.brand-dot { color: var(--accent); }
+.brand-mark { width: 31px; height: 31px; position: relative; border: 1px solid var(--accent); border-radius: 50%; transform: rotate(-32deg); }
+.brand-mark::before, .brand-mark::after { content: ''; position: absolute; inset: 4px; border: 1px solid var(--accent); border-radius: 50%; }
+.brand-mark::after { inset: 9px; background: var(--accent); border: 0; box-shadow: 10px -8px 0 -2px var(--surface); }
+.workspace-navigation { display: flex; gap: 3px; padding: 4px; border: 1px solid #414141; border-radius: 11px; background: var(--bg); }
+.workspace-navigation > * { display: inline-flex; align-items: center; justify-content: center; min-width: 94px; min-height: 32px; padding: 4px 13px; font-size: 13px; border-radius: 7px; color: var(--muted); border: 1px solid transparent; background: transparent; }
+.workspace-navigation [aria-current="page"] { border-color: var(--border); background: #333; color: var(--fg); }
+.workspace-navigation [aria-current="page"]::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); margin-right: 8px; }
+.catalog-header .catalog-import { display: inline-flex; align-items: center; gap: 8px; min-height: 38px; padding: 9px 15px; background: var(--accent); color: var(--accent-on); border: 1px solid var(--accent); border-radius: 9px; font-size: 13px; font-weight: 650; box-shadow: inset 0 1px #ffffff44, 0 2px 5px #0002; }
+.catalog-shell[data-view="catalog"] .workspace { grid-template-columns: 210px minmax(0, 1fr); }
+.catalog-sidebar { background: var(--surface); border-right: 1px solid #414141; padding: 25px 12px 18px; }
+.catalog-sidebar h2 { font-size: 12px; color: var(--muted); margin: 0 12px 14px; font-weight: 550; letter-spacing: .05em; }
+.catalog-sidebar button, .catalog-shell .gallery button { font-family: inherit; color: var(--fg-2); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; min-height: 36px; }
+.catalog-sidebar .photo { display: flex; align-items: center; gap: 9px; padding: 10px 12px; font-size: 12px; text-align: left; background: transparent; border-color: transparent; position: relative; }
+.catalog-sidebar .photo[aria-pressed="true"] { background: #35312e; border-color: #57514d; color: var(--fg); }
+.catalog-sidebar .photo[aria-pressed="true"]::before { content: ''; position: absolute; left: -1px; top: 11px; bottom: 11px; width: 3px; border-radius: 2px; background: var(--accent); }
+.catalog-sidebar .photo[aria-pressed="true"] .catalog-icon { color: var(--accent); }
+.catalog-count { flex: none; min-width: 24px; white-space: nowrap; text-align: center; margin-left: auto; padding: 2px 6px; background: var(--bg); border-radius: 5px; font-variant-numeric: tabular-nums; }
+.catalog-sidebar .library-filters { border: 0; border-top: 1px solid #414141; border-radius: 0; padding: 22px 12px 0; margin: 24px 0; color: var(--fg-2); }
+.catalog-sidebar .library-filters legend { padding: 0 5px; font-size: 12px; color: var(--muted); }
+.catalog-sidebar .library-filters label { font-size: 13px; margin: 0 0 9px; }
+.catalog-sidebar .library-filters select { margin-bottom: 22px; padding: 10px 8px; min-height: 40px; border-color: var(--border); border-radius: 7px; background: var(--bg); color: var(--fg-2); font-size: 12px; }
+.catalog-sidebar .library-filters button { margin-top: 0; min-height: 32px; padding: 5px 8px; }
+.catalog-sidebar .quiet { color: var(--muted); font-size: 12px; }
+.catalog-local { border-top: 1px solid #414141; margin: 22px 12px 0; padding-top: 15px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+.catalog-local p { margin: 0 0 5px; }
+.catalog-sidebar .import-progress { color: var(--fg-2); padding: 0 12px; }
+.catalog-sidebar progress { accent-color: var(--accent); }
+.catalog-sidebar .current-file { color: var(--muted); font-size: 12px; }
+.catalog-shell .gallery { background: var(--bg); padding: 25px 24px; min-width: 0; }
+.catalog-heading { margin-bottom: 25px; }
+.catalog-heading h1 { font: 580 29px/1.3 var(--font-body); letter-spacing: -1px; margin: 0 0 8px; }
+.catalog-heading p { margin: 0; font-size: 12px; color: var(--muted); }
+.catalog-shell .gallery .quiet { color: var(--muted); font-size: 12px; }
+.catalog-shell .gallery > .empty { margin: 60px auto 20px; color: var(--muted); }
+.catalog-shell .empty h2 { color: var(--fg); font: 550 21px/1.4 var(--font-body); margin: 20px 0 10px; }
+.catalog-shell .empty p { font-size: 13px; }
+.empty-icon { display: inline-flex; border: 1px solid #57514d; color: var(--accent); padding: 15px; border-radius: 13px; background: var(--surface); }
+.empty-icon .catalog-icon { width: 28px; height: 28px; }
+.catalog-footer { min-height: 36px; padding: 9px 22px; background: var(--surface); border-top: 1px solid #414141; font-size: 12px; color: var(--muted); }
+.catalog-footer > span:last-child { font-size: 12px; letter-spacing: 0; }
+.catalog-header button:focus-visible, .catalog-sidebar :is(button, select):focus-visible, .catalog-shell .gallery :is(button, summary):focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.catalog-header button:hover, .catalog-sidebar button:hover, .catalog-shell .gallery button:hover { filter: none; }
+.catalog-header .catalog-import:hover { background: var(--accent-hover); }
+.catalog-sidebar button:hover:not(:disabled), .workspace-navigation button:hover:not(:disabled) { background: #353535; }
+.catalog-header button:disabled, .catalog-sidebar button:disabled, .catalog-shell .gallery button:disabled { cursor: default; }
+.catalog-shell .grid { grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 16px; }
+.catalog-shell .gallery .tile { border-color: #484848; background: var(--surface); padding: 7px; border-radius: 12px; box-shadow: inset 0 1px 0 #ffffff06; color: var(--fg-2); }
+.catalog-shell .gallery .tile:hover { border-color: var(--border); background: #262626; }
+.catalog-shell .thumbnail { height: 150px; background: #181818; border-radius: 6px; color: var(--muted); font-size: 12px; overflow: hidden; }
+.catalog-shell .filename { margin: 12px 5px 0; font-size: 12px; color: var(--fg-2); }
+.catalog-shell .tile-meta { display: flex; justify-content: space-between; gap: 10px; margin: 9px 5px 4px; color: var(--muted); font-size: 12px; }
+.catalog-shell .tile-meta > span { display: inline-flex; align-items: center; gap: 5px; }
+.catalog-shell .tile-meta .catalog-icon { width: 14px; height: 14px; }
+.catalog-shell .original-status { margin: 8px 5px 4px; font-size: 12px; color: var(--danger); }
+.catalog-shell .gallery .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-color: var(--accent); }
+.catalog-shell .pagination { font-size: 12px; color: var(--muted); gap: 18px; }
+.catalog-shell .pagination button { padding: 8px 12px; }
+.catalog-shell .failures { color: var(--danger); border-color: var(--danger); border-radius: 8px; line-height: 1.6; }
+.catalog-shell .query-error { color: var(--danger); font-size: 13px; line-height: 1.6; }
+@media (max-width: 900px) {
+  .catalog-header { padding: 0 18px; gap: 12px; }
+  .catalog-brand { font-size: 22px; gap: 8px; }
+  .workspace-navigation > * { min-width: 75px; padding: 4px 9px; }
+  .catalog-shell[data-view="catalog"] .workspace { grid-template-columns: 194px minmax(0, 1fr); }
+  .catalog-shell .gallery { padding: 22px 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .catalog-header *, .catalog-sidebar *, .catalog-shell .gallery * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}

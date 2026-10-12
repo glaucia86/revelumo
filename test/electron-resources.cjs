@@ -58,12 +58,12 @@ if (mode === 'prepare') {
     await app.whenReady();
     await until(() => { win = BrowserWindow.getAllWindows().find(w => w.webContents.getURL() === 'app://revelumo/index.html'); return Boolean(win); }, 'packaged window');
     win.hide();
-    await until(() => js('Boolean(document.querySelector("header button") && !document.querySelector("header button").disabled)'), 'empty renderer');
+    await until(() => js('Boolean(Array.from(document.querySelectorAll("header button")).find(b=>b.textContent==="Importar JPEGs") && !Array.from(document.querySelectorAll("header button")).find(b=>b.textContent==="Importar JPEGs").disabled)'), 'empty renderer');
     await stable('empty');
     selection = { canceled: false, filePaths: files };
-    await js('document.querySelector("header button").click()');
-    await until(() => js('document.querySelector("header button").disabled'), 'batch start');
-    while (await js('document.querySelector("header button").disabled')) { sample('batch-48'); await delay(100); }
+    await js('Array.from(document.querySelectorAll("header button")).find(b=>b.textContent==="Importar JPEGs").click()');
+    await until(() => js('Array.from(document.querySelectorAll("header button")).find(b=>b.textContent==="Importar JPEGs").disabled'), 'batch start');
+    while (await js('Array.from(document.querySelectorAll("header button")).find(b=>b.textContent==="Importar JPEGs").disabled')) { sample('batch-48'); await delay(100); }
     await until(() => js('document.querySelectorAll(".thumbnail img").length===48 && Array.from(document.querySelectorAll(".thumbnail img")).every(i=>i.complete && i.naturalWidth>0)'), '48 cached thumbnails');
     await stable('grid-48');
     await js('document.querySelector(".tile").click()');

@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { BatchItem, ImportProgress, PhotoSummary, PhotoStatus, PhotoAvailability, Preview, LibraryFilters } from '../shared/contracts.ts';
 import { lastPage, pagePhotos } from './gallery.ts';
+import { Icon } from './ui/Icon.tsx';
+import './theme/cobre.css';
 import { ClassificationControls } from './ClassificationControls.tsx';
 import { ExposureEditor, type ExposureHandle } from './ExposureEditor.tsx';
 
@@ -31,6 +33,8 @@ export function App() {
   const [thumbnailErrors, setThumbnailErrors] = useState<Record<string, string>>({});
   const openSequence = useRef(0);
   const editor = useRef<ExposureHandle>(null);
+  const catalogSection = useRef<HTMLElement>(null);
+  const returnFocusId = useRef<string | null>(null);
   const transitioning = useRef(false), pendingExit = useRef<(() => void | Promise<void>) | null>(null);
   const pendingClose = useRef(false);
   const [exitFailed, setExitFailed] = useState(false), [exiting, setExiting] = useState(false);
@@ -74,6 +78,15 @@ export function App() {
       .finally(() => { if (active && sequence === querySequence.current) setLoading(false); });
     return () => { active = false; };
   }, [filters, queryRefresh, viewing, importNotice]);
+
+  useEffect(() => {
+    if (viewing || loading || !returnFocusId.current) return;
+    const section = catalogSection.current;
+    const photoButton = section?.querySelector<HTMLButtonElement>(`[data-photo-id="${returnFocusId.current}"]`);
+    const target = photoButton ?? section?.querySelector<HTMLElement>('.query-error button, h1');
+    target?.focus();
+    returnFocusId.current = null;
+  }, [viewing, loading, visible, queryError]);
 
   function changeFilters(next: LibraryFilters) {
     ++querySequence.current;
@@ -202,17 +215,23 @@ export function App() {
     finally { setImporting(false); setProgress(null); }
   }
 
-  function resetViewer() { ++openSequence.current; setLoading(true); setQueryRefresh(current => current + 1); setImportNotice(null); setViewing(false); setSelectedPhoto(null); setCurrentStatus(null); setPreview(null); setMessage(''); }
+  function resetViewer() { if (viewing) returnFocusId.current = selectedPhoto?.id ?? null; ++openSequence.current; setLoading(true); setQueryRefresh(current => current + 1); setImportNotice(null); setViewing(false); setSelectedPhoto(null); setCurrentStatus(null); setPreview(null); setMessage(''); }
   function showGrid() { void leave(resetViewer); }
 
-  return <main>
-    <header><div><span className="eyebrow">SEU OLHAR, EM PRIMEIRO LUGAR</span><h1>Revelumo<span> / biblioteca</span></h1></div>
-      <button disabled={loading || importing || relocating || classifying || exiting} onClick={() => { if (viewing) void leave(async () => { resetViewer(); await importPhotos(); }); else void importPhotos(); }}>Importar JPEGs</button></header>
+  return <main className="catalog-shell" data-view={viewing ? 'editor' : 'catalog'}>
+    <header className="catalog-header">
+      <div className="catalog-brand" aria-label="Revelumo"><span className="brand-mark" aria-hidden="true"/><span>revelumo<span className="brand-dot">.</span></span></div>
+      <nav className="workspace-navigation" aria-label="Área de trabalho">
+        <button disabled={relocating || classifying || exiting} onClick={showGrid} aria-current={!viewing ? 'page' : undefined}>Catálogo</button>
+        <span aria-current={viewing ? 'page' : undefined} title={!viewing ? 'Abra uma foto do catálogo para editar' : undefined}>Edição</span>
+      </nav>
+      <button className="catalog-import" disabled={loading || importing || relocating || classifying || exiting} onClick={() => { if (viewing) void leave(async () => { resetViewer(); await importPhotos(); }); else void importPhotos(); }}><Icon name="import"/>Importar JPEGs</button>
+    </header>
     <div className="workspace">
-      <aside><h2>Biblioteca <span>{total}</span></h2><p className="quiet">Originais preservados</p>
-        <button className="photo" disabled={relocating || classifying || exiting} onClick={showGrid} aria-pressed={!viewing}>Todas as fotos</button>
-        <button className="photo" disabled={loading || importing || relocating || classifying || exiting} onClick={() => { setRefresh(current => current + 1); if (viewing && selectedPhoto) void refreshSelectedStatus(selectedPhoto); }}>Verificar disponibilidade</button>
-        <p className="quiet">JPEG · catálogo local<br/>Miniaturas derivadas</p>
+      <aside className="catalog-sidebar"><h2>Biblioteca</h2>
+        <button className="photo" disabled={relocating || classifying || exiting} onClick={showGrid} aria-label="Todas as fotos" aria-pressed={!viewing}><Icon name="grid"/><span>Todas as fotos</span><span className="catalog-count">{total}</span></button>
+        <button className="photo" disabled={loading || importing || relocating || classifying || exiting} onClick={() => { setRefresh(current => current + 1); if (viewing && selectedPhoto) void refreshSelectedStatus(selectedPhoto); }}><Icon name="refresh"/>Verificar disponibilidade</button>
+
         <fieldset className="library-filters" disabled={viewing || importing || relocating || classifying || exiting}>
           <legend>Filtrar biblioteca</legend>
           <label htmlFor="filter-rating">Estrelas mínimas</label>
@@ -225,24 +244,25 @@ export function App() {
             <option value="all">Todas as marcações</option><option value="neutral">Sem flag</option><option value="selected">Selecionada</option><option value="rejected">Rejeitada</option>
           </select>
           <button disabled={!filtered} onClick={() => changeFilters({ rating: 'all', flag: 'all' })}>Limpar filtros</button>
-          <p className="quiet">Filtros duram esta sessão. Estrelas e marcação se combinam.</p>
+          <p className="quiet">Estrelas e marcação se combinam. Filtros duram esta sessão.</p>
         </fieldset>
+        <div className="catalog-local"><p>Seu catálogo fica neste computador.</p><p>Os originais continuam onde estão.</p></div>
         {importing && <div className="import-progress" role="status" aria-live="polite"><p>{progress?.total ? `${progress.completed} de ${progress.total} arquivos` : 'Aguardando seleção…'}</p>
           {progress && progress.total > 0 && <><progress max={progress.total} value={progress.completed}/><p className="current-file">{progress.currentName}</p></>}
         </div>}
       </aside>
-      <section className={viewing ? 'viewer' : 'gallery'} aria-label={viewing ? 'Visualização da foto' : 'Grade de fotos'} aria-busy={loading}>
+      <section ref={catalogSection} className={viewing ? 'viewer' : 'gallery'} aria-label={viewing ? 'Visualização da foto' : 'Grade de fotos'} aria-busy={loading}>
         {viewing ? <><button className="back" disabled={relocating || classifying || exiting} onClick={showGrid}>← Voltar à grade</button>{currentStatus && currentStatus.state !== 'available' ? <div className="original-notice" role="status"><h2>{selectedPhoto?.name}</h2><p>{currentStatus.message}</p>{preview && <p>A prévia existente e o rascunho foram mantidos; o original precisa estar disponível para salvar.</p>}{currentStatus.canRelocate && <button disabled={relocating || importing || classifying || exiting} onClick={() => void relocatePhoto()} aria-label={`Localizar original de ${selectedPhoto?.name}`}>{relocating ? 'Localizando…' : 'Localizar original'}</button>}</div> : !preview && <p className="quiet">{message || 'Abrindo prévia…'}</p>}{selectedPhoto && <><ExposureEditor key={`exposure-${selectedPhoto.id}`} ref={editor} photo={selectedPhoto} preview={preview}/><ClassificationControls key={selectedPhoto.id} photo={selectedPhoto} onBusyChange={setClassifying} onMessage={setMessage}/></>}</> :
-          <>{failures.length > 0 && <details className="failures"><summary>{failures.length} arquivo(s) não importado(s)</summary><ul>{failures.map((item, index) => <li key={index}>{item.name}: {!item.result.ok && item.result.message}</li>)}</ul></details>}
-            {loading ? <p role="status">Consultando biblioteca.</p> : queryError ? <div className="query-error" role="alert"><p>{queryError}</p><button onClick={() => setQueryRefresh(current => current + 1)}>Tentar novamente</button></div> : photos.length ? <><p className="quiet" role="status">{photos.length} de {total} fotos{filtered ? ' correspondem aos filtros' : ''}.</p><div className="grid" role="list" aria-label="Fotos importadas">{visible.map(photo => <div role="listitem" key={photo.id}><button className="tile" onClick={() => void openPhoto(photo)} aria-label={`Abrir ${photo.name}`} aria-describedby={statuses[photo.id] && statuses[photo.id].state !== 'present' ? `original-${photo.id}` : undefined}>
-              <span className="thumbnail">{thumbnails[photo.id] ? <img src={thumbnails[photo.id]} alt=""/> : <span title={thumbnailErrors[photo.id]}>{thumbnailErrors[photo.id] ? 'Miniatura indisponível' : 'Carregando…'}</span>}</span><span className="filename">{photo.name}</span>
+          <><div className="catalog-heading"><h1 tabIndex={-1}>{filtered ? 'Fotos filtradas' : 'Todas as fotos'}</h1><p>JPEG · catálogo local</p></div>{failures.length > 0 && <details className="failures"><summary>{failures.length} arquivo(s) não importado(s)</summary><ul>{failures.map((item, index) => <li key={index}>{item.name}: {!item.result.ok && item.result.message}</li>)}</ul></details>}
+            {loading ? <p role="status">Consultando biblioteca.</p> : queryError ? <div className="query-error" role="alert"><p>{queryError}</p><button onClick={() => setQueryRefresh(current => current + 1)}>Tentar novamente</button></div> : photos.length ? <><p className="quiet" role="status">{photos.length} de {total} fotos{filtered ? ' correspondem aos filtros' : ''}.</p><div className="grid" role="list" aria-label="Fotos importadas">{visible.map(photo => <div role="listitem" key={photo.id}><button className="tile" data-photo-id={photo.id} onClick={() => void openPhoto(photo)} aria-label={`Abrir ${photo.name}`} aria-describedby={statuses[photo.id] && statuses[photo.id].state !== 'present' ? `original-${photo.id}` : undefined}>
+              <span className="thumbnail">{thumbnails[photo.id] ? <img src={thumbnails[photo.id]} alt=""/> : <span title={thumbnailErrors[photo.id]}>{thumbnailErrors[photo.id] ? 'Miniatura indisponível' : 'Carregando…'}</span>}</span><span className="filename" title={photo.name}>{photo.name}</span><span className="tile-meta"><span>JPEG</span><span>Abrir foto <Icon name="arrow"/></span></span>
               {statuses[photo.id] && statuses[photo.id].state !== 'present' && <span className="original-status" id={`original-${photo.id}`}>{statuses[photo.id].state === 'missing' ? 'Original ausente' : 'Original indisponível'}</span>}
             </button></div>)}</div><nav className="pagination" aria-label="Páginas da biblioteca"><button disabled={page === 0} onClick={() => setPage(current => current - 1)}>Anterior</button><span>Página {page + 1} de {lastPage(photos.length) + 1}</span><button disabled={page >= lastPage(photos.length)} onClick={() => setPage(current => current + 1)}>Próxima</button></nav></> :
-              total > 0 ? <div className="empty"><h2>Nenhuma foto corresponde aos filtros.</h2><p>As {total} fotos continuam no catálogo. Altere ou limpe os filtros para encontrá-las.</p><button onClick={() => changeFilters({ rating: 'all', flag: 'all' })}>Limpar filtros</button></div> : <div className="empty"><span className="mark">R</span><h2>Toda foto começa com um olhar.</h2><p>Importe JPEGs para começar. Os arquivos continuam onde estão.</p></div>}
+              total > 0 ? <div className="empty"><h2>Nenhuma foto corresponde aos filtros.</h2><p>As {total} fotos continuam no catálogo. Altere ou limpe os filtros para encontrá-las.</p><button onClick={() => changeFilters({ rating: 'all', flag: 'all' })}>Limpar filtros</button></div> : <div className="empty"><span className="empty-icon"><Icon name="image"/></span><h2>Seu catálogo está vazio</h2><p>Use “Importar JPEGs” para adicionar suas fotos.<br/>Os arquivos continuam onde estão.</p></div>}
           </>}
       </section>
     </div>
     {exitFailed && <div className="exit-failure" role="alert"><p>Não foi possível salvar o último ajuste. A foto permanece aberta.</p><button disabled={exiting} onClick={() => { const action = pendingExit.current; if (action) void leave(action); }}>Tentar novamente e sair</button><button disabled={exiting} onClick={() => { pendingExit.current = null; setExitFailed(false); }}>Permanecer</button><button disabled={exiting} onClick={() => { const action = pendingExit.current; if (action) void leave(action, true); }}>Descartar ajuste não salvo e sair</button></div>}
-    <footer><span role="status" aria-live="polite">{message || 'Catálogo local · sem alterar seus arquivos'}</span><span>PRÉVIA DE DESENVOLVIMENTO</span></footer>
+    <footer className="catalog-footer"><span role="status" aria-live="polite">{message || 'Catálogo local · sem alterar seus arquivos'}</span><span>Em desenvolvimento</span></footer>
   </main>;
 }

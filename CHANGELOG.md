@@ -18,6 +18,10 @@ Base de aplicação integrada em 12/10/2026: `9f40a288573f4ea95d8744e014c8cb1a0e
 - README em inglês, português e espanhol, distinguindo implementação, direção visual aprovada e recursos planejados. [PR #27](https://github.com/glaucia86/revelumo/pull/27).
 - Guias de contribuição, suporte e segurança, formulários de issue, template de PR e checagem offline dos links locais e navegação entre idiomas. [Guia de contribuição](CONTRIBUTING.md).
 
+### Alterado
+
+- Catálogo com a identidade Cobre: cabeçalho compacto, grade neutra, fonte Geist local com OFL preservada, controles legíveis e retorno de foco por teclado à foto aberta. Paginação, filtros, importação e originais permanecem preservados. O visual completo do editor continua separado. [PR #33](https://github.com/glaucia86/revelumo/pull/33), [issue #29](https://github.com/glaucia86/revelumo/issues/29).
+
 ### Licença
 
 - Código e documentação escrita originais sob [MIT](LICENSE), copyright 2026 Glaucia Lemos. Recursos e software de terceiros mantêm seus próprios direitos e avisos, reunidos em [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
@@ -37,7 +41,7 @@ Base de aplicação integrada em 12/10/2026: `9f40a288573f4ea95d8744e014c8cb1a0e
 ### Limites conhecidos
 
 - Somente JPEG. Recorte, exportação JPEG, RAW/HEIC, TIFF e ajustes em lote ainda não estão disponíveis. O experimento RawTherapee do [PR #21](https://github.com/glaucia86/revelumo/pull/21) não integrou um motor RAW.
-- A direção visual A · Cobre foi escolhida, mas ainda não foi integrada. A interface atual está em português; seleção PT/EN/ES no aplicativo permanece planejada.
+- A direção A · Cobre cobre o catálogo e o shell; o redesenho completo do editor permanece na [issue #31](https://github.com/glaucia86/revelumo/issues/31). A interface atual está em português; seleção PT/EN/ES no aplicativo permanece planejada.
 - Cache corrompido não se recupera automaticamente; alteração externa do original não invalida a miniatura até reimportação. Nome, tamanho e miniatura não comprovam identidade.
 - Windows foi verificado por automação com seletor substituído. Inspeção visual e diálogo nativo Windows permanecem pendentes na [issue #4](https://github.com/glaucia86/revelumo/issues/4). Ubuntu teve testes/tipos/pacote na CI; smokes Electron recentes não foram executados ali. Há roteiros gráficos Linux históricos em seus próprios snapshots. macOS não foi validado.
 - Sem validação no alvo de 8 GB ou ampla matriz de câmeras/cor. Forge produz pasta de desenvolvimento; sem instaladores, assinatura ou notarização. A MIT do código não concede direitos sobre fotos, retratos, fontes ou outros recursos de terceiros.

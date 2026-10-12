@@ -1,0 +1,242 @@
+{
+  "platform": "linux",
+  "electron": "44.7.0",
+  "executions": [
+    {
+      "script": "smoke",
+      "run": "reg2-import",
+      "mode": "first",
+      "response": "reg2-import 0"
+    },
+    {
+      "script": "smoke",
+      "run": "reg2-import",
+      "mode": "reopen",
+      "response": "reg2-import 0"
+    },
+    {
+      "script": "relocation",
+      "run": "reg2-relocation",
+      "mode": "first",
+      "response": "reg2-relocation 0"
+    },
+    {
+      "script": "relocation",
+      "run": "reg2-relocation",
+      "mode": "reopen",
+      "response": "reg2-relocation 0"
+    },
+    {
+      "script": "availability",
+      "run": "reg2-availability",
+      "mode": "first",
+      "response": "reg2-availability 0"
+    },
+    {
+      "script": "filters",
+      "run": "reg2-filters",
+      "mode": "first",
+      "response": "reg2-filters 0"
+    },
+    {
+      "script": "filters",
+      "run": "reg2-filters",
+      "mode": "reopen",
+      "response": "reg2-filters 0"
+    },
+    {
+      "script": "exposure",
+      "run": "reg2-exposure",
+      "mode": "first",
+      "response": "reg2-exposure 0"
+    },
+    {
+      "script": "exposure",
+      "run": "reg2-exposure",
+      "mode": "reopen",
+      "response": "reg2-exposure 0"
+    },
+    {
+      "script": "exposure",
+      "run": "reg2-exposure",
+      "mode": "discard-race",
+      "response": "reg2-exposure 0"
+    },
+    {
+      "script": "exposure",
+      "run": "reg2-exposure",
+      "mode": "reopen",
+      "response": "reg2-exposure 0"
+    },
+    {
+      "script": "exposure",
+      "run": "reg2-exposure",
+      "mode": "race",
+      "response": "reg2-exposure 0"
+    },
+    {
+      "script": "exposure",
+      "run": "reg2-exposure",
+      "mode": "race-reopen",
+      "response": "reg2-exposure 0"
+    },
+    {
+      "script": "classification",
+      "run": "reg-classification",
+      "mode": "first",
+      "response": "reg-classification 0"
+    },
+    {
+      "script": "classification",
+      "run": "reg-classification",
+      "mode": "reopen",
+      "response": "reg-classification 0"
+    },
+    {
+      "script": "history",
+      "run": "reg-history",
+      "mode": "first",
+      "response": "reg-history 0"
+    },
+    {
+      "script": "history",
+      "run": "reg-history",
+      "mode": "reopen",
+      "response": "reg-history 0"
+    },
+    {
+      "script": "history",
+      "run": "reg-history",
+      "mode": "gestures",
+      "response": "reg-history 0"
+    },
+    {
+      "script": "history",
+      "run": "reg-history",
+      "mode": "history-failure",
+      "response": "reg-history 0"
+    },
+    {
+      "script": "history",
+      "run": "reg-history",
+      "mode": "history-reopen",
+      "response": "reg-history 0"
+    },
+    {
+      "script": "history",
+      "run": "reg-history",
+      "mode": "interrupt",
+      "response": "reg-history 0"
+    },
+    {
+      "script": "history",
+      "run": "reg-history",
+      "mode": "interrupt-reopen",
+      "response": "reg-history 0"
+    },
+    {
+      "script": "history",
+      "run": "reg-history",
+      "mode": "save-failure",
+      "response": "reg-history 0"
+    },
+    {
+      "script": "history",
+      "run": "reg-history",
+      "mode": "many-pending",
+      "response": "reg-history 0"
+    },
+    {
+      "script": "history",
+      "run": "reg-history",
+      "mode": "key-chord",
+      "response": "reg-history 0"
+    },
+    {
+      "script": "history",
+      "run": "reg-history",
+      "mode": "retention",
+      "response": "reg-history 0"
+    },
+    {
+      "script": "history",
+      "run": "reg-history",
+      "mode": "retention-reopen",
+      "response": "reg-history 0"
+    },
+    {
+      "script": "white-balance",
+      "run": "reg-wb",
+      "mode": "first",
+      "response": "reg-wb 0"
+    },
+    {
+      "script": "white-balance",
+      "run": "reg-wb",
+      "mode": "reopen",
+      "response": "reg-wb 0"
+    },
+    {
+      "script": "white-balance",
+      "run": "reg-wb",
+      "mode": "controls",
+      "response": "reg-wb 0"
+    },
+    {
+      "script": "white-balance",
+      "run": "reg-wb",
+      "mode": "preview-race",
+      "response": "reg-wb 0"
+    },
+    {
+      "script": "white-balance",
+      "run": "reg-wb",
+      "mode": "save-race",
+      "response": "reg-wb 0"
+    },
+    {
+      "script": "white-balance",
+      "run": "reg-wb",
+      "mode": "history-ack",
+      "response": "reg-wb 0"
+    },
+    {
+      "script": "white-balance",
+      "run": "reg-wb",
+      "mode": "keyboard",
+      "response": "reg-wb 0"
+    },
+    {
+      "script": "white-balance",
+      "run": "reg-wb",
+      "mode": "many-pending",
+      "response": "reg-wb 0"
+    },
+    {
+      "script": "white-balance",
+      "run": "reg-wb",
+      "mode": "close-race",
+      "response": "reg-wb 0"
+    },
+    {
+      "script": "white-balance",
+      "run": "reg-wb",
+      "mode": "close-reopen",
+      "response": "reg-wb 0"
+    },
+    {
+      "script": "white-balance",
+      "run": "reg-wb",
+      "mode": "color",
+      "response": "reg-wb 0"
+    },
+    {
+      "script": "white-balance",
+      "run": "reg-wb",
+      "mode": "layout",
+      "response": "reg-wb 0"
+    }
+  ],
+  "passed": 39,
+  "note": "Real packaged app; native dialogs substituted; existing production preload/IPC/SQLite/worker. Test-only hidden-window wrapper."
+}

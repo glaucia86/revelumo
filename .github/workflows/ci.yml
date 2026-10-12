@@ -102,6 +102,15 @@ jobs:
           npm run test:filters -- "$filters" reopen
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
+      - name: 'Cobre catalog: real import, keyboard, states and minimum layout'
+        if: runner.os == 'Windows'
+        id: cobre_catalog
+        run: |
+          $catalog = Join-Path $env:RUNNER_TEMP ('revelumo-cobre-' + [guid]::NewGuid())
+          npm run test:cobre-catalog -- "$catalog"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Get-Content -LiteralPath (Join-Path $catalog 'result.json') >> $env:GITHUB_STEP_SUMMARY
+
       - name: 'npm run test:electron -- <fresh directory> first'
         if: runner.os == 'Windows'
         id: electron_first
@@ -177,7 +186,7 @@ jobs:
           '| Step | Outcome |' >> $env:GITHUB_STEP_SUMMARY
           '| --- | --- |' >> $env:GITHUB_STEP_SUMMARY
           $results = $env:STEP_RESULTS | ConvertFrom-Json -AsHashtable
-          foreach ($id in @('versions', 'docs', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history', 'white_balance')) {
+          foreach ($id in @('versions', 'docs', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'cobre_catalog', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history', 'white_balance')) {
             "| $id | $($results[$id].outcome) |" >> $env:GITHUB_STEP_SUMMARY
           }
           if ($env:RUNNER_OS -ne 'Windows') {

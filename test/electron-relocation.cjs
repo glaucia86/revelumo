@@ -47,16 +47,16 @@ const locate = name => `document.querySelector(${JSON.stringify(`button[aria-lab
 async function click(expression) { await until(() => js(`Boolean(${expression} && !${expression}.disabled)`), 'button ready'); await js(`${expression}.click()`); }
 async function importFiles(filenames, count) {
   selection = { canceled:false, filePaths:filenames };
-  await until(() => js('!document.querySelector("header button").disabled'), 'catalog ready before import');
-  await click('document.querySelector("header button")');
-  await until(() => js(`!document.querySelector('header button').disabled && document.querySelectorAll('.tile').length === ${count}`), 'import rendered');
+  await until(() => js('!Array.from(document.querySelectorAll("header button")).find(b=>b.textContent==="Importar JPEGs").disabled'), 'catalog ready before import');
+  await click('Array.from(document.querySelectorAll("header button")).find(b=>b.textContent==="Importar JPEGs")');
+  await until(() => js(`!Array.from(document.querySelectorAll('header button')).find(b=>b.textContent==='Importar JPEGs').disabled && document.querySelectorAll('.tile').length === ${count}`), 'import rendered');
 }
 const timeout = setTimeout(() => { console.error('Relocation integration exceeded 60 seconds'); app.exit(1); }, 60000);
 require('./hidden-electron.cjs')(path.join(archive, '.vite', 'build', 'index.cjs'));
 (async () => {
   await app.whenReady();
   win = await until(() => BrowserWindow.getAllWindows().find(window=>window.webContents.getURL()==='app://revelumo/index.html'), 'packaged origin');
-  await until(() => js('Boolean(window.revelumo && document.querySelector("header button") && !document.querySelector("header button").disabled)'), 'renderer ready');
+  await until(() => js('Boolean(window.revelumo && Array.from(document.querySelectorAll("header button")).find(b=>b.textContent==="Importar JPEGs") && !Array.from(document.querySelectorAll("header button")).find(b=>b.textContent==="Importar JPEGs").disabled)'), 'renderer ready');
   win.hide();
   assert.equal(await js('typeof window.revelumo.originalStatus'), 'function', 'restricted original status must be exposed');
   assert.equal(await js('typeof window.revelumo.relocatePhoto'), 'function', 'restricted relocation must be exposed');

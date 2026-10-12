@@ -1,0 +1,51 @@
+[
+  {
+    "label": "primary text",
+    "fg": "#281b13",
+    "bg": "#efb28a",
+    "ratio": 9.078,
+    "required": 4.5
+  },
+  {
+    "label": "main text",
+    "fg": "#f1f1f1",
+    "bg": "#151515",
+    "ratio": 16.168,
+    "required": 4.5
+  },
+  {
+    "label": "secondary text",
+    "fg": "#c9c9c9",
+    "bg": "#202020",
+    "ratio": 9.839,
+    "required": 4.5
+  },
+  {
+    "label": "muted text",
+    "fg": "#aaaaaa",
+    "bg": "#202020",
+    "ratio": 7.014,
+    "required": 4.5
+  },
+  {
+    "label": "essential control border",
+    "fg": "#858585",
+    "bg": "#202020",
+    "ratio": 4.415,
+    "required": 3
+  },
+  {
+    "label": "focus / dark background",
+    "fg": "#efb28a",
+    "bg": "#151515",
+    "ratio": 9.918,
+    "required": 3
+  },
+  {
+    "label": "active navigation border",
+    "fg": "#858585",
+    "bg": "#333333",
+    "ratio": 3.424,
+    "required": 3
+  }
+]
