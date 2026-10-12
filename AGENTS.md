@@ -16,6 +16,7 @@ Use progressive disclosure: este arquivo é o ponto de entrada. Consulte somente
 | Quando consultar | Documento |
 | --- | --- |
 | Ler, planejar ou atualizar issues, specs e mapas Wayfinder | [issue-tracker.md](docs-agents/issue-tracker.md) |
+| Implementar uma issue pelo fluxo oficial do Matt Pocock | [matt-pocock-workflow.md](docs-agents/matt-pocock-workflow.md) |
 | Investigar conceitos do produto ou decisões de arquitetura | [domain.md](docs-agents/domain.md) |
 | Trabalhar na primeira fatia JPEG/SQLite | [0001-local-catalog-ipc.md](docs-agents/adr/0001-local-catalog-ipc.md) |
 | Trabalhar em lote JPEG, miniaturas e grade | [0002-batch-jpeg-thumbnails.md](docs-agents/adr/0002-batch-jpeg-thumbnails.md) |
