@@ -11,7 +11,7 @@ The first test now uses the same bridge helper. Re-review: zero hard violations,
 zero optional findings. The specific retirement hook implements an explicit
 sequencing requirement; it is not an unrelated control API. Agreed seams include
 Library, coordinator/IPC, actual preload and packaged UI. Independent focused
-verification passed18/18.
+verification passed 18/18.
 
 ## Spec
 
