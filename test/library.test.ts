@@ -33,7 +33,10 @@ test('imports by reference, returns no private path and leaves original bytes/lo
   assert.equal((await stat(file)).size, before.length);
   const preview = await library.preview(imported.value.photo.id);
   assert.equal(preview.ok, true);
-  assert.equal(preview.value.dataUrl, 'data:image/jpeg;base64,' + before.toString('base64'));
+  assert.ok(preview.value.bytes instanceof ArrayBuffer);
+  assert.equal(preview.value.bytes.byteLength, before.length);
+  assert.deepEqual(Buffer.from(preview.value.bytes), before);
+  assert.equal('dataUrl' in preview.value, false);
 });
 
 test('canceling selection leaves the catalog empty', async (t) => {

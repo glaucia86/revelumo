@@ -135,7 +135,7 @@ require('./hidden-electron.cjs')(path.join(archive, '.vite', 'build', 'index.cjs
     assert.deepEqual((await api('listPhotos')).value,expected.photos);
     assert.equal((await api('originalStatus',expected.original.id)).value.state,'available');
     assert.deepEqual(await api('thumbnailPhoto',expected.original.id),expected.cache);
-    const preview = await api('previewPhoto',expected.original.id); assert.equal(preview.ok,true); assert.equal(preview.value.dataUrl,'data:image/jpeg;base64,'+sample.toString('base64'));
+    const preview = await api('previewPhoto',expected.original.id); assert.equal(preview.ok,true); assert.deepEqual(Buffer.from(preview.value.bytes),sample);
     assert.equal((await api('previewPhoto',legacyPhotos[0].id)).ok,true);
     assert.equal((await api('originalStatus',legacyPhotos[1].id)).value.canRelocate,false);
     for (const [file,digest] of Object.entries(expected.integrity)) assert.equal(fingerprint(fs.readFileSync(file)),digest);

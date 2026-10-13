@@ -4,6 +4,8 @@ Mudanças relevantes para quem usa o Revelumo. `Unreleased` contém somente entr
 
 ## Unreleased
 
+- Prévia original JPEG transportada em bytes, com entrega única ao Worker e descarte do buffer remetente; miniaturas e fidelidade de edição preservadas. [Issue #54](https://github.com/glaucia86/revelumo/issues/54), [contrato e evidências](evidence/issue-54/report.md). Sem alegação de redução medida de RAM.
+
 - Prévias JPEG enfileiradas e substituídas por uma seleção mais recente são descartadas antes da leitura/hash/decodificação quando ainda não iniciadas; salvamentos e histórico mantêm sua ordem. [Issue #52](https://github.com/glaucia86/revelumo/issues/52), [evidências e limites](evidence/issue-52-preview-queue/report.md).
 
 - Recuperação explícita de prévia JPEG em PT-BR/EN/ES, preservando sessão, rascunho e histórico; entrada comprimida liberada após preparo/erro/saída e resultados obsoletos descartados. Fatia parcial da [issue #44](https://github.com/glaucia86/revelumo/issues/44), sem alegação de orçamento total de memória ou suporte a 8 GB.

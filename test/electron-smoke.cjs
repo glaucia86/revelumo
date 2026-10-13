@@ -129,7 +129,7 @@ require('./hidden-electron.cjs')(path.join(archive, '.vite', 'build', 'index.cjs
     const oriented = listed.value.find(photo => photo.name === 'orientation-6.jpg');
     const orientedPreview = await js(`window.revelumo.previewPhoto(${JSON.stringify(oriented.id)})`); assert.equal(orientedPreview.ok,true);
     const original = fs.readFileSync(path.join(runDir,'synthetic-photos','orientation-6.jpg'));
-    assert.equal(orientedPreview.value.dataUrl, 'data:image/jpeg;base64,' + original.toString('base64'));
+    assert.deepEqual(Buffer.from(orientedPreview.value.bytes), original);
     for (const [file,digest] of Object.entries(expected.before)) assert.equal(hash(file),digest);
     log.push('new Electron process reopens all 51 IDs, cached thumbnail and JPEG preview');
     log.push('cached thumbnail survives an unavailable synthetic original; preview reports unreadable and catalog is unchanged');

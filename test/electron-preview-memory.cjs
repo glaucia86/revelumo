@@ -38,12 +38,15 @@ const timer = setTimeout(()=>{ console.error('Preview lifecycle timeout'); app.e
   if (mode==='first') { await click('.catalog-import'); await until(()=>js('Boolean(document.querySelector(".tile"))'),'import'); }
   await js(`(()=>{
     const Native=window.Worker;
-    window.previewProbe={live:0,peak:0,created:0,terminated:0,failNext:${mode==='first'},workers:[],pendingReady:[]};
+    window.previewProbe={live:0,peak:0,created:0,terminated:0,failNext:${mode==='first'},workers:[],pendingReady:[],transfers:[]};
+    function assertPreview(bytes,args) {
+      if (!(bytes instanceof ArrayBuffer) || bytes.byteLength<4 || args[0]?.length!==1 || args[0][0]!==bytes) throw new Error('Expected exact transferable preview bytes');
+    }
     window.Worker=class extends Native {
       constructor(...args) { if(previewProbe.throwNext) {previewProbe.throwNext=false; throw new Error('Synthetic worker allocation failure');} super(...args); this.stopped=false; previewProbe.live++; previewProbe.created++; previewProbe.peak=Math.max(previewProbe.peak,previewProbe.live); previewProbe.workers.push(this); }
       set onmessage(handler) { this.handleMessage=handler; super.onmessage=event=>{if(event.data.op==='ready' && previewProbe.holdReady) {previewProbe.pendingReady.push(()=>handler(event));return;} handler(event);}; }
       get onmessage() { return this.handleMessage; }
-      postMessage(message,...args) { if(message.op==='prepare') this.envelope={id:message.id,sessionId:message.sessionId}; if(message.op==='prepare' && previewProbe.failNext) { previewProbe.failNext=false; queueMicrotask(()=>this.onerror?.(new Event('error'))); return; } super.postMessage(message,...args); }
+      postMessage(message,...args) { if(message.op==='prepare') this.envelope={id:message.id,sessionId:message.sessionId}; if(message.op==='prepare' && previewProbe.failNext) { previewProbe.failNext=false; queueMicrotask(()=>this.onerror?.(new Event('error'))); return; } if(message.op==='prepare') { const bytes=message.bytes; assertPreview(bytes,args); const length=bytes.byteLength; super.postMessage(message,...args); previewProbe.transfers.push({length,detached:bytes.byteLength===0}); } else super.postMessage(message,...args); }
       terminate() { if(!this.stopped) {this.stopped=true;previewProbe.live--;previewProbe.terminated++;} super.terminate(); }
     };
   })()`);
@@ -181,8 +184,13 @@ const timer = setTimeout(()=>{ console.error('Preview lifecycle timeout'); app.e
     const list=await js('window.revelumo.listPhotos()'); assert.equal(list.value.find(p=>p.name==='source.jpg').id,fs.readFileSync(path.join(run,'id'),'utf8'));
     await click('.back'); await until(()=>js('Boolean(document.querySelector(".tile"))'),'return catalog');
   }
+  const transfers = await js('previewProbe.transfers');
+  assert.ok(transfers.length > 0);
+  assert.ok(transfers.every(t => t.detached), 'renderer input is detached by real Worker transfer');
+  const expectedLengths = [fs.statSync(source).size, fs.statSync(secondSource).size];
+  assert.ok(transfers.every(t => expectedLengths.includes(t.length)), 'bridge delivers only exact original bytes');
   assert.equal(hash(source),fs.readFileSync(path.join(run,'original.sha256'),'utf8'));
   assert.equal(hash(secondSource),fs.readFileSync(path.join(run,'second.sha256'),'utf8'));
-  fs.writeFileSync(path.join(run,mode+'-result.json'),JSON.stringify({mode,platform:process.platform,arch:process.arch,versions:process.versions,beginCount,previewCount,workers:await js('({live:previewProbe.live,peak:previewProbe.peak,created:previewProbe.created,terminated:previewProbe.terminated})'),originalHash:hash(source)},null,2));
+  fs.writeFileSync(path.join(run,mode+'-result.json'),JSON.stringify({mode,platform:process.platform,arch:process.arch,versions:process.versions,beginCount,previewCount,transfers,workers:await js('({live:previewProbe.live,peak:previewProbe.peak,created:previewProbe.created,terminated:previewProbe.terminated})'),originalHash:hash(source)},null,2));
   clearTimeout(timer); app.exit(0);
 })().catch(error=>{ console.error(error.stack||error);clearTimeout(timer);app.exit(1); });

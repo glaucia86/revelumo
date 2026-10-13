@@ -10,7 +10,7 @@ import { Catalog } from './catalog.ts';
 import { Library } from './library.ts';
 import { PreviewIpc } from './preview-ipc.ts';
 import { parseRequest } from '../shared/requests.ts';
-import { jpegPreview } from './preview.ts';
+import { jpegDimensions } from './jpeg-dimensions.ts';
 import { jpegThumbnail } from './thumbnail.ts';
 import type { ImportProgress } from '../shared/contracts.ts';
 import { JpegExportJobs } from './jpeg-export-job.ts';
@@ -43,13 +43,12 @@ const developmentUrl = MAIN_WINDOW_VITE_DEV_SERVER_URL;
 const entryUrl = developmentUrl || 'app://revelumo/index.html';
 const fail = (code: string, message: string, descriptor: MessageDescriptor = { key: 'errors.generic' }) => ({ ok: false, code, message, descriptor });
 
-async function preview(bytes: Buffer): Promise<string> {
-  return jpegPreview(bytes, (content) => {
-    const image = nativeImage.createFromBuffer(content);
-    if (image.isEmpty()) throw new Error('JPEG decode failed');
-    const size = image.getSize();
-    if (size.width * size.height > 40_000_000) throw new Error('JPEG exceeds pixel budget');
-  });
+async function validateJpeg(bytes: Buffer): Promise<void> {
+  jpegDimensions(bytes);
+  const image = nativeImage.createFromBuffer(bytes);
+  if (image.isEmpty()) throw new Error('JPEG decode failed');
+  const size = image.getSize();
+  if (size.width * size.height > 40_000_000) throw new Error('JPEG exceeds pixel budget');
 }
 
 async function thumbnail(bytes: Buffer): Promise<string> {
@@ -127,7 +126,7 @@ if (ownsInstance) app.whenReady().then(async () => {
     return result;
   });
   catalog = new Catalog(join(dataDir, 'catalog.sqlite'));
-  const library = new Library(catalog, preview, thumbnail);
+  const library = new Library(catalog, validateJpeg, thumbnail);
   previewIpc = new PreviewIpc(library);
   ipcMain.handle('revelumo:preview', (event, input: unknown) => previewIpc!.handle(event, window?.webContents ?? null, entryUrl, input));
   exportJobs = new JpegExportJobs(library, async name => {

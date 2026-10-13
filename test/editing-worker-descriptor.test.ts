@@ -12,6 +12,6 @@ test('the editing worker reports a stable preview-error descriptor on its messag
   Object.defineProperty(globalThis, 'self', { value: port, configurable: true });
   await import('../src/renderer/exposure.worker.ts');
   assert.ok(port.onmessage);
-  await port.onmessage({ data: { op: 'prepare', id: 'photo-id', sessionId: 'session-id', dataUrl: 'data:image/jpeg;base64,not valid base64!' } });
+  await port.onmessage({ data: { op: 'prepare', id: 'photo-id', sessionId: 'session-id', bytes: new ArrayBuffer(0) } });
   assert.deepEqual(replies, [{ op: 'error', id: 'photo-id', sessionId: 'session-id', message: 'Não foi possível preparar a prévia de edição sRGB.', descriptor: { key: 'errors.prepareEditingPreview' } }]);
 });

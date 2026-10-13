@@ -16,7 +16,8 @@ export type Result<T> = { ok: true; value: T } | { ok: false; code: FailureCode;
 export type ImportOutcome = { canceled: true } | { canceled: false; photo: PhotoSummary };
 // Cancellation is a preview lifecycle outcome, never a file/catalog failure.
 export type PreviewResult = Result<Preview> | { ok: false; canceled: true };
-export type Preview = { photo: PhotoSummary; dataUrl: string };
+export type Preview = { photo: PhotoSummary; bytes: ArrayBuffer };
+export type Thumbnail = { photo: PhotoSummary; dataUrl: string };
 export type PhotoStatus = { photo: PhotoSummary; state: 'available' | 'missing' | 'unreadable' | 'changed'; canRelocate: boolean; message: string; descriptor?: MessageDescriptor };
 export type PhotoAvailability = { photo: PhotoSummary; state: 'present' | 'missing' | 'unreadable'; identityRecorded: boolean; contentVerified: false; message: string; descriptor?: MessageDescriptor };
 export interface RevelumoApi {
@@ -36,7 +37,7 @@ export interface RevelumoApi {
   classifyPhoto(id: string, rating: number | null, flag: PhotoFlag): Promise<Result<PhotoClassification>>;
   importJpeg(): Promise<Result<BatchOutcome>>;
   importProgress(): Promise<Result<ImportProgress>>;
-  thumbnailPhoto(id: string): Promise<Result<Preview>>;
+  thumbnailPhoto(id: string): Promise<Result<Thumbnail>>;
   listPhotos(): Promise<Result<PhotoSummary[]>>;
   queryPhotos(filters: LibraryFilters): Promise<Result<LibraryResults>>;
   previewPhoto(id: string, generation?: number): Promise<PreviewResult>;

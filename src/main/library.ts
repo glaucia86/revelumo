@@ -4,14 +4,18 @@ import { constants } from 'node:fs';
 import { basename } from 'node:path';
 import { createHash, randomUUID } from 'node:crypto';
 import { setImmediate } from 'node:timers/promises';
+import { MAX_PREVIEW_BYTES } from '../shared/preview-bytes.ts';
+import { jpegPreview } from './preview.ts';
 import { Catalog } from './catalog.ts';
 import { parseExportRecipe } from '../processing/jpeg-export-contract.ts';
 import { parseRequest } from '../shared/requests.ts';
 import type { PhotoClassification, PhotoFlag, PhotoRecipe, PhotoAdjustments, EditSession, ExposureGesture, LibraryFilters, LibraryResults } from '../shared/contracts.ts';
-import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcome, PhotoSummary, PhotoStatus, PhotoAvailability, Preview, PreviewResult, Result } from '../shared/contracts.ts';
+import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcome, PhotoSummary, PhotoStatus, PhotoAvailability, Preview, Thumbnail, PreviewResult, Result } from '../shared/contracts.ts';
 
-const MAX_BYTES = 32 * 1024 * 1024;
-export type PreviewDecoder = (bytes: Buffer) => Promise<string>;
+const MAX_BYTES = MAX_PREVIEW_BYTES;
+// Validation returns no transport payload; imports/legacy identity do not copy it.
+export type JpegValidator = (bytes: Buffer) => Promise<void>;
+export type ThumbnailDecoder = (bytes: Buffer) => Promise<string>;
 const failure = (code: FailureCode, message: string, descriptor: MessageDescriptor): Result<never> => ({ ok: false, code, message, descriptor });
 const summary = ({ id, name }: PhotoSummary): PhotoSummary => ({ id, name });
 const digest = (bytes: Buffer): string => createHash('sha256').update(bytes).digest('hex');
@@ -48,14 +52,14 @@ async function readJpeg(filename: string): Promise<Result<Buffer>> {
 
 export class Library {
   private catalog: Catalog;
-  private decoder: PreviewDecoder;
-  private thumbnailDecoder?: PreviewDecoder;
+  private validateJpeg: JpegValidator;
+  private thumbnailDecoder?: ThumbnailDecoder;
   private pending: Promise<void> = Promise.resolve();
   private editing: EditSession | null = null;
   private editingOperation: string | null = null;
   private editingGesture = { id: 0, complete: true };
-  constructor(catalog: Catalog, decoder: PreviewDecoder, thumbnailDecoder?: PreviewDecoder) {
-    this.catalog = catalog; this.decoder = decoder; this.thumbnailDecoder = thumbnailDecoder;
+  constructor(catalog: Catalog, validateJpeg: JpegValidator, thumbnailDecoder?: ThumbnailDecoder) {
+    this.catalog = catalog; this.validateJpeg = validateJpeg; this.thumbnailDecoder = thumbnailDecoder;
   }
 
   // Queue before reading: concurrent requests cannot retain a batch of full JPEG buffers.
@@ -237,7 +241,7 @@ export class Library {
         if (!image.ok) state = 'unreadable';
         else if (identityDiffers(photo.sha256, digest(image.value))) state = 'changed';
         else if (!photo.sha256) {
-          try { await this.decoder(image.value); }
+          try { await this.validateJpeg(image.value); }
           catch { state = 'unreadable'; }
           if (state === 'available') {
             try { this.catalog.rememberIdentity(id, digest(image.value)); }
@@ -294,7 +298,7 @@ export class Library {
     if (identityDiffers(existing?.sha256, sha256)) return failure('identity-mismatch', 'O arquivo é diferente do original catalogado. O registro anterior foi preservado.', { key: 'errors.importIdentity' });
     if (shouldStop()) return { ok: true, value: { canceled: true } };
     let thumbnail: string | undefined;
-    try { if (this.thumbnailDecoder) thumbnail = await this.thumbnailDecoder(image.value); else await this.decoder(image.value); }
+    try { if (this.thumbnailDecoder) thumbnail = await this.thumbnailDecoder(image.value); else await this.validateJpeg(image.value); }
     catch { return failure('invalid-jpeg', 'Não foi possível decodificar este JPEG dentro dos limites desta versão.', { key: 'errors.decodeJpeg' }); }
     if (shouldStop()) return { ok: true, value: { canceled: true } };
     try {
@@ -302,7 +306,7 @@ export class Library {
     } catch { return failure('catalog-error', 'Não foi possível salvar a referência no catálogo.', { key: 'errors.saveReference' }); }
   }
 
-  thumbnail(id: string): Promise<Result<Preview>> {
+  thumbnail(id: string): Promise<Result<Thumbnail>> {
     return this.serial(async () => {
       const photo = this.catalog.find(id);
       if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
@@ -333,14 +337,15 @@ export class Library {
     const image = await readJpeg(photo.path);
     if (!image.ok) return image;
     if (identityDiffers(photo.sha256, digest(image.value))) return failure('identity-mismatch', 'O arquivo neste caminho é diferente do original catalogado. Localize o original para continuar.', { key: 'errors.previewIdentity' });
-    let dataUrl: string;
+    let bytes: ArrayBuffer;
     try {
-      dataUrl = await this.decoder(image.value);
+      await this.validateJpeg(image.value);
+      bytes = jpegPreview(image.value);
     } catch { return failure('invalid-jpeg', 'Não foi possível abrir a prévia deste JPEG.', { key: 'errors.openPreview' }); }
     if (!photo.sha256) {
       try { this.catalog.rememberIdentity(id, digest(image.value)); }
       catch { return failure('catalog-error', 'Não foi possível registrar a identificação do original no catálogo.', { key: 'errors.rememberIdentity' }); }
     }
-    return { ok: true, value: { photo: summary(photo), dataUrl } };
+    return { ok: true, value: { photo: summary(photo), bytes } };
   }
 }

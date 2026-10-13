@@ -1,5 +1,6 @@
 /// <reference lib="webworker" />
 import type { MessageDescriptor } from '../shared/i18n/messages.ts';
+import { previewBytes } from '../shared/preview-bytes.ts';
 import { applyJpegAdjustments } from '../processing/jpeg-adjustments.ts';
 // Only one selected image lives in this worker. Every adjustment starts from
 // the same reduced, oriented, quantized sRGB base, never the prior output.
@@ -9,10 +10,9 @@ const context = self as unknown as DedicatedWorkerGlobalScope;
 context.onmessage = async ({ data }) => {
   try {
     if (data.op === 'prepare') {
+      base = null; width = height = 0;
       id = data.id; sessionId = data.sessionId;
-      const binary = atob(data.dataUrl.split(',')[1]);
-      const bytes = new Uint8Array(binary.length);
-      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      const bytes = previewBytes(data.bytes);
       const bitmap = await createImageBitmap(new Blob([bytes], { type: 'image/jpeg' }), { imageOrientation: 'from-image', colorSpaceConversion: 'default' });
       try {
         const scale = Math.min(1, 2048 / Math.max(bitmap.width, bitmap.height));

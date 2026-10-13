@@ -15,16 +15,17 @@ test('a second Node process reopens the persisted photo reference and original',
   const imports = `import { Catalog } from ${JSON.stringify(new URL('../src/main/catalog.ts', import.meta.url).href)};
     import { Library } from ${JSON.stringify(new URL('../src/main/library.ts', import.meta.url).href)};
     const catalog = new Catalog(${JSON.stringify(db)});
-    const library = new Library(catalog, async bytes => 'data:image/jpeg;base64,' + bytes.toString('base64'));`;
+    const library = new Library(catalog, async () => {});`;
   const first = JSON.parse(execFileSync(process.execPath, ['--input-type=module', '-e', imports + `
     const result = await library.importSelected(${JSON.stringify(photo)});
     catalog.close(); console.log(JSON.stringify(result));`], { encoding: 'utf8' }));
   assert.equal(first.ok, true);
   const second = JSON.parse(execFileSync(process.execPath, ['--input-type=module', '-e', imports + `
     const list = library.list(); const preview = await library.preview(list[0].id);
+    if (preview.ok) preview.value.bytes = Array.from(new Uint8Array(preview.value.bytes));
     catalog.close(); console.log(JSON.stringify({list, preview}));`], { encoding: 'utf8' }));
   assert.deepEqual(second.list, [first.value.photo]);
   assert.equal(second.preview.ok, true);
-  assert.ok(second.preview.value.dataUrl.startsWith('data:image/jpeg;base64,'));
+  assert.deepEqual(second.preview.value.bytes, [...readFileSync(photo)]);
   assert.equal(createHash('sha256').update(readFileSync(photo)).digest('hex'), before);
 });

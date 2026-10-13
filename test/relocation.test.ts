@@ -79,7 +79,7 @@ test('a second catalog connection never previews a replacement at the original p
   await writeFile(file, before);
   const restored = await reopened.preview(imported.value.photo.id);
   assert.equal(restored.ok, true);
-  if (restored.ok) assert.equal(restored.value.dataUrl, await decoder(before));
+  if (restored.ok) assert.deepEqual(Buffer.from(restored.value.bytes), before);
 });
 
 test('an externally moved original is marked missing while its photo and cached thumbnail remain available', async (t) => {
@@ -119,7 +119,7 @@ test('relocating identical bytes with a new filename preserves the photo and cac
   assert.deepEqual(reopened.list(), [photo]);
   const preview = await reopened.preview(photo.id);
   assert.equal(preview.ok, true);
-  if (preview.ok) assert.equal(preview.value.dataUrl, await decoder(before));
+  if (preview.ok) assert.deepEqual(Buffer.from(preview.value.bytes), before);
   const status = await reopened.status(photo.id);
   assert.equal(status.ok, true); if (status.ok) assert.equal(status.value.state, 'available');
 });
