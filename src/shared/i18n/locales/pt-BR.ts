@@ -1,6 +1,7 @@
 import type { Dictionary } from '../messages.ts';
 
 export const messages = {
+  "errors.previewCapacity": "A capacidade para esta prévia está ocupada. Tente novamente após a prévia anterior terminar.",
   "export.checkResult": "Conferir resultado",
   "export.showPath": "Mostrar local salvo",
   "export.outputLimit": "O JPEG exportado excede o limite de saída de 32 MiB desta versão. Qualidade e resolução não foram reduzidas.",

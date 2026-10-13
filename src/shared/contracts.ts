@@ -11,12 +11,13 @@ export type PhotoRecipe = PhotoAdjustments & { photo: PhotoSummary; processingVe
 export const MAX_EXPOSURE_CHECKPOINT_GESTURES = 1024;
 export type ExposureGesture = { id: number; exposureTenths: number; complete: boolean };
 export type EditSession = PhotoRecipe & { sessionId: string; revision: number; undoSteps: number; redoSteps: number };
-export type FailureCode = 'invalid-request' | 'invalid-jpeg' | 'too-large' | 'unreadable' | 'not-found' | 'catalog-error' | 'busy' | 'identity-mismatch' | 'identity-unverified' | 'path-conflict';
+export type FailureCode = 'preview-capacity' | 'invalid-request' | 'invalid-jpeg' | 'too-large' | 'unreadable' | 'not-found' | 'catalog-error' | 'busy' | 'identity-mismatch' | 'identity-unverified' | 'path-conflict';
 export type Result<T> = { ok: true; value: T } | { ok: false; code: FailureCode; message: string; descriptor?: MessageDescriptor };
 export type ImportOutcome = { canceled: true } | { canceled: false; photo: PhotoSummary };
 // Cancellation is a preview lifecycle outcome, never a file/catalog failure.
 export type PreviewResult = Result<Preview> | { ok: false; canceled: true };
-export type Preview = { photo: PhotoSummary; bytes: ArrayBuffer };
+export type PreviewReservation = { lease: string; generation: number };
+export type Preview = { photo: PhotoSummary; bytes: ArrayBuffer; reservation?: PreviewReservation };
 export type Thumbnail = { photo: PhotoSummary; dataUrl: string };
 export type PhotoStatus = { photo: PhotoSummary; state: 'available' | 'missing' | 'unreadable' | 'changed'; canRelocate: boolean; message: string; descriptor?: MessageDescriptor };
 export type PhotoAvailability = { photo: PhotoSummary; state: 'present' | 'missing' | 'unreadable'; identityRecorded: boolean; contentVerified: false; message: string; descriptor?: MessageDescriptor };
@@ -40,6 +41,7 @@ export interface RevelumoApi {
   thumbnailPhoto(id: string): Promise<Result<Thumbnail>>;
   listPhotos(): Promise<Result<PhotoSummary[]>>;
   queryPhotos(filters: LibraryFilters): Promise<Result<LibraryResults>>;
+  releasePreview(reservation: PreviewReservation): Promise<Result<null>>;
   previewPhoto(id: string, generation?: number): Promise<PreviewResult>;
   invalidatePreview(): Promise<Result<number>>;
   originalStatus(id: string): Promise<Result<PhotoStatus>>;

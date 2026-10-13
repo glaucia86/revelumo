@@ -2,7 +2,8 @@ import type { Library } from './library.ts';
 import type { PreviewResult } from '../shared/contracts.ts';
 
 const canceled = (): PreviewResult => ({ ok: false, canceled: true });
-type Ticket = { lifetime: object; id: string; generation: number; resolve: (result: PreviewResult) => void };
+type Admission = { reserve(size: number): boolean; complete(result: PreviewResult): PreviewResult };
+type Ticket = { admission?: Admission; lifetime: object; id: string; generation: number; resolve: (result: PreviewResult) => void };
 
 // One dispatched operation (which may wait in Library's protected queue), and
 // one replaceable pending selection. Mutations never enter this coordinator.
@@ -16,13 +17,13 @@ export class PreviewRequests {
   private pending: Ticket | null = null;
   constructor(library: Library) { this.library = library; }
 
-  preview(id: string, generation: number): Promise<PreviewResult> {
+  preview(id: string, generation: number, admission?: Admission): Promise<PreviewResult> {
     if (!this.alive || !Number.isSafeInteger(generation) || generation < 1 || generation < this.generation ||
         (generation === this.generation && this.claimed)) return Promise.resolve(canceled());
     this.generation = generation; this.claimed = true;
     this.pending?.resolve(canceled());
     return new Promise(resolve => {
-      this.pending = { lifetime: this.lifetime, id, generation, resolve };
+      this.pending = { lifetime: this.lifetime, id, generation, admission, resolve: result => resolve(admission ? admission.complete(result) : result) };
       this.dispatch();
     });
   }
@@ -46,7 +47,7 @@ export class PreviewRequests {
     if (this.active || !this.pending) return;
     const ticket = this.pending; this.pending = null; this.active = ticket;
     // Admit at the tail, never put a newer photo in an old queued position.
-    void this.library.preview(ticket.id, () => this.alive && ticket.lifetime === this.lifetime && ticket.generation === this.generation)
+    void this.library.preview(ticket.id, () => this.alive && ticket.lifetime === this.lifetime && ticket.generation === this.generation, ticket.admission?.reserve)
       .then(ticket.resolve, () => ticket.resolve({ ok: false, code: 'catalog-error', message: 'Preview operation failed.', descriptor: { key: 'errors.generic' } }))
       .finally(() => { this.active = null; this.dispatch(); });
   }

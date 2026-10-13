@@ -1,5 +1,11 @@
 # Estado da implementação
 
+## Issue #55: admissão parcial do envelope comprimido — 13/10/2026
+
+- Admissão antes da leitura/cópia da prévia, com envelope lógico `2N+1`, teto estrutural derivado do limite individual existente e no máximo dois envelopes retidos. Não é orçamento de RAM/RSS, tampouco soma física das cópias IPC.
+- Consumo/descarte cooperativo por lease/documento/geração; erro e retry PT-BR/EN/ES preservam sessão, receita e histórico. Invalidação/timeout não devolvem crédito de operação ainda em voo. Saves e status continuam autenticados e fora desse envelope.
+- [Contrato e pendências](../evidence/issue-55/contract.md), [verificação e desvios registrados](../evidence/issue-55/verification.md). #55 e #44 permanecem abertas para estágios restantes e cota de produção fundamentada; sem nova dependência, instalador, release ou promessa para 8 GB.
+
 ## Pré-release de código-fonte publicada — 12/10/2026
 
 - [v0.1.0-alpha.1](https://github.com/glaucia86/revelumo/releases/tag/v0.1.0-alpha.1) publicada em 2026-10-12T23:28:59Z, tag no SHA `bdb51e6c6eb78c5ad522639ff06ac76317c0a609`; [CI pós-merge](https://github.com/glaucia86/revelumo/actions/runs/38319815423) verde. Somente archives automáticos de fonte/notas; sem instaladores. [Estado e limites](versioning.md).

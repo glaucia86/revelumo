@@ -188,7 +188,8 @@ test('repeated reloads retain only one pending preview behind an old active deco
   const thirdDocument = await reload();
   const c = ipc.handle(event, owner, frame.url, { op: 'preview', id, generation: 1, document: thirdDocument });
   assert.deepEqual(await b, { ok: false, canceled: true }); // settles while A remains held
-  gate.release.resolve(); assert.equal((await a).ok, true); assert.equal((await c).ok, true);
+  gate.release.resolve(); assert.deepEqual(await a, { ok: false, canceled: true }); // old document cannot retain a delivered source
+  assert.equal((await c).ok, true);
   assert.equal(decodes(), 3);
 });
 

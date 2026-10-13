@@ -225,11 +225,16 @@ export function App() {
 
   async function loadPreview(photo: PhotoSummary, sequence: number, generation: number) {
     const result = await window.revelumo.previewPhoto(photo.id, generation);
-    if (sequence !== openSequence.current || (!result.ok && 'canceled' in result)) return;
+    if (sequence !== openSequence.current) {
+      if (result.ok) new PreviewSource(result.value).release();
+      return;
+    }
+    if (!result.ok && 'canceled' in result) return;
     if (result.ok) { replacePreview(new PreviewSource(result.value)); setMessage([]); setPreviewFailure(null); }
     else {
       const problem = result.descriptor ?? { key: 'errors.generic' };
       setMessage([problem]); setPreviewFailure(problem);
+      if (result.code === 'preview-capacity') return; // capacity is not an original-file failure
       const fresh = await window.revelumo.originalStatus(photo.id);
       if (sequence === openSequence.current && fresh.ok) setCurrentStatus(fresh.value);
     }

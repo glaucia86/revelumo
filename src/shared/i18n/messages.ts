@@ -1,5 +1,6 @@
 /** Stable message IDs and parameter contracts shared by main and renderer. */
 export const messageParameters = {
+  "errors.previewCapacity": {},
   "export.checkResult": {},
   "export.showPath": {},
   "export.outputLimit": {},

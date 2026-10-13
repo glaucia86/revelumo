@@ -7,13 +7,21 @@ import { applyJpegAdjustments } from '../processing/jpeg-adjustments.ts';
 let base: Uint8ClampedArray | null = null;
 let width = 0, height = 0, id = '', sessionId = '';
 const context = self as unknown as DedicatedWorkerGlobalScope;
+// This synchronous frame owns the only JS view of the compressed input.
+// Its locals are out of scope before the async preparation resumes. The event
+// envelope is cleared as well; native Blob/decoder allocations are not counted.
+function decodeInput(data: { bytes?: unknown }): Promise<ImageBitmap> {
+  const payload = data.bytes;
+  delete data.bytes;
+  const bytes = previewBytes(payload);
+  return createImageBitmap(new Blob([bytes], { type: 'image/jpeg' }), { imageOrientation: 'from-image', colorSpaceConversion: 'default' });
+}
 context.onmessage = async ({ data }) => {
   try {
     if (data.op === 'prepare') {
       base = null; width = height = 0;
       id = data.id; sessionId = data.sessionId;
-      const bytes = previewBytes(data.bytes);
-      const bitmap = await createImageBitmap(new Blob([bytes], { type: 'image/jpeg' }), { imageOrientation: 'from-image', colorSpaceConversion: 'default' });
+      const bitmap = await decodeInput(data);
       try {
         const scale = Math.min(1, 2048 / Math.max(bitmap.width, bitmap.height));
         width = Math.max(1, Math.round(bitmap.width * scale)); height = Math.max(1, Math.round(bitmap.height * scale));

@@ -1,0 +1,18 @@
+✔ a preview larger than its compressed envelope allowance is refused recoverably (14.954171ms)
+✔ a delivered envelope consumes capacity until its matching receipt and retry then succeeds (8.204294ms)
+✔ an old or duplicate receipt cannot release a newer envelope and invalidation alone releases nothing (6.083787ms)
+✔ preview capacity refusal does not block authenticated saves or end editing (5.949674ms)
+✔ ending an owner releases its delivered envelope for the next document (5.025072ms)
+✔ decoder failure returns its real error and leaves capacity available for recovery (5.812587ms)
+✔ two unconsumed sources bound receipt cardinality even when byte capacity remains (5.344944ms)
+✔ capacity is refused before the source Buffer allocation (3.82009ms)
+✔ owner retirement retains an active decode's envelope until settlement (6.086792ms)
+✔ owner retirement retains an active decode's envelope until its real failure (4.447698ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 218.219824
