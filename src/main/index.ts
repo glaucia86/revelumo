@@ -8,6 +8,7 @@ import type { MessageDescriptor } from '../shared/i18n/messages.ts';
 import { translate } from '../shared/i18n/format.ts';
 import { Catalog } from './catalog.ts';
 import { Library } from './library.ts';
+import { PreviewIpc } from './preview-ipc.ts';
 import { parseRequest } from '../shared/requests.ts';
 import { jpegPreview } from './preview.ts';
 import { jpegThumbnail } from './thumbnail.ts';
@@ -32,6 +33,7 @@ let exportJobs: JpegExportJobs | undefined;
 let exportGeneration: object = {};
 let exportSettlement: Promise<void> = Promise.resolve();
 let rendererAlive = false;
+let previewIpc: PreviewIpc | undefined;
 function retireExportGeneration() {
   const generation = exportGeneration; exportGeneration = {};
   exportSettlement = Promise.all([exportSettlement, exportJobs?.cancelOwner(generation)]).then(() => {});
@@ -67,11 +69,14 @@ async function createWindow() {
   });
   const created = window;
   created.webContents.on('did-start-navigation', (_event, _url, inPlace, mainFrame) => {
-    if (mainFrame && !inPlace) { rendererAlive = false; retireExportGeneration(); }
+    if (mainFrame && !inPlace && window === created) { rendererAlive = false; retireExportGeneration(); previewIpc?.retire(); }
   });
+  // Start retires the departing document; only a committed main-frame
+  // navigation may issue a fresh token to the new preload.
+  created.webContents.on('did-navigate', () => { if (window === created) previewIpc?.reset(created.webContents); });
   created.webContents.on('did-finish-load', () => { if (window === created) rendererAlive = true; });
-  created.webContents.on('render-process-gone', () => { if (window === created) { rendererAlive = false; retireExportGeneration(); } });
-  created.webContents.on('destroyed', () => { if (window === created) retireExportGeneration(); });
+  created.webContents.on('render-process-gone', () => { if (window === created) { rendererAlive = false; retireExportGeneration(); previewIpc?.retire(); } });
+  created.webContents.on('destroyed', () => { if (window === created) { retireExportGeneration(); previewIpc?.retire(); } });
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   window.webContents.on('will-navigate', (event) => event.preventDefault());
   window.on('close', (event) => {
@@ -123,6 +128,8 @@ if (ownsInstance) app.whenReady().then(async () => {
   });
   catalog = new Catalog(join(dataDir, 'catalog.sqlite'));
   const library = new Library(catalog, preview, thumbnail);
+  previewIpc = new PreviewIpc(library);
+  ipcMain.handle('revelumo:preview', (event, input: unknown) => previewIpc!.handle(event, window?.webContents ?? null, entryUrl, input));
   exportJobs = new JpegExportJobs(library, async name => {
     const owner = window;
     if (!owner || owner.isDestroyed()) return null;
@@ -158,6 +165,7 @@ if (ownsInstance) app.whenReady().then(async () => {
         if (!closeRequested) return fail('invalid-request', 'Nenhum fechamento solicitado.', { key: 'errors.noCloseRequested' });
         await exportJobs?.cancelOwner(exportGeneration);
         await exportSettlement;
+        previewIpc?.retire();
         closeAllowed = true;
         // Reply before closing the bridge's owning renderer.
         setImmediate(() => { if (window === owner && !owner.isDestroyed()) owner.close(); });
@@ -168,7 +176,6 @@ if (ownsInstance) app.whenReady().then(async () => {
       if (request.op === 'status') return await library.status(request.id);
       if (request.op === 'availability') return await library.availability(request.id);
       if (request.op === 'thumbnail') return await library.thumbnail(request.id);
-      if (request.op === 'preview') return await library.preview(request.id);
       if (selectingFiles) return fail('busy', 'Outra seleção de arquivos está em andamento. Aguarde.', { key: 'errors.busy' });
       if (request.op === 'relocate') {
         selectingFiles = true;

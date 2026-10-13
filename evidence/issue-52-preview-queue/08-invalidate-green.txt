@@ -1,0 +1,12 @@
+✔ a retired preview waiting for the protected queue does not open its original (15.178338ms)
+✔ only the latest waiting preview survives while a started preview completes (6.599467ms)
+✔ old or duplicate generations cannot supersede the current selection (5.573959ms)
+✔ leaving the viewer retires queued previews without retiring a started pipeline (4.187457ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 189.737331

@@ -8,10 +8,12 @@ const source = path.join(run, 'source.jpg'), secondSource = path.join(run, 'seco
 if (mode === 'first') { fs.copyFileSync(path.join(repo, 'test/fixtures/export/circuit-source.jpg'), source, fs.constants.COPYFILE_EXCL); fs.writeFileSync(path.join(run,'original.sha256'), hash(source)); fs.copyFileSync(path.join(repo,'test/fixtures/exposure-orientation-6.jpg'),secondSource,fs.constants.COPYFILE_EXCL); fs.writeFileSync(path.join(run,'second.sha256'),hash(secondSource)); assert.notEqual(hash(source),hash(secondSource)); }
 dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [source,secondSource] });
 dialog.showSaveDialog = async () => ({ canceled:false, filePath:path.join(run,'recovered-export.jpg') });
-let beginCount = 0, previewCount = 0, failSave = false, heldPreview = null, heldExportStatus = null;
+let beginCount = 0, previewCount = 0, invalidationCount = 0, failInvalidationAt = 0, failRetirement = false, failEnd = false, failSave = false, heldPreview = null, heldExportStatus = null;
 const register = ipcMain.handle.bind(ipcMain);
 ipcMain.handle = (channel, listener) => register(channel, async (event, request) => {
   if (request?.op === 'begin-edit') beginCount++;
+  if (channel === 'revelumo:preview' && request?.op === 'invalidate') { invalidationCount++; if (failRetirement || invalidationCount === failInvalidationAt) return { ok:false, code:'invalid-request', message:'Synthetic retirement failure' }; }
+  if (request?.op === 'end-edit' && failEnd) return { ok:false, code:'invalid-request', message:'Synthetic end-edit failure' };
   if (request?.op === 'preview') previewCount++;
   if (request?.op === 'adjustments' && failSave) return { ok:false, code:'catalog-error', message:'Synthetic save failure', descriptor:{key:'errors.saveAdjustment'} };
   const result = await listener(event, request);
@@ -66,6 +68,19 @@ const timer = setTimeout(()=>{ console.error('Preview lifecycle timeout'); app.e
     assert.equal(beginCount,1,'retry preserves edit session'); assert.equal(previewCount,2,'explicit retry authenticates original');
     await input('.exposure input[type=number]',1); await saved();
     await input('.white-balance input[type=number]',25); await saved();
+    // Retirement runs once after flush; a hook/end-edit failure preserves session and draft.
+    for (const fault of ['retirement','end-edit']) {
+      const beforeInvalidation=invalidationCount;
+      failRetirement=fault==='retirement'; failEnd=fault==='end-edit';
+      await js('document.querySelector(".back").click();document.querySelector(".back").click()');
+      await until(()=>js('Boolean(document.querySelector(".exit-failure"))'),'retirement failure '+fault);
+      assert.equal(invalidationCount,beforeInvalidation+1,'duplicate exit does not retire twice');
+      assert.equal(beginCount,1); assert.equal(await js('Number(document.querySelector(".exposure input[type=number]").value)'),1);
+      assert.equal(await js('Number(document.querySelector(".white-balance input[type=number]").value)'),25);
+      failRetirement=false; failEnd=false;
+      await js('Array.from(document.querySelectorAll(".exit-failure button")).find(b=>b.textContent==="Stay").click()');
+      await ready();
+    }
     // A failed retry must remain recoverable even if Worker construction fails.
     await js('previewProbe.workers.at(-1).onerror(new Event("error")); previewProbe.throwNext=true');
     await until(()=>js('Boolean(document.querySelector(".preview-retry"))'),'runtime worker failure');
@@ -87,7 +102,9 @@ const timer = setTimeout(()=>{ console.error('Preview lifecycle timeout'); app.e
     await js('Array.from(document.querySelectorAll(".exposure button")).find(b=>b.textContent==="Retry saving").focus();previewProbe.workers.at(-1).onerror(new Event("error"))');
     await until(()=>js('Boolean(document.querySelector(".preview-retry"))'),'fault with draft');
     assert.equal(await js('document.activeElement?.textContent'), 'Retry saving','spontaneous failure does not steal save focus');
+    const invalidationsBeforeFailedSave=invalidationCount;
     await click('.back'); await until(()=>js('Boolean(document.querySelector(".exit-failure"))'),'unsaved exit blocked');
+    assert.equal(invalidationCount,invalidationsBeforeFailedSave,'failed save must not retire preview intent');
     assert.equal(await js('Number(document.querySelector(".exposure input[type=number]").value)'),2);
     await click('.preview-retry'); await ready(); assert.equal(beginCount,1);
     assert.equal(await js('Number(document.querySelector(".exposure input[type=number]").value)'),2);
@@ -153,7 +170,9 @@ const timer = setTimeout(()=>{ console.error('Preview lifecycle timeout'); app.e
     await click('[aria-label="Open second.jpg"]'); await ready();
     assert.equal(await js('Number(document.querySelector(".exposure input[type=number]").value)'),0);
     assert.equal(await js('Number(document.querySelector(".white-balance input[type=number]").value)'),0);
+    const finalRetirements=invalidationCount; failInvalidationAt=finalRetirements+2;
     await click('.back'); await until(()=>js('Boolean(document.querySelector(".tile"))'),'return from distinct second photo');
+    assert.equal(invalidationCount,finalRetirements+1,'successful exit has no second fallible retirement after ending the session');
     assert.equal(await js('previewProbe.live'),0); assert.equal(await js('previewProbe.peak'),1);
     const list=await js('window.revelumo.listPhotos()'); assert.ok(list.ok); fs.writeFileSync(path.join(run,'id'),list.value.find(p=>p.name==='source.jpg').id);
   } else {

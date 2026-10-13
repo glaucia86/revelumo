@@ -1,0 +1,37 @@
+✖ a retired preview waiting for the protected queue does not open its original (12.706558ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 138.242905
+
+✖ failing tests:
+
+test at test/preview-queue.test.ts:33:1
+✖ a retired preview waiting for the protected queue does not open its original (12.706558ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   code: 'unreadable',
+  +   descriptor: {
+  +     key: 'errors.unreadable'
+  +   },
+  +   message: 'Não foi possível ler o original. Verifique sua localização e permissão.',
+  -   canceled: true,
+      ok: false
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-issue-52/test/preview-queue.test.ts:45:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: false, code: 'unreadable', message: 'Não foi possível ler o original. Verifique sua localização e permissão.', descriptor: { key: 'errors.unreadable' } },
+    expected: { ok: false, canceled: true },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

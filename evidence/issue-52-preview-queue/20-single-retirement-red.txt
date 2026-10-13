@@ -1,0 +1,8 @@
+[373573:1012/231522.376205:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[373573:1012/231522.458194:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[373573:1012/231522.458231:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+AssertionError [ERR_ASSERTION]: successful exit has no second fallible retirement after ending the session
+
+23 !== 22
+
+    at /workspace/scratch/827b15a15839/revelumo-issue-52/test/electron-preview-memory.cjs:175:12

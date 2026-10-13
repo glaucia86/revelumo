@@ -1,0 +1,30 @@
+✖ preload keeps the document handshake private and reserves monotonic preview intents (72.363832ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 385.621899
+
+✖ failing tests:
+
+test at test/preview-preload.test.ts:8:1
+✖ preload keeps the document handshake private and reserves monotonic preview intents (72.363832ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-issue-52/test/preview-preload.test.ts:18:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

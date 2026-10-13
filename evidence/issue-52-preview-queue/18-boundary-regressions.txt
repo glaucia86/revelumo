@@ -1,0 +1,19 @@
+✔ preload keeps the document handshake private and reserves monotonic preview intents (62.332548ms)
+✔ a direct preview overtakes an earlier reservation without reusing its generation (19.204985ms)
+✔ a failed preload handshake fails closed and is never silently retried (17.669375ms)
+✔ a retired preview waiting for the protected queue does not open its original (11.993446ms)
+✔ only the latest waiting preview survives while a started preview completes (6.996921ms)
+✔ old or duplicate generations cannot supersede the current selection (4.405041ms)
+✔ leaving the viewer retires queued previews without retiring a started pipeline (3.992831ms)
+✔ retired document tokens cannot become current again after reload or crash (6.940187ms)
+✔ untrusted owners, frames, origins and malformed preview payloads cannot change a selection (4.809519ms)
+✔ a preview storm settles replaced requests and does not overtake an accepted save (5.574599ms)
+✔ repeated reloads retain only one pending preview behind an old active decode (4.047893ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 421.919954

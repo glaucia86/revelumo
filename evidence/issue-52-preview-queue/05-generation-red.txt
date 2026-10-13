@@ -1,0 +1,17 @@
+✔ a retired preview waiting for the protected queue does not open its original (10.6607ms)
+✔ only the latest waiting preview survives while a started preview completes (6.141038ms)
+✖ old or duplicate generations cannot supersede the current selection (1003.275363ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 1
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1146.474124
+
+✖ failing tests:
+
+test at test/preview-queue.test.ts:69:1
+✖ old or duplicate generations cannot supersede the current selection (1003.275363ms)
+  'test timed out after 1000ms'
