@@ -1,0 +1,8 @@
+[312176:1012/210307.334826:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[312176:1012/210307.422129:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[312176:1012/210307.422188:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+AssertionError [ERR_ASSERTION]: retry is visible in the minimum editing viewport
+
+false !== true
+
+    at /workspace/scratch/827b15a15839/revelumo-issue-44/test/electron-preview-memory.cjs:46:12

@@ -4,7 +4,7 @@ Mudanças relevantes para quem usa o Revelumo. `Unreleased` contém somente entr
 
 ## Unreleased
 
-Nenhuma mudança posterior à candidata foi agrupada aqui ainda.
+- Recuperação explícita de prévia JPEG em PT-BR/EN/ES, preservando sessão, rascunho e histórico; entrada comprimida liberada após preparo/erro/saída e resultados obsoletos descartados. Fatia parcial da [issue #44](https://github.com/glaucia86/revelumo/issues/44), sem alegação de orçamento total de memória ou suporte a 8 GB.
 
 ## 0.1.0-alpha.1 — 2026-10-12 (pré-release de código-fonte)
 

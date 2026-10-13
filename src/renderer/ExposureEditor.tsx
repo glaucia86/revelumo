@@ -4,8 +4,9 @@ import { useLanguage } from './i18n/LanguageProvider.tsx';
 import type { MessageDescriptor } from '../shared/i18n/messages.ts';
 import { isMessageDescriptor } from '../shared/i18n/format.ts';
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import type { PreviewSource } from './preview-source.ts';
 import { MAX_EXPOSURE_CHECKPOINT_GESTURES } from '../shared/contracts.ts';
-import type { EditSession, PhotoSummary, Preview, ExposureGesture, PhotoAdjustments } from '../shared/contracts.ts';
+import type { EditSession, PhotoSummary, ExposureGesture, PhotoAdjustments } from '../shared/contracts.ts';
 
 export type ExposureHandle = { leave(discard?: boolean): Promise<ExportJobState | undefined> };
 type GestureKind = 'number' | 'slider-pointer' | 'slider-key' | 'reset';
@@ -13,7 +14,7 @@ type Draft = PhotoAdjustments & { revision: number };
 type PendingGesture = ExposureGesture & Draft;
 type PreviewRequest = Draft & { renderRequestId: number };
 
-export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; preview: Preview | null; onExportResult: (result: ExportJobState) => void }>(function ExposureEditor({ photo, preview, onExportResult }, ref) {
+export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; preview: PreviewSource | null; previewLoading: boolean; previewFailure: MessageDescriptor | null; onRetryPreview: () => void; onExportResult: (result: ExportJobState) => void }>(function ExposureEditor({ photo, preview, previewLoading, previewFailure, onRetryPreview, onExportResult }, ref) {
   const { t } = useLanguage();
   const [exporting, setExporting] = useState(false);
   const [exportStatus, setExportStatus] = useState<MessageDescriptor | null>(null);
@@ -111,6 +112,8 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
   const worker = useRef<Worker | null>(null), ready = useRef(false), rendering = useRef<number | null>(null), waiting = useRef<PreviewRequest | null>(null);
   const previewSequence = useRef(0);
   const canvas = useRef<HTMLCanvasElement>(null);
+  const retryButton = useRef<HTMLButtonElement>(null), exposureInput = useRef<HTMLInputElement>(null);
+  const restorePreviewFocus = useRef(false);
   const [numericText, setNumericText] = useState('0.0');
   const [whiteBalance, setWhiteBalance] = useState({ temperature: 0, tint: 0 });
   const [whiteBalanceText, setWhiteBalanceText] = useState({ temperature: '0', tint: '0' });
@@ -317,14 +320,35 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
   }, [photo.id]);
 
   useEffect(() => {
+    // The parent can reject recovery while an exit/export is being reconciled.
+    // Clear the prior error only when a new source request was actually accepted.
+    if (previewLoading) setPreviewError(null);
+  }, [previewLoading]);
+
+  useEffect(() => {
+    setPrepared(false);
     if (!loaded || !preview || preview.photo.id !== photo.id || !session.current) return;
-    ready.current = false; rendering.current = null;
-    const current = session.current, instance = new Worker(new URL('./exposure.worker.ts', import.meta.url), { type: 'module' });
-    worker.current = instance; setPrepared(false);
+    ready.current = false; rendering.current = null; setPreviewError(null);
+    const current = session.current;
+    let instance: Worker;
+    try { instance = new Worker(new URL('./exposure.worker.ts', import.meta.url), { type: 'module' }); }
+    catch { preview.release(); setPreviewError({ key: 'editor.workerFailed' }); return; }
+    worker.current = instance;
+    const currentAttempt = () => alive.current && instance === worker.current;
+    function disposeAttempt() {
+      preview!.release(); instance.terminate();
+      if (worker.current === instance) worker.current = null;
+      ready.current = false; rendering.current = null; waiting.current = null;
+      if (canvas.current) { canvas.current.width = canvas.current.height = 1; delete canvas.current.dataset.renderRequestId; delete canvas.current.dataset.revision; }
+    }
+    function failPreview(problem: MessageDescriptor) {
+      if (!currentAttempt()) return;
+      disposeAttempt(); setPrepared(false); setPreviewError(problem);
+    }
     instance.onmessage = ({ data }) => {
       if (!alive.current || instance !== worker.current || data.id !== photo.id || data.sessionId !== current.sessionId) return;
-      if (data.op === 'error') { setPreviewError(isMessageDescriptor(data.descriptor) ? data.descriptor : { key: 'editor.workerFailed' }); return; }
-      if (data.op === 'ready') { ready.current = true; render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths }); return; }
+      if (data.op === 'error') { failPreview(isMessageDescriptor(data.descriptor) ? data.descriptor : { key: 'editor.workerFailed' }); return; }
+      if (data.op === 'ready') { preview.release(); ready.current = true; render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths }); return; }
       if (data.op === 'pixels') {
         if (data.renderRequestId !== rendering.current) return;
         rendering.current = null;
@@ -338,9 +362,10 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
         startNextRender();
       }
     };
-    instance.onerror = () => setPreviewError({ key: 'editor.workerFailed' });
-    instance.postMessage({ op: 'prepare', id: photo.id, sessionId: current.sessionId, dataUrl: preview.dataUrl });
-    return () => { instance.terminate(); if (worker.current === instance) worker.current = null; waiting.current = null; ready.current = false; };
+    instance.onerror = () => failPreview({ key: 'editor.workerFailed' });
+    try { instance.postMessage({ op: 'prepare', id: photo.id, sessionId: current.sessionId, dataUrl: preview.read() }); }
+    catch { failPreview({ key: 'editor.workerFailed' }); }
+    return disposeAttempt;
   }, [loaded, preview, photo.id]);
 
   function change(text: string, kind: GestureKind) {
@@ -379,13 +404,23 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
   function formatWhiteBalance(field: 'temperature' | 'tint') {
     setWhiteBalanceText(current => ({ ...current, [field]: String(draft.current[field]) }));
   }
-  const disabled = exporting || !loaded || !prepared || leaving || moving || historyFailure || Boolean(previewError);
+  const disabled = exporting || !loaded || !prepared || leaving || moving || historyFailure || Boolean(previewError || previewFailure) || previewLoading;
   const pendingChange = pendingGestures.current.some(item => item.exposureTenths !== confirmed.current.exposureTenths);
+  useEffect(() => {
+    if (!restorePreviewFocus.current) return;
+    // Restore only focus lost by the explicit recovery action. A user who
+    // moved to Save, Back or another control keeps that newer choice.
+    if (document.activeElement !== document.body && document.activeElement !== retryButton.current) { restorePreviewFocus.current = false; return; }
+    if (previewLoading || leaving || moving || exporting) return;
+    const target = previewError || previewFailure ? retryButton.current : prepared ? exposureInput.current : null;
+    if (target && !target.disabled) { target.focus(); restorePreviewFocus.current = false; }
+  }, [prepared, previewError, previewFailure, previewLoading, leaving, moving, exporting]);
   return <div className="editing">
+      {(previewError || previewFailure) && <p className="preview-problem" role="alert">{t((previewError || previewFailure)!)} <button ref={retryButton} className="preview-retry" disabled={previewLoading || leaving || moving || exporting} onClick={event => { restorePreviewFocus.current = document.activeElement === event.currentTarget; onRetryPreview(); }}>{t({ key: 'editor.retryPreview' })}</button></p>}
     <div className="export-controls"><button className="export-jpeg" disabled={disabled} onClick={() => void exportPhoto()}>{t({ key: exportJobId.current || pendingExportStart.current ? 'export.checkResult' : 'export.action' })}</button>{exporting && <button className="export-cancel" onClick={() => void cancelExport()}>{t({ key: 'export.cancel' })}</button>}<small>{t({ key: 'export.settings' })}</small><small>{t({ key: 'export.limitHint' })}</small>{exportStatus && <p role={exportProblem ? 'alert' : 'status'}>{t(exportStatus)}</p>}{exportCleanup && <p role="alert">{t({ key: 'export.cleanupFailure' })}</p>}</div>
     {preview && <figure><canvas ref={canvas} width={1} height={1} role="img" aria-label={t({ key: 'editor.previewLabel', params: { filename: photo.name } })}/><figcaption>{photo.name} · {t({ key: 'editor.previewCaption' })}</figcaption></figure>}
     <div className="exposure" aria-label={t({ key: 'editor.exposureGroup' })}>
-      <label>{t({ key: 'editor.exposure' })} <input aria-label={t({ key: 'editor.exposure' })} type="range" min="-3" max="3" step="0.1" value={value / 10} disabled={disabled} onChange={event => changeControl(event.target.value)}
+      <label>{t({ key: 'editor.exposure' })} <input ref={exposureInput} aria-label={t({ key: 'editor.exposure' })} type="range" min="-3" max="3" step="0.1" value={value / 10} disabled={disabled} onChange={event => changeControl(event.target.value)}
         onPointerDown={event => { beginGesture('slider-pointer'); event.currentTarget.setPointerCapture(event.pointerId); }} onPointerUp={() => finishGesture('slider-pointer')} onPointerCancel={() => finishGesture('slider-pointer')} onLostPointerCapture={() => finishGesture('slider-pointer')}
         onKeyDown={event => { if (isSliderKey(event.key)) { sliderKeys.current.add(event.key); if (activeGesture.current?.kind !== 'slider-pointer') beginGesture('slider-key'); } }}
         onKeyUp={event => { if (isSliderKey(event.key)) { sliderKeys.current.delete(event.key); if (!sliderKeys.current.size) finishGesture('slider-key'); } }}
@@ -397,7 +432,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
       <button disabled={disabled || !history.redoSteps || pendingChange} onClick={() => void moveHistory('redo')}>{t({ key: 'editor.redo' })}</button>
       <button disabled={disabled} aria-pressed={compare} onClick={() => { comparison.current = !comparison.current; setCompare(comparison.current); render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths }); }}>{t({ key: 'editor.compare' })}</button>
       <span className="save-status" role="status" aria-live="polite">{t(status)}</span>
-      {(error || previewError) && <p role="alert">{t((error || previewError)!)} {error && loaded && (historyFailure ? <button disabled={leaving || moving} onClick={() => { if (historyRequest.current) void moveHistory(historyRequest.current.direction); }}>{t({ key: 'editor.retryHistory' })}</button> : <button disabled={leaving} onClick={() => { cancelDelay(); void save(); }}>{t({ key: 'editor.retrySave' })}</button>)}</p>}
+      {error && <p role="alert">{t(error)} {error && loaded && (historyFailure ? <button disabled={leaving || moving} onClick={() => { if (historyRequest.current) void moveHistory(historyRequest.current.direction); }}>{t({ key: 'editor.retryHistory' })}</button> : <button disabled={leaving} onClick={() => { cancelDelay(); void save(); }}>{t({ key: 'editor.retrySave' })}</button>)}</p>}
     </div>
     <div className="white-balance" aria-label={t({ key: 'editor.whiteBalance' })}>
       <h3>{t({ key: 'editor.whiteBalance' })} <small>{t({ key: 'editor.relative' })}</small></h3>

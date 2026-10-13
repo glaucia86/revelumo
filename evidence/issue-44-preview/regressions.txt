@@ -1,0 +1,31 @@
+green-export-fixed reopen 0
+reg-exposure first 0
+reg-exposure reopen 0
+reg-exposure discard-race 0
+reg-exposure reopen 0
+reg-exposure race 0
+reg-exposure race-reopen 0
+reg-history first 0
+reg-history reopen 0
+reg-history gestures 0
+reg-history history-failure 0
+reg-history history-reopen 0
+reg-wb first 0
+reg-wb reopen 0
+reg-wb preview-race 1
+# The WB preview-race failure above followed an omitted prerequisite controls phase.
+# Full required continuation including controls follows; all passed.
+final-preview reopen 0
+reg-wb controls 0
+reg-wb preview-race 0
+reg-wb save-race 0
+reg-wb history-ack 0
+reg-wb keyboard 0
+reg-wb many-pending 0
+reg-wb close-race 0
+reg-wb close-reopen 0
+reg-wb color 0
+reg-wb layout 0
+reg-editor-language first 0
+reg-export-ui first 0
+reg-cobre first 0

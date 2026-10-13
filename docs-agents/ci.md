@@ -125,3 +125,11 @@ Reabertura independente com Pillow/LittleCMS e medição completa de40 MP ficam 
 ### Visible JPEG export gate
 
 `npm run test:jpeg-export-ui -- <fresh directory>` exercises the actual packaged editor/main/circuit. The Windows job runs it after the circuit gate; dialogs and external IPC/FS failure timing are adapted. It verifies save acknowledgement, comparison exit, selected output, keyboard cancellation, three-language states at an asserted 760×540 viewport, collision, navigation/close reconciliation, accepted/unaccepted start recovery and renderer loss. The deliberate renderer crash and injected IPC errors print diagnostics even on a successful test. Screenshots are local test output, not CI artifact uploads. Native Windows dialogs, physical input, screen readers and macOS remain unvalidated. See [UI evidence](../evidence/issue-19-ui/report.md).
+
+## Recuperação e propriedade da prévia JPEG — fatia parcial #44
+
+Após `npm run package`, execute `npm run test:preview-memory -- <diretório-novo> first` e, em outro processo, `npm run test:preview-memory -- <mesmo-diretório> reopen`. O novo gate `preview_memory` executa essa ordem no Windows; Ubuntu continua sem esse smoke gráfico. Um diretório novo impede reutilização silenciosa de catálogo/artefatos anteriores.
+
+O teste usa dois JPEGs sintéticos distintos e o app empacotado. Confere importação, EV/WB, recuperação explícita, identidade após alteração externa controlada da fixture, preservação de draft/autosave/histórico, exportação reconciliada, callbacks obsoletos, retorno ao catálogo e reabertura. Diálogos, falha/ACK de Worker e tempo de resposta IPC são adaptados nas fronteiras; algoritmos, SQLite e worker/canvas reais não são substituídos. O perfil, screenshots e resultados JSON são locais; este gate não publica artifacts.
+
+Contagem de workers e descarte de referências são invariantes de propriedade, não medições de RSS/heap ou garantia de coleta imediata pelo Chromium. Esta parte não fecha #44: admissão sob orçamento reduzido, corpus próximo aos limites e medições repetidas por processo permanecem pendentes. Não comprova máquina de 8 GB nem macOS.

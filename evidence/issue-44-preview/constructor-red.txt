@@ -1,0 +1,6 @@
+[313059:1012/210417.702688:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[313059:1012/210417.827761:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[313059:1012/210417.827798:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+Error: Timed out: constructor failure retry remains available
+    at until (/workspace/scratch/827b15a15839/revelumo-issue-44/test/electron-preview-memory.cjs:20:170)
+    at async /workspace/scratch/827b15a15839/revelumo-issue-44/test/electron-preview-memory.cjs:56:5

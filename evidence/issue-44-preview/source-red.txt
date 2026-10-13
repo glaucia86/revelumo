@@ -1,0 +1,32 @@
+✖ retiring a preview releases its compressed payload without changing photo identity (1.333652ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 123.85572
+
+✖ failing tests:
+
+test at test/preview-source.test.ts:5:1
+✖ retiring a preview releases its compressed payload without changing photo identity (1.333652ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'data:image/jpeg;base64,YQ=='
+  - null
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-issue-44/test/preview-source.test.ts:9:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'data:image/jpeg;base64,YQ==',
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

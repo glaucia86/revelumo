@@ -1,7 +1,7 @@
 import { exportFailureMessage } from '../shared/jpeg-export-messages.ts';
 import type { ExportJobState } from '../shared/jpeg-export-contract.ts';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import type { BatchItem, ImportProgress, PhotoSummary, PhotoStatus, PhotoAvailability, Preview, LibraryFilters } from '../shared/contracts.ts';
+import type { BatchItem, ImportProgress, PhotoSummary, PhotoStatus, PhotoAvailability, LibraryFilters } from '../shared/contracts.ts';
 import { lastPage, pagePhotos } from './gallery.ts';
 import { Icon } from './ui/Icon.tsx';
 import './theme/cobre.css';
@@ -11,6 +11,7 @@ import type { MessageDescriptor } from '../shared/i18n/messages.ts';
 import { formatNumber } from '../shared/i18n/format.ts';
 import { ClassificationControls } from './ClassificationControls.tsx';
 import { ExposureEditor, type ExposureHandle } from './ExposureEditor.tsx';
+import { PreviewSource } from './preview-source.ts';
 
 export function App() {
   const { t, resolved: locale } = useLanguage();
@@ -23,7 +24,15 @@ export function App() {
   const [importNotice, setImportNotice] = useState<{ valid: number; failed: number; stopped: boolean; ids: string[] } | null>(null);
   const querySequence = useRef(0);
   const filtered = filters.rating !== 'all' || filters.flag !== 'all';
-  const [preview, setPreview] = useState<Preview | null>(null);
+  const [preview, setPreview] = useState<PreviewSource | null>(null);
+  const previewOwner = useRef<PreviewSource | null>(null);
+  const previewLoadingRef = useRef(false);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewFailure, setPreviewFailure] = useState<MessageDescriptor | null>(null);
+  function replacePreview(next: PreviewSource | null) {
+    previewOwner.current?.release(); previewOwner.current = next; setPreview(next);
+  }
+  useEffect(() => () => previewOwner.current?.release(), []);
   const [loading, setLoading] = useState(true);
   const [importing, setImporting] = useState(false);
   const [relocating, setRelocating] = useState(false);
@@ -178,22 +187,42 @@ export function App() {
   async function openPhotoAfterFlush(photo: PhotoSummary) {
     const sequence = ++openSequence.current;
     setImportNotice(null);
-    setViewing(true); setSelectedPhoto(photo); setCurrentStatus(null); setMessage([{ key: 'viewer.opening' }]); setPreview(null);
+    setViewing(true); setSelectedPhoto(photo); setCurrentStatus(null); setMessage([{ key: 'viewer.opening' }]); replacePreview(null); setPreviewFailure(null);
+    previewLoadingRef.current = true; setPreviewLoading(true);
     try {
       const status = await window.revelumo.originalStatus(photo.id);
       if (sequence !== openSequence.current) return;
       if (!status.ok) { setMessage([status.descriptor ?? { key: 'errors.generic' }]); return; }
       setCurrentStatus(status.value);
       if (status.value.state !== 'available') { setMessage([status.value.descriptor ?? { key: 'errors.generic' }]); return; }
-      const result = await window.revelumo.previewPhoto(photo.id);
-      if (sequence !== openSequence.current) return;
-      if (result.ok) { setPreview(result.value); setMessage([]); }
-      else {
-        setMessage([result.descriptor ?? { key: 'errors.generic' }]);
-        const fresh = await window.revelumo.originalStatus(photo.id);
-        if (sequence === openSequence.current && fresh.ok) setCurrentStatus(fresh.value);
-      }
-    } catch { if (sequence === openSequence.current) setMessage([{ key: 'viewer.openFailed' }]); }
+      await loadPreview(photo, sequence);
+    } catch { if (sequence === openSequence.current) { setMessage([{ key: 'viewer.openFailed' }]); setPreviewFailure({ key: 'viewer.openFailed' }); } }
+    finally { if (sequence === openSequence.current) { previewLoadingRef.current = false; setPreviewLoading(false); } }
+  }
+
+  async function loadPreview(photo: PhotoSummary, sequence: number) {
+    const result = await window.revelumo.previewPhoto(photo.id);
+    if (sequence !== openSequence.current) return;
+    if (result.ok) { replacePreview(new PreviewSource(result.value)); setMessage([]); setPreviewFailure(null); }
+    else {
+      const problem = result.descriptor ?? { key: 'errors.generic' };
+      setMessage([problem]); setPreviewFailure(problem);
+      const fresh = await window.revelumo.originalStatus(photo.id);
+      if (sequence === openSequence.current && fresh.ok) setCurrentStatus(fresh.value);
+    }
+  }
+
+  async function retryPreview() {
+    if (!selectedPhoto || previewLoadingRef.current || transitioning.current || exportExitPending.current) return;
+    const photo = selectedPhoto, sequence = ++openSequence.current;
+    previewLoadingRef.current = true; setPreviewLoading(true); setPreviewFailure(null); replacePreview(null);
+    try {
+      // previewPhoto reauthenticates the original. Do not create a new edit
+      // session: the editor still owns its draft, confirmation and history.
+      await loadPreview(photo, sequence);
+      if (sequence === openSequence.current) await refreshSelectedStatus(photo);
+    } catch { if (sequence === openSequence.current) setPreviewFailure({ key: 'viewer.openFailed' }); }
+    finally { if (sequence === openSequence.current) { previewLoadingRef.current = false; setPreviewLoading(false); } }
   }
 
   async function relocatePhoto() {
@@ -232,7 +261,7 @@ export function App() {
     finally { setImporting(false); setProgress(null); }
   }
 
-  function resetViewer() { if (viewing) returnFocusId.current = selectedPhoto?.id ?? null; ++openSequence.current; setLoading(true); setQueryRefresh(current => current + 1); setImportNotice(null); setViewing(false); setSelectedPhoto(null); setCurrentStatus(null); setPreview(null); setMessage([]); }
+  function resetViewer() { if (viewing) returnFocusId.current = selectedPhoto?.id ?? null; ++openSequence.current; setLoading(true); setQueryRefresh(current => current + 1); setImportNotice(null); setViewing(false); setSelectedPhoto(null); setCurrentStatus(null); replacePreview(null); previewLoadingRef.current = false; setPreviewLoading(false); setPreviewFailure(null); setMessage([]); }
   function showGrid() { void leave(resetViewer); }
 
   return <main className="catalog-shell" data-view={viewing ? 'editor' : 'catalog'}>
@@ -272,7 +301,7 @@ export function App() {
         </div>}
       </aside>
       <section ref={catalogSection} className={viewing ? 'viewer' : 'gallery'} aria-label={viewing ? t({ key: 'viewer.label' }) : t({ key: 'catalog.grid' })} aria-busy={loading}>
-        {viewing ? <><button className="back" disabled={relocating || classifying || exiting} onClick={showGrid}>{t({ key: 'viewer.back' })}</button>{currentStatus && currentStatus.state !== 'available' ? <div className="original-notice" role="status"><h2>{selectedPhoto?.name}</h2><p>{t(currentStatus.descriptor ?? { key: 'errors.generic' })}</p>{preview && <p>{t({ key: 'viewer.draftPreserved' })}</p>}{currentStatus.canRelocate && <button disabled={relocating || importing || classifying || exiting} onClick={() => void relocatePhoto()} aria-label={t({ key: 'viewer.locateNamed', params: { filename: selectedPhoto?.name ?? '' } })}>{t({ key: relocating ? 'viewer.locating' : 'viewer.locate' })}</button>}</div> : !preview && <p className="quiet">{renderMessage(message) || t({ key: 'viewer.opening' })}</p>}{selectedPhoto && <><ExposureEditor key={`exposure-${selectedPhoto.id}`} ref={editor} photo={selectedPhoto} preview={preview} onExportResult={rememberExport}/><ClassificationControls key={selectedPhoto.id} photo={selectedPhoto} onBusyChange={setClassifying} onMessage={setMessage}/></>}</> :
+        {viewing ? <><button className="back" disabled={relocating || classifying || exiting} onClick={showGrid}>{t({ key: 'viewer.back' })}</button>{currentStatus && currentStatus.state !== 'available' ? <div className="original-notice" role="status"><h2>{selectedPhoto?.name}</h2><p>{t(currentStatus.descriptor ?? { key: 'errors.generic' })}</p>{preview && <p>{t({ key: 'viewer.draftPreserved' })}</p>}{currentStatus.canRelocate && <button disabled={relocating || importing || classifying || exiting} onClick={() => void relocatePhoto()} aria-label={t({ key: 'viewer.locateNamed', params: { filename: selectedPhoto?.name ?? '' } })}>{t({ key: relocating ? 'viewer.locating' : 'viewer.locate' })}</button>}</div> : !preview && <p className="quiet">{renderMessage(message) || t({ key: 'viewer.opening' })}</p>}{selectedPhoto && <><ExposureEditor key={`exposure-${selectedPhoto.id}`} ref={editor} photo={selectedPhoto} preview={preview} previewLoading={previewLoading} previewFailure={previewFailure} onRetryPreview={() => void retryPreview()} onExportResult={rememberExport}/><ClassificationControls key={selectedPhoto.id} photo={selectedPhoto} onBusyChange={setClassifying} onMessage={setMessage}/></>}</> :
           <><div className="catalog-heading"><h1 tabIndex={-1}>{t({ key: filtered ? 'catalog.filtered' : 'shell.allPhotos' })}</h1><p>{t({ key: 'catalog.description' })}</p></div>{failures.length > 0 && <details className="failures"><summary>{t({ key: 'import.failedFiles', params: { count: failures.length } })}</summary><ul>{failures.map((item, index) => <li key={index}>{item.name}: {!item.result.ok && t(item.result.descriptor ?? { key: 'errors.generic' })}</li>)}</ul></details>}
             {loading ? <p role="status">{t({ key: 'catalog.loading' })}</p> : queryError ? <div className="query-error" role="alert"><p>{t(queryError)}</p><button onClick={() => setQueryRefresh(current => current + 1)}>{t({ key: 'preferences.retry' })}</button></div> : photos.length ? <><p className="quiet" role="status">{t({ key: filtered ? 'catalog.filteredSummary' : 'catalog.summary', params: { count: photos.length, total } })}</p><div className="grid" role="list" aria-label={t({ key: 'catalog.imported' })}>{visible.map(photo => <div role="listitem" key={photo.id}><button className="tile" data-photo-id={photo.id} onClick={() => void openPhoto(photo)} aria-label={t({ key: 'catalog.openNamed', params: { filename: photo.name } })} aria-describedby={statuses[photo.id] && statuses[photo.id].state !== 'present' ? `original-${photo.id}` : undefined}>
               <span className="thumbnail">{thumbnails[photo.id] ? <img src={thumbnails[photo.id]} alt=""/> : <span title={thumbnailErrors[photo.id] ? t(thumbnailErrors[photo.id]) : undefined}>{t({ key: thumbnailErrors[photo.id] ? 'catalog.thumbnailUnavailable' : 'catalog.thumbnailLoading' })}</span>}</span><span className="filename" title={photo.name}>{photo.name}</span><span className="tile-meta"><span>JPEG</span><span>{t({ key: 'catalog.openPhoto' })} <Icon name="arrow"/></span></span>
