@@ -1,0 +1,8 @@
+[317764:1012/211038.502849:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[317764:1012/211038.589665:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[317764:1012/211038.589699:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+AssertionError [ERR_ASSERTION]: refused retry keeps recovery action
+
+false !== true
+
+    at /workspace/scratch/827b15a15839/revelumo-issue-44/test/electron-preview-memory.cjs:120:12

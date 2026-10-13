@@ -117,6 +117,7 @@ export const messageParameters = {
   "editor.redo": {},
   "editor.compare": {},
   "editor.retryHistory": {},
+  "editor.retryPreview": {},
   "editor.retrySave": {},
   "editor.whiteBalance": {},
   "editor.relative": {},

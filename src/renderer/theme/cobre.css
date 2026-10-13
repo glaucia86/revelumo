@@ -109,3 +109,6 @@
 
 .export-close-confirm { flex-shrink:0; display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:12px 24px; background:var(--surface); border-top:1px solid var(--accent); max-height:180px; overflow:auto; font-size:13px; }
 .export-close-confirm p { flex-basis:100%; margin:0; }
+
+.preview-problem { width:100%; flex-shrink:0; margin:0; padding:12px; border:1px solid var(--danger); border-radius:8px; background:var(--surface); font-size:13px; line-height:1.5; overflow-wrap:anywhere; }
+.preview-problem .preview-retry { display:block; margin-top:8px; }
