@@ -13,3 +13,23 @@ Autosave tem debounce de 300 ms, uma gravação pendente por vez e coalescência
 Crash, encerramento forçado e interrupção durante o debounce recuperam somente a receita já persistida. Não há promessa de recuperar rascunhos, resistência adicional a falha de energia ou corrupção. Banco e originais permanecem locais; renderer isolado, IPC estrito, sem novos serviços/motor nativo. QA nativa/visual Windows da #4 continua pendente separadamente.
 
 O campo numérico mantém seu texto de edição separado do último EV válido. A edição por caracteres preserva o sinal e o separador decimal em andamento. Textos sem número válido (como sinal isolado ou campo vazio) e entradas fora da faixa/passo não criam revisão, prévia ou gravação. Um prefixo que o controle nativo já reconhece como número válido pode atualizar o ajuste enquanto a digitação continua. Ao perder foco, o campo volta ao último EV válido, formatado com uma casa decimal. Slider e redefinição substituem também o texto em edição; a confirmação do autosave não o reformata durante a digitação.
+
+## Bytes e ownership — issue #54
+
+A abertura usa bytes comprimidos em `ArrayBuffer` de tamanho exato, preservando
+EXIF/ICC, sem data URL/base64 no caminho da prévia original. `invoke` clona dados
+main→preload e `contextBridge` copia dados preload→renderer; essas fronteiras não
+transferem ownership. `PreviewSource.take()` entrega o buffer uma única vez e
+remove a referência retida, antes de `postMessage(..., [bytes])` transferi-lo ao
+Worker e destacar o buffer remetente. O Worker verifica tipo, tamanho (até 32 MiB)
+e assinatura antes de criar o Blob; o decode nativo verifica o conteúdo completo.
+Blob/decoder/canvas têm suas próprias representações: não é zero-copy ponta a
+ponta nem decode streaming.
+
+ACK atual, erro, substituição e saída mantêm `release()` idempotente e descarte
+do Worker/base/superfície. ACK antigo continua sem alterar a tentativa atual.
+Retry explícito pede novos bytes autenticados do original, preservando a sessão,
+rascunho, receita confirmada e Undo/Redo; não reutiliza um buffer destacado.
+Não mudam o algoritmo, cor, EXIF, limite de 2048 sem upscale, identidade,
+persistência ou garantias de WB da ADR 0005. Inventário reproduzível:
+[evidências da issue #54](../../evidence/issue-54/report.md).

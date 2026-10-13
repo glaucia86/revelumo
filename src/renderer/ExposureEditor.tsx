@@ -367,7 +367,11 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
       }
     };
     instance.onerror = () => failPreview({ key: 'editor.workerFailed' });
-    try { instance.postMessage({ op: 'prepare', id: photo.id, sessionId: current.sessionId, dataUrl: preview.read() }); }
+    try {
+      const bytes = preview.take();
+      if (!bytes) throw new Error('Preview source already delivered');
+      instance.postMessage({ op: 'prepare', id: photo.id, sessionId: current.sessionId, bytes }, [bytes]);
+    }
     catch { failPreview({ key: 'editor.workerFailed' }); }
     return disposeAttempt;
   }, [loaded, preview, photo.id]);

@@ -42,3 +42,15 @@ pedido de prévia. Esta fatia reduz trabalho de prévias aposentadas, não todo 
 de navegação. Coalescência dos pixels EV/WB, transporte JPEG, limites e algoritmo
 permanecem os mesmos. Testes de núcleo e `test:preview-queue` usam fixtures pequenas,
 contadores determinísticos e bloqueio na fronteira de filesystem.
+
+## Transporte da prévia original — issue #54
+
+`Preview` contém `{ photo, bytes: ArrayBuffer }`; `Thumbnail` preserva
+`{ photo, dataUrl: string }` e seu cache SQLite. A leitura autenticada continua
+limitada a 32 MiB. O buffer de leitura tem um byte extra para detectar crescimento;
+a prévia copia somente a view autenticada para armazenamento de tamanho exato,
+sem pool, prefixo, cauda ou caminho. Validação de importação/identidade não constrói
+payload de prévia. O main continua validando dimensões e decode nativo; o original
+permanece somente leitura. O envelope `PreviewResult`, cancelamento e fila da
+seção #52 desta ADR não mudam. Contrato de ownership e evidências:
+[transporte binário](../../evidence/issue-54/report.md).
