@@ -4,6 +4,16 @@ O workflow `.github/workflows/ci.yml` responde a `pull_request`, `push` em `main
 
 ## Reprodução
 
+Para um percurso JPEG sintético em um comando após os pré-requisitos, use
+`npm run test:jpeg-workflow`. O [guia reproduzível](jpeg-workflow.md) descreve
+package/first/reopen, isolamento, resultados e requisitos gráficos reais.
+O gate Windows roda o mesmo comando; Ubuntu sonda uma janela Electron com
+sandbox antes de executá-lo via Xvfb. Somente bloqueios reconhecidos de
+display/bibliotecas/sandbox geram skip explícito; falhas inesperadas de probe ou
+do percurso falham o CI. Consulte `jpeg-workflow.txt` no summary para distinguir
+cobertura executada de cobertura ausente. Os smokes legados abaixo continuam
+Windows-only e não foram substituídos.
+
 Na raiz de um checkout limpo, com Node 24:
 
 ```sh

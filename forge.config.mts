@@ -1,9 +1,18 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
 import { VitePlugin } from '@electron-forge/plugin-vite';
+import { createRequire } from 'node:module';
+import { electronDownloadChecksums } from './scripts/electron-download-checksums.ts';
+const require = createRequire(import.meta.url);
+const checksums = electronDownloadChecksums({
+  expectedVersion: require('./package.json').devDependencies.electron,
+  installedVersion: require('electron/package.json').version,
+  platform: process.platform, arch: process.arch,
+  checksums: require('electron/checksums.json'),
+});
 const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
-    download: process.env.electron_config_cache ? { cacheRoot: process.env.electron_config_cache } : undefined,
+    download: { checksums, ...(process.env.electron_config_cache ? { cacheRoot: process.env.electron_config_cache } : {}) },
   },
   rebuildConfig: {},
   // Installers/distribution are deliberately outside this first local slice.
