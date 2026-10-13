@@ -76,6 +76,45 @@ jobs:
         id: package
         run: npm run package
 
+      - name: 'Reproducible JPEG workflow: package, first and reopen'
+        if: runner.os == 'Windows'
+        id: jpeg_workflow_windows
+        timeout-minutes: 8
+        env:
+          TEMP: ${{ runner.temp }}
+          TMP: ${{ runner.temp }}
+        run: |
+          npm run test:jpeg-workflow 2>&1 | Tee-Object -FilePath (Join-Path $env:RUNNER_TEMP 'jpeg-workflow.txt')
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: 'Ubuntu JPEG workflow: verify real graphics and sandbox prerequisites'
+        if: runner.os == 'Linux'
+        id: jpeg_workflow_linux
+        timeout-minutes: 8
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/jpeg-workflow.txt"
+          probe="$RUNNER_TEMP/jpeg-graphics-probe.txt"
+          if ! command -v xvfb-run >/dev/null; then
+            printf '%s\n' '{"stage":"jpeg-workflow","status":"skipped","reason":"xvfb-run is unavailable; graphical JPEG first/reopen was not run on Ubuntu"}' | tee "$log"
+            exit 0
+          fi
+          # A hidden window still needs graphics and Chromium sandbox support.
+          # No sysctl, permissions changes or --no-sandbox fallback is allowed.
+          if xvfb-run -a node_modules/electron/dist/electron test/electron-graphics-probe.cjs >"$probe" 2>&1; then
+            cat "$probe" | tee "$log"
+            xvfb-run -a npm run test:jpeg-workflow 2>&1 | tee -a "$log"
+          else
+            cat "$probe" | tee "$log"
+            if node scripts/classify-graphics-failure.mjs "$probe" | tee -a "$log"; then
+              : # Only the specifically verified SUID-helper abort is classified.
+            else
+              echo 'Unexpected graphics probe failure; failing CI.' | tee -a "$log"
+              exit 1
+            fi
+          fi
+
       - name: Create fresh synthetic Windows smoke directories
         if: runner.os == 'Windows'
         id: smoke_dirs
@@ -243,16 +282,16 @@ jobs:
           '| Step | Outcome |' >> $env:GITHUB_STEP_SUMMARY
           '| --- | --- |' >> $env:GITHUB_STEP_SUMMARY
           $results = $env:STEP_RESULTS | ConvertFrom-Json -AsHashtable
-          foreach ($id in @('versions', 'docs', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'cobre_catalog', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history', 'white_balance', 'language', 'editor_language', 'jpeg_engine', 'jpeg_export_circuit', 'jpeg_export_ui')) {
+          foreach ($id in @('versions', 'docs', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'cobre_catalog', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history', 'white_balance', 'language', 'editor_language', 'jpeg_engine', 'jpeg_export_circuit', 'jpeg_export_ui', 'jpeg_workflow_windows', 'jpeg_workflow_linux')) {
             "| $id | $($results[$id].outcome) |" >> $env:GITHUB_STEP_SUMMARY
           }
           if ($env:RUNNER_OS -ne 'Windows') {
-            'Electron smokes skipped on Ubuntu: this slice validates their packaged runtime on Windows only.' >> $env:GITHUB_STEP_SUMMARY
+            'The legacy Electron smokes are Windows-only. The reproducible JPEG workflow has its own Ubuntu prerequisite probe and result below; a prerequisite skip is not a workflow pass.' >> $env:GITHUB_STEP_SUMMARY
           } else {
             'Core FIFO import/preview tests skip on Windows because they require POSIX mkfifo. Symlink alias tests may skip when Windows denies symlink creation; the test log records whether that happened.' >> $env:GITHUB_STEP_SUMMARY
           }
           'Other skipped steps did not run because a prerequisite failed or the job was cancelled; consult the step logs.' >> $env:GITHUB_STEP_SUMMARY
-          foreach ($file in @('node-versions.txt', 'core-tests.txt')) {
+          foreach ($file in @('node-versions.txt', 'core-tests.txt', 'jpeg-workflow.txt')) {
             $path = Join-Path $env:RUNNER_TEMP $file
             if (Test-Path -LiteralPath $path) {
               "### $file (includes actual test totals and skip reasons)" >> $env:GITHUB_STEP_SUMMARY

@@ -45,6 +45,11 @@ For a prose-only edit, a checkout and Markdown preview may be enough; use the do
 
 Use a separate development catalog and synthetic images. Do not use your only copy of a photo library to test unreleased changes.
 
+After the prerequisites, `npm run test:jpeg-workflow` reproduces import,
+classification, EV/WB and a restart using a new synthetic profile in one command.
+See the [JPEG workflow guide](docs-agents/jpeg-workflow.md) for real graphical
+requirements, diagnostics and the exact sequence shared with CI.
+
 ## Make a focused change
 
 Keep the pull request small enough to review and tied to one clear outcome. Avoid unrelated cleanup, dependency upgrades, generated packages, or lockfile churn.
