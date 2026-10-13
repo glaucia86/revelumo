@@ -1,0 +1,26 @@
+{
+  "pillow": "12.3.0",
+  "fixtures": [
+    {
+      "name": "a.jpg",
+      "width": 640,
+      "height": 480,
+      "bytes": 27579,
+      "sha256": "3c500ecf3fdd57e81007a79d7fc4b3a8fc0da3b16e998d9d80594b8c17532fe8"
+    },
+    {
+      "name": "b.jpg",
+      "width": 800,
+      "height": 600,
+      "bytes": 48334,
+      "sha256": "6b56166e9a529a2099d12b12111f284ca8745295eefa79203c759464f0157827"
+    },
+    {
+      "name": "c.jpg",
+      "width": 720,
+      "height": 480,
+      "bytes": 36478,
+      "sha256": "e1efd0e9f26d0a35e31910cae56f3796f41b8f28ee301e1abf493901b4ff45c8"
+    }
+  ]
+}
