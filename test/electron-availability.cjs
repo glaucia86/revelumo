@@ -94,7 +94,8 @@ require('./hidden-electron.cjs')(path.join(repo, 'out', `Revelumo-${process.plat
   fs.renameSync(files[0] + '.moved', files[0]);
   // Selection establishes a legacy baseline; protection remains content-based.
   reset();
-  assert.equal((await api('previewPhoto', photos[0].id)).ok, true);
+  const legacyPreview = await api('previewPhoto', photos[0].id); assert.equal(legacyPreview.ok, true);
+  const receipt = legacyPreview.value.reservation; legacyPreview.value.bytes = null; await api('releasePreview', receipt);
   assert.ok(io.reads > 0 && io.bytes > 0 && io.hashes > 0 && io.decodes > 0, 'observers must detect protected operation');
   snapshots.push({ label: 'explicit preview enrolls one legacy original', ...io });
   const wrong = Buffer.from(sample), marker = wrong.indexOf(Buffer.from([0xff, 0xdb]));

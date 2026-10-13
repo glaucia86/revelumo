@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import type { RevelumoApi, Result } from './shared/contracts.ts';
+import type { RevelumoApi, Result, PreviewReservation } from './shared/contracts.ts';
 let previewGeneration = 0;
 let previewContext: Promise<Result<string>> | undefined;
 async function previewRequest(request: Record<string, unknown>) {
@@ -7,6 +7,19 @@ async function previewRequest(request: Record<string, unknown>) {
   const context = await (previewContext ??= ipcRenderer.invoke('revelumo:preview', { op: 'context' }));
   if (!context.ok) return context;
   return ipcRenderer.invoke('revelumo:preview', { ...request, document: context.value });
+}
+// Entries are created only for real delivered leases (main bounds their count).
+// Retain unconfirmed dispositions across an IPC failure and replay them before
+// the next source request. A duplicate receipt never releases a newer lease.
+const deliveredPreviews = new Map<string, PreviewReservation>();
+const releasedPreviews = new Map<string, PreviewReservation>();
+async function releasePreview(reservation: PreviewReservation): Promise<Result<null>> {
+  const owned = deliveredPreviews.get(reservation?.lease);
+  if (!owned || owned.generation !== reservation.generation) return { ok: true, value: null };
+  releasedPreviews.set(owned.lease, owned);
+  const result = await previewRequest({ op: 'release', ...owned });
+  if (result.ok) { releasedPreviews.delete(owned.lease); deliveredPreviews.delete(owned.lease); }
+  return result;
 }
 const closeListeners = new Set<() => void>();
 let closePending = false;
@@ -31,10 +44,20 @@ const api: RevelumoApi = {
   thumbnailPhoto: (id) => ipcRenderer.invoke('revelumo:invoke', { op: 'thumbnail', id }),
   listPhotos: () => ipcRenderer.invoke('revelumo:invoke', { op: 'list' }),
   queryPhotos: (filters) => ipcRenderer.invoke('revelumo:invoke', { ...filters, op: 'query' }),
-  previewPhoto: (id, generation) => {
+  releasePreview,
+  previewPhoto: async (id, generation) => {
     const reserved = generation ?? ++previewGeneration;
     if (reserved !== previewGeneration) return Promise.resolve({ ok: false, canceled: true });
-    return previewRequest({ op: 'preview', id, generation: reserved });
+    for (const receipt of releasedPreviews.values()) {
+      const result = await releasePreview(receipt);
+      if (!result.ok) return result;
+    }
+    const result = await previewRequest({ op: 'preview', id, generation: reserved });
+    if (result.ok && result.value?.reservation) {
+      const receipt = result.value.reservation;
+      deliveredPreviews.set(receipt.lease, receipt);
+    }
+    return result;
   },
   invalidatePreview: async () => {
     const generation = ++previewGeneration;

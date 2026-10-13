@@ -294,6 +294,22 @@ jobs:
             Get-Content -LiteralPath (Join-Path $preview ($mode + '-result.json')) >> $env:GITHUB_STEP_SUMMARY
           }
 
+      - name: 'Windows compressed preview admission and lifecycle'
+        if: runner.os == 'Windows'
+        id: preview_admission
+        timeout-minutes: 4
+        run: |
+          $lifecycle = Join-Path $env:RUNNER_TEMP ('revelumo-preview-reservation-' + [guid]::NewGuid())
+          npm run test:preview-reservation -- "$lifecycle"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Get-Content -LiteralPath (Join-Path $lifecycle 'result.json') >> $env:GITHUB_STEP_SUMMARY
+          $preview = Join-Path $env:RUNNER_TEMP ('revelumo-preview-admission-' + [guid]::NewGuid())
+          foreach ($mode in @('first', 'reopen')) {
+            npm run test:preview-admission -- "$preview" $mode
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            Get-Content -LiteralPath (Join-Path $preview ($mode + '-result.json')) >> $env:GITHUB_STEP_SUMMARY
+          }
+
       - name: Results and limits
         if: always()
         env:
@@ -306,7 +322,7 @@ jobs:
           '| Step | Outcome |' >> $env:GITHUB_STEP_SUMMARY
           '| --- | --- |' >> $env:GITHUB_STEP_SUMMARY
           $results = $env:STEP_RESULTS | ConvertFrom-Json -AsHashtable
-          foreach ($id in @('versions', 'docs', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'cobre_catalog', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history', 'white_balance', 'language', 'editor_language', 'jpeg_engine', 'jpeg_export_circuit', 'jpeg_export_ui', 'jpeg_workflow_windows', 'jpeg_workflow_linux', 'preview_memory', 'preview_queue')) {
+          foreach ($id in @('versions', 'docs', 'install', 'electron', 'typecheck', 'tests', 'package', 'smoke_dirs', 'filters', 'cobre_catalog', 'electron_first', 'electron_reopen', 'relocation_first', 'relocation_reopen', 'exposure_first', 'exposure_persistence', 'history', 'white_balance', 'language', 'editor_language', 'jpeg_engine', 'jpeg_export_circuit', 'jpeg_export_ui', 'jpeg_workflow_windows', 'jpeg_workflow_linux', 'preview_memory', 'preview_queue', 'preview_admission')) {
             "| $id | $($results[$id].outcome) |" >> $env:GITHUB_STEP_SUMMARY
           }
           if ($env:RUNNER_OS -ne 'Windows') {

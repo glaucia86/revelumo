@@ -51,7 +51,7 @@ require('./hidden-electron.cjs')(path.join(archive, '.vite', 'build', 'index.cjs
   check('packaged origin and limited bridge', () => assert.equal(win.webContents.getURL(), 'app://revelumo/index.html'));
   const exposed = await js('({keys:Object.keys(window.revelumo).sort(),node:typeof require})');
   check('renderer exposes only approved bridge operations', () => {
-    assert.deepEqual(exposed.keys, ['importJpeg','importProgress','listPhotos','queryPhotos','previewPhoto','invalidatePreview','thumbnailPhoto','originalAvailability','originalStatus','relocatePhoto','classificationPhoto','classifyPhoto','recipePhoto','beginEditingPhoto','saveExposure','saveAdjustments','moveExposureHistory','endEditingPhoto','onCloseRequested','confirmClose','startJpegExport','recoverJpegExport','jpegExportStatus','cancelJpegExport'].sort());
+    assert.deepEqual(exposed.keys, ['importJpeg','importProgress','listPhotos','queryPhotos','previewPhoto','releasePreview','invalidatePreview','thumbnailPhoto','originalAvailability','originalStatus','relocatePhoto','classificationPhoto','classifyPhoto','recipePhoto','beginEditingPhoto','saveExposure','saveAdjustments','moveExposureHistory','endEditingPhoto','onCloseRequested','confirmClose','startJpegExport','recoverJpegExport','jpegExportStatus','cancelJpegExport'].sort());
     assert.equal(exposed.node, 'undefined');
   });
   const listed = await js('window.revelumo.listPhotos()'); assert.equal(listed.ok, true);
@@ -114,6 +114,8 @@ require('./hidden-electron.cjs')(path.join(archive, '.vite', 'build', 'index.cjs
     assert.deepEqual(listed.value,expected.photos);
     const first = listed.value[0];
     const preview = await js(`window.revelumo.previewPhoto(${JSON.stringify(first.id)})`); assert.equal(preview.ok,true);
+    const previewReceipt = preview.value.reservation; preview.value.bytes = null;
+    await js(`window.revelumo.releasePreview(${JSON.stringify(previewReceipt)})`);
     const firstFile = path.join(runDir,'synthetic-photos',first.name);
     const displacedFile = firstFile + '.temporarily-moved';
     assert.equal(fs.existsSync(displacedFile),false);
@@ -130,6 +132,8 @@ require('./hidden-electron.cjs')(path.join(archive, '.vite', 'build', 'index.cjs
     const orientedPreview = await js(`window.revelumo.previewPhoto(${JSON.stringify(oriented.id)})`); assert.equal(orientedPreview.ok,true);
     const original = fs.readFileSync(path.join(runDir,'synthetic-photos','orientation-6.jpg'));
     assert.deepEqual(Buffer.from(orientedPreview.value.bytes), original);
+    const orientedReceipt = orientedPreview.value.reservation; orientedPreview.value.bytes = null;
+    await js(`window.revelumo.releasePreview(${JSON.stringify(orientedReceipt)})`);
     for (const [file,digest] of Object.entries(expected.before)) assert.equal(hash(file),digest);
     log.push('new Electron process reopens all 51 IDs, cached thumbnail and JPEG preview');
     log.push('cached thumbnail survives an unavailable synthetic original; preview reports unreadable and catalog is unchanged');

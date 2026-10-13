@@ -1,0 +1,58 @@
+✔ a preview larger than its compressed envelope allowance is refused recoverably (11.155668ms)
+✔ a delivered envelope consumes capacity until its matching receipt and retry then succeeds (5.668152ms)
+✔ an old or duplicate receipt cannot release a newer envelope and invalidation alone releases nothing (4.614545ms)
+✔ preview capacity refusal does not block authenticated saves or end editing (5.407006ms)
+✔ ending an owner releases its delivered envelope for the next document (3.54323ms)
+✔ decoder failure returns its real error and leaves capacity available for recovery (4.060995ms)
+✔ two unconsumed sources bound receipt cardinality even when byte capacity remains (4.625141ms)
+✔ capacity is refused before the source Buffer allocation (3.545704ms)
+✖ owner retirement retains an active decode's envelope until settlement (4.029229ms)
+✖ owner retirement retains an active decode's envelope until its real failure (4.374509ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 8
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 173.026673
+
+✖ failing tests:
+
+test at test/preview-admission.test.ts:124:36
+✖ owner retirement retains an active decode's envelope until settlement (4.029229ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 1267
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-issue-55/test/preview-admission.test.ts:135:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 1267,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/preview-admission.test.ts:124:36
+✖ owner retirement retains an active decode's envelope until its real failure (4.374509ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 1267
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-issue-55/test/preview-admission.test.ts:135:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 1267,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -21,7 +21,7 @@ const summary = ({ id, name }: PhotoSummary): PhotoSummary => ({ id, name });
 const digest = (bytes: Buffer): string => createHash('sha256').update(bytes).digest('hex');
 const identityDiffers = (recorded: string | null | undefined, incoming: string): boolean => Boolean(recorded && recorded !== incoming);
 
-async function readJpeg(filename: string): Promise<Result<Buffer>> {
+async function readJpeg(filename: string, admit?: (size: number) => boolean): Promise<Result<Buffer>> {
   try {
     // Do not wait for a writer if the selected path became a named pipe.
     // The descriptor check below still rejects every non-regular file.
@@ -31,6 +31,7 @@ async function readJpeg(filename: string): Promise<Result<Buffer>> {
       if (!info.isFile()) return failure('unreadable', 'Escolha um arquivo JPEG.', { key: 'errors.chooseJpeg' });
       if (info.size > MAX_BYTES) return failure('too-large', 'Esta primeira versão aceita JPEGs de até 32 MiB.', { key: 'errors.tooLarge' });
       // Bound the allocation/read even if another process grows the file.
+      if (admit && !admit(info.size)) return failure('preview-capacity', 'A prévia aguarda capacidade. Tente novamente.', { key: 'errors.previewCapacity' });
       const bytes = Buffer.alloc(info.size + 1);
       let count = 0;
       while (count < bytes.length) {
@@ -325,16 +326,16 @@ export class Library {
     });
   }
 
-  preview(id: string, isCurrent: () => boolean = () => true): Promise<PreviewResult> {
+  preview(id: string, isCurrent: () => boolean = () => true, admit?: (size: number) => boolean): Promise<PreviewResult> {
     // Check after acquiring the protected queue, before any lookup/read/hash/decode.
     // Once started, preserve the entire authentication/identity/error pipeline.
-    return this.serial<PreviewResult>(() => isCurrent() ? this.openPreview(id) : Promise.resolve({ ok: false, canceled: true } as const));
+    return this.serial<PreviewResult>(() => isCurrent() ? this.openPreview(id, admit) : Promise.resolve({ ok: false, canceled: true } as const));
   }
 
-  private async openPreview(id: string): Promise<Result<Preview>> {
+  private async openPreview(id: string, admit?: (size: number) => boolean): Promise<Result<Preview>> {
     const photo = this.catalog.find(id);
     if (!photo) return failure('not-found', 'Foto não encontrada no catálogo.', { key: 'errors.notFound' });
-    const image = await readJpeg(photo.path);
+    const image = await readJpeg(photo.path, admit);
     if (!image.ok) return image;
     if (identityDiffers(photo.sha256, digest(image.value))) return failure('identity-mismatch', 'O arquivo neste caminho é diferente do original catalogado. Localize o original para continuar.', { key: 'errors.previewIdentity' });
     let bytes: ArrayBuffer;

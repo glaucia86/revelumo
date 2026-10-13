@@ -120,7 +120,8 @@ require('./hidden-electron.cjs')(path.join(archive, '.vite', 'build', 'index.cjs
     // accessible original before moving it to establish its content identity.
     const readable = legacyPhotos[0];
     assert.equal((await api('originalAvailability', readable.id)).value.identityRecorded, false);
-    assert.equal((await api('previewPhoto', readable.id)).ok, true);
+    const legacyPreview = await api('previewPhoto', readable.id); assert.equal(legacyPreview.ok, true);
+    const legacyReceipt = legacyPreview.value.reservation; legacyPreview.value.bytes = null; await api('releasePreview', legacyReceipt);
     const legacyMoved = path.join(folder,'legacy-readable-relocated.jpg'); fs.renameSync(files['legacy-readable'],legacyMoved);
     assert.equal((await api('originalStatus',readable.id)).value.canRelocate,true);
     selection = {canceled:false,filePaths:[legacyMoved]};
@@ -136,7 +137,9 @@ require('./hidden-electron.cjs')(path.join(archive, '.vite', 'build', 'index.cjs
     assert.equal((await api('originalStatus',expected.original.id)).value.state,'available');
     assert.deepEqual(await api('thumbnailPhoto',expected.original.id),expected.cache);
     const preview = await api('previewPhoto',expected.original.id); assert.equal(preview.ok,true); assert.deepEqual(Buffer.from(preview.value.bytes),sample);
-    assert.equal((await api('previewPhoto',legacyPhotos[0].id)).ok,true);
+    const receipt = preview.value.reservation; preview.value.bytes = null; await api('releasePreview', receipt);
+    const legacyPreview = await api('previewPhoto',legacyPhotos[0].id); assert.equal(legacyPreview.ok,true);
+    const legacyReceipt = legacyPreview.value.reservation; legacyPreview.value.bytes = null; await api('releasePreview', legacyReceipt);
     assert.equal((await api('originalStatus',legacyPhotos[1].id)).value.canRelocate,false);
     for (const [file,digest] of Object.entries(expected.integrity)) assert.equal(fingerprint(fs.readFileSync(file)),digest);
     checks.push('second Electron process preserves relocated references, all four IDs/names, cached thumbnail, blocked legacy and five file hashes');

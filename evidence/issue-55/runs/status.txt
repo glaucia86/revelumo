@@ -1,0 +1,13 @@
+preview-reservation first EXIT=0
+preview-admission first EXIT=0
+preview-admission reopen EXIT=0
+preview-queue first EXIT=0
+preview-queue reopen EXIT=0
+preview-memory first EXIT=0
+preview-memory reopen EXIT=0
+smoke first EXIT=0
+smoke reopen EXIT=0
+relocation first EXIT=0
+relocation reopen EXIT=0
+availability first EXIT=0
+availability retry VERIFIED_EXIT=0

@@ -12,27 +12,45 @@ test('editing Worker consumes compressed bytes directly without a base64 represe
   const replies: any[] = [];
   let observed: Uint8Array | undefined;
   let closed = false;
+  let finishDecode!: () => void;
+  const decoding = new Promise<void>(resolve => { finishDecode = resolve; });
+  let failDecode = false;
+  const prepare = { op:'prepare', id:'photo', sessionId:'session', bytes:Uint8Array.from(bytes).buffer };
   const port = { onmessage: null as any, postMessage: (message: unknown) => replies.push(message) };
   Object.defineProperty(globalThis, 'self', { configurable:true, value:port });
   Object.defineProperty(globalThis, 'createImageBitmap', { configurable:true, value:async (blob: Blob) => {
+    assert.equal('bytes' in prepare, false, 'the message envelope cannot retain compressed input while native decode runs');
     observed = new Uint8Array(await blob.arrayBuffer());
+    await decoding;
+    if (failDecode) throw new Error('Native decoder rejected input');
     return { width:2, height:1, close() { closed = true; } };
   } });
   Object.defineProperty(globalThis, 'OffscreenCanvas', { configurable:true, value:class {
     getContext() { return { drawImage() {}, getImageData() { return { data:new Uint8ClampedArray(8) }; } }; }
   } });
   await import('../src/renderer/exposure.worker.ts');
-  await port.onmessage({ data:{ op:'prepare', id:'photo', sessionId:'session', bytes:Uint8Array.from(bytes).buffer } });
+  const preparing = port.onmessage({ data:prepare });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(replies, [], 'ready cannot acknowledge input while native decode is pending');
+  finishDecode();
+  await preparing;
   assert.deepEqual(replies, [{op:'ready', id:'photo', sessionId:'session', width:2, height:1}]);
   assert.deepEqual(observed, Uint8Array.from(bytes));
   assert.equal(closed,true);
   replies.length = 0;
   for (const invalid of [new ArrayBuffer(0), new ArrayBuffer(8), 'data:image/jpeg;base64,/9j/']) {
     observed = undefined;
-    await port.onmessage({data:{op:'prepare', id:'invalid', sessionId:'other', bytes:invalid}});
+    const rejected = {op:'prepare', id:'invalid', sessionId:'other', bytes:invalid};
+    await port.onmessage({data:rejected});
+    assert.equal('bytes' in rejected, false, 'invalid envelopes do not retain input either');
     assert.equal(replies.pop().op, 'error');
     assert.equal(observed, undefined, 'invalid transport is rejected before native decode');
   }
+  failDecode = true;
+  const rejected = {op:'prepare', id:'invalid', sessionId:'other', bytes:Uint8Array.from(bytes).buffer};
+  await port.onmessage({data:rejected});
+  assert.equal('bytes' in rejected, false);
+  assert.equal(replies.pop().op, 'error', 'a decoder error never acknowledges successful consumption with ready');
   await port.onmessage({data:{op:'render', id:'invalid', sessionId:'other', exposureTenths:0, temperature:0, tint:0}});
   assert.equal(replies.length, 0, 'a failed prepare cannot render an older neutral base under its identity');
 });

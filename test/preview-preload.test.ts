@@ -60,3 +60,21 @@ test('a failed preload handshake fails closed and is never silently retried', as
   assert.equal((await api.previewPhoto('photo')).code, 'invalid-request');
   assert.equal(handshakes, 1);
 });
+
+test('preload retries an unconfirmed release before another preview without discarding its generation', async () => {
+  const calls: any[] = [];
+  let fail = true;
+  const reservation = { lease: 'source-lease', generation: 1 };
+  const api = await bridge(async (_channel, request) => {
+    calls.push(request);
+    if (request.op === 'context') return { ok: true, value: 'document-token' };
+    if (request.op === 'release' && fail) { fail = false; throw new Error('ACK lost'); }
+    return { ok: true, value: request.op === 'preview' ? { reservation } : null };
+  });
+  await api.previewPhoto('photo-a');
+  assert.equal(typeof api.releasePreview, 'function');
+  await assert.rejects(api.releasePreview(reservation), /ACK lost/);
+  await api.previewPhoto('photo-b');
+  assert.deepEqual(calls.slice(2).map(request => request.op), ['release', 'release', 'preview']);
+  assert.equal(calls[3].generation, 1);
+});

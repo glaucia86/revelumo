@@ -49,6 +49,13 @@ let win, previewHandler, previewEvent;
 const js=code=>win.webContents.executeJavaScript(code), delay=ms=>new Promise(r=>setTimeout(r,ms));
 async function until(work,label){const end=Date.now()+15000;while(Date.now()<end){const result=await work();if(result)return result;await delay(20);}throw new Error('Timed out: '+label);}
 const api=(method,...args)=>js(`window.revelumo.${method}(...${JSON.stringify(args)})`);
+async function discardResults(...names) {
+  await js(`(async () => { for (const name of ${JSON.stringify(names)}) {
+    const result = await window[name];
+    if (result.ok && result.value.reservation) { const receipt = result.value.reservation; result.value.bytes = null; await window.revelumo.releasePreview(receipt); }
+    delete window[name];
+  } })()`);
+}
 function gate(file){let release;const promise=new Promise(r=>{release=r;});hold={path:file,promise,release,entered:false};return hold;}
 const reset=()=>{io=paths.map(()=>({reads:0,hashes:0,decodes:0}));};
 const timer=setTimeout(()=>{console.error('Preview queue timeout');app.exit(1);},90000);
@@ -66,6 +73,7 @@ require('./hidden-electron.cjs')(path.join(repo,'out',`Revelumo-${process.platfo
     assert.deepEqual(await js('window.b'),{ok:false,canceled:true});assert.equal(await js('bSettles'),1);
     assert.deepEqual(io[1],{reads:0,hashes:0,decodes:0});a.release();assert.equal((await js('window.a')).ok,true);assert.equal((await js('window.c')).ok,true);hold=null;
     assert.deepEqual(io[1],{reads:0,hashes:0,decodes:0});assert.equal(await js('bSettles'),1);checks.push({name:'A-B-C drops B before read/hash/decode',io:structuredClone(io)});
+    await discardResults('a', 'c');
     reset();const blocked=gate(paths[0]);
     await js(`window.blocker=window.revelumo.originalStatus(${JSON.stringify(ids[0])});void 0`);await until(()=>blocked.entered,'protected queue');
     await js(`window.retired=window.revelumo.previewPhoto(${JSON.stringify(ids[1])});void 0`);
@@ -75,6 +83,7 @@ require('./hidden-electron.cjs')(path.join(repo,'out',`Revelumo-${process.platfo
     await js(`window.active=window.revelumo.previewPhoto(${JSON.stringify(ids[0])});void 0`);await until(()=>saving.entered,'save queue blocker');
     await js(`window.order=[];window.old=window.revelumo.previewPhoto(${JSON.stringify(ids[1])});window.save=window.revelumo.saveExposure(${JSON.stringify(ids[0])},${JSON.stringify(session.value.sessionId)},1,10,2).then(r=>{order.push('save');return r});window.last=window.revelumo.previewPhoto(${JSON.stringify(ids[2])}).then(r=>{order.push('preview');return r});void 0`);
     assert.deepEqual(await js('window.old'),{ok:false,canceled:true});saving.release();await js('window.active');assert.equal((await js('window.save')).ok,true);assert.equal((await js('window.last')).ok,true);hold=null;assert.deepEqual(await js('order'),['save','preview']);
+    await discardResults('active', 'last');
     assert.equal((await api('endEditingPhoto',ids[0],session.value.sessionId)).ok,true);checks.push({name:'latest preview does not overtake accepted save'});
     // A real UI opening is queued behind another protected read after status.
     await api('invalidatePreview');await js('document.querySelector(".catalog-import").click()');await until(()=>js('document.querySelectorAll(".tile").length===3'),'grid');
@@ -94,7 +103,9 @@ require('./hidden-electron.cjs')(path.join(repo,'out',`Revelumo-${process.platfo
     const reloaded=new Promise(resolve=>win.webContents.once('did-finish-load',resolve));
     win.reload();await reloaded;
     await until(()=>js('Boolean(document.querySelector(".catalog-import")&&!document.querySelector(".catalog-import").disabled)'),'reloaded app');
-    assert.equal((await api('previewPhoto',ids[0])).ok,true,'fresh preload obtains a fresh document token');
+    const freshPreview = await api('previewPhoto',ids[0]);
+    assert.equal(freshPreview.ok,true,'fresh preload obtains a fresh document token');
+    const receipt = freshPreview.value.reservation; freshPreview.value.bytes = null; await api('releasePreview', receipt);
     assert.deepEqual(await previewHandler(previewEvent,{op:'preview',id:ids[0],generation:1000,document:oldContext.value}),{ok:false,canceled:true});
     checks.push({name:'navigation-start handshake fails closed; real reload rejects old token'});
     for(const fail of [false,true]){

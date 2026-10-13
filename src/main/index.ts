@@ -74,8 +74,8 @@ async function createWindow() {
   // navigation may issue a fresh token to the new preload.
   created.webContents.on('did-navigate', () => { if (window === created) previewIpc?.reset(created.webContents); });
   created.webContents.on('did-finish-load', () => { if (window === created) rendererAlive = true; });
-  created.webContents.on('render-process-gone', () => { if (window === created) { rendererAlive = false; retireExportGeneration(); previewIpc?.retire(); } });
-  created.webContents.on('destroyed', () => { if (window === created) { retireExportGeneration(); previewIpc?.retire(); } });
+  created.webContents.on('render-process-gone', () => { if (window === created) { rendererAlive = false; retireExportGeneration(); previewIpc?.retire(true); } });
+  created.webContents.on('destroyed', () => { if (window === created) { retireExportGeneration(); previewIpc?.retire(true); } });
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   window.webContents.on('will-navigate', (event) => event.preventDefault());
   window.on('close', (event) => {
@@ -127,7 +127,7 @@ if (ownsInstance) app.whenReady().then(async () => {
   });
   catalog = new Catalog(join(dataDir, 'catalog.sqlite'));
   const library = new Library(catalog, validateJpeg, thumbnail);
-  previewIpc = new PreviewIpc(library);
+  previewIpc = new PreviewIpc(library, { capacity: process.env.REVELUMO_PREVIEW_CAPACITY_BYTES === undefined ? undefined : Number(process.env.REVELUMO_PREVIEW_CAPACITY_BYTES) });
   ipcMain.handle('revelumo:preview', (event, input: unknown) => previewIpc!.handle(event, window?.webContents ?? null, entryUrl, input));
   exportJobs = new JpegExportJobs(library, async name => {
     const owner = window;

@@ -1,6 +1,7 @@
 import type { Dictionary } from '../messages.ts';
 
 export const messages = {
+  "errors.previewCapacity": "Capacity for this preview is occupied. Retry after the previous preview finishes.",
   "export.checkResult": "Check export result",
   "export.showPath": "Show saved location",
   "export.outputLimit": "The exported JPEG exceeds this version’s 32 MiB output limit. Quality and resolution were not reduced.",

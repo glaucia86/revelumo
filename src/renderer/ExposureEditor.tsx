@@ -340,7 +340,9 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
     worker.current = instance;
     const currentAttempt = () => alive.current && instance === worker.current;
     function disposeAttempt() {
-      preview!.release(); instance.terminate();
+      // Dropping parent state is not evidence that the Worker dropped its input.
+      // Terminate its owning realm before returning an unconsumed reservation.
+      instance.terminate(); preview!.consumed();
       if (worker.current === instance) worker.current = null;
       ready.current = false; rendering.current = null; waiting.current = null;
       if (canvas.current) { canvas.current.width = canvas.current.height = 1; delete canvas.current.dataset.renderRequestId; delete canvas.current.dataset.revision; }
@@ -352,7 +354,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
     instance.onmessage = ({ data }) => {
       if (!alive.current || instance !== worker.current || data.id !== photo.id || data.sessionId !== current.sessionId) return;
       if (data.op === 'error') { failPreview(isMessageDescriptor(data.descriptor) ? data.descriptor : { key: 'editor.workerFailed' }); return; }
-      if (data.op === 'ready') { preview.release(); ready.current = true; render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths }); return; }
+      if (data.op === 'ready') { preview.consumed(); ready.current = true; render({ ...draft.current, exposureTenths: comparison.current ? 0 : draft.current.exposureTenths }); return; }
       if (data.op === 'pixels') {
         if (data.renderRequestId !== rendering.current) return;
         rendering.current = null;
