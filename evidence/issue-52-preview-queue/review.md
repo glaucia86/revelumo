@@ -35,3 +35,10 @@ Final Spec review after clean rebase examined
 `ba57ceeadc0244ce68a5c4bfb787328ad9e50589...4d640d48e307b440cf2b23219f106b482169544d`:
 no new findings. Later changes only record final evidence/documents; production
 source is unchanged. Both packaged suites were rerun after this rebase.
+
+## CI busy-state follow-up
+
+Standards and Spec independently re-reviewed the one-line gallery busy-state fix
+and its held-acknowledgement assertion. Both returned no findings. The public
+accessibility readiness state now includes the asynchronous catalog exit, without
+disabling photo tiles or weakening the unchanged filters gate.

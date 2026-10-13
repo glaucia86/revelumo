@@ -23,11 +23,11 @@ npm warn Unknown env config "http-proxy". This will stop working in the next maj
 ❯ Building src/preload.ts
 ❯ Building main_window
 ❯ Building jpeg_export
+✔ Built target src/main/jpeg-export-engine.ts
+✔ Built target src/main/jpeg-export-service.ts
 ✔ Built target src/export-preload.ts
 ✔ Built target src/preload.ts
-✔ Built target src/main/jpeg-export-engine.ts
 ✔ Built target jpeg_export
-✔ Built target src/main/jpeg-export-service.ts
 ✔ Built target src/main/index.ts
 ✔ Building main and preload targets...
 ✔ Built target main_window

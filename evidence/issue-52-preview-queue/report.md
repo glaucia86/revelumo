@@ -92,3 +92,22 @@ behavior, peak RSS and suitability for an 8 GB computer were not measured here.
 Windows/Ubuntu final-SHA CI remains a publication/merge gate; a local Linux pass
 is not a Windows or macOS claim. Native dialogs, physical input and screen-reader
 validation are not established by these automated harnesses.
+
+## PR #58 initial Windows CI correction
+
+Run 38336874372, Windows job 115098838840 failed in the existing filters
+integration at electron-filters.cjs:131: its grid readiness check accepted the
+old 48 tiles while catalog navigation awaited preview retirement. The subsequent
+refresh removed pagination before the assertion. This was a missing busy state,
+not a reason to weaken the existing gate.
+
+The gallery now reports aria-busy during a catalog exit as well as query loading.
+The held-acknowledgement regression failed before the fix (23-catalog-busy-red.txt)
+and passed after it; newer photo selection remains possible during that interval.
+The existing filters harness was unchanged.
+
+After the correction: typecheck and packaging passed; the locally bounded Node
+suite passed 328/328 (same two 32 MiB cases excluded locally as above); queue,
+preview lifecycle, existing filters, and standard smoke all passed in first and
+reopened packaged Linux processes. Their result JSON is included here. All CI
+gates remain enabled; final Windows/Ubuntu results must still be checked.

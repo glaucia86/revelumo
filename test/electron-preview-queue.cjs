@@ -100,6 +100,7 @@ require('./hidden-electron.cjs')(path.join(repo,'out',`Revelumo-${process.platfo
     for(const fail of [false,true]){
       let release;const held={fail,entered:false,promise:new Promise(resolve=>{release=resolve;})};heldInvalidation=held;
       await js('document.querySelector(".workspace-navigation button").click()');await until(()=>held.entered,'held catalog exit');
+      assert.equal(await js('document.querySelector(".gallery").getAttribute("aria-busy")'),'true','catalog refresh must expose its pending invalidation before the query begins');
       await js(`document.querySelector('[data-photo-id="${ids[2]}"]').click()`);
       await until(()=>js('Boolean(document.querySelector("canvas")?.dataset.renderRequestId)'),'newer selected photo');
       release();await until(()=>js('!document.querySelector(".back")?.disabled'),'older exit settled');
