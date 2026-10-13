@@ -1,6 +1,6 @@
 import { MAX_EXPOSURE_CHECKPOINT_GESTURES } from './contracts.ts';
 import type { PhotoFlag, LibraryFilters, ExposureGesture, PhotoAdjustments } from './contracts.ts';
-export type Request = { op: 'import' | 'list' | 'progress' | 'close-ready' } | ({ op: 'query' } & LibraryFilters) | { op: 'preview' | 'thumbnail' | 'availability' | 'status' | 'relocate' | 'classification' | 'recipe' | 'begin-edit'; id: string } | { op: 'end-edit'; id: string; sessionId: string } | { op: 'exposure'; id: string; sessionId: string; revision: number; exposureTenths: number; processingVersion: 2; gestures?: ExposureGesture[] } | { op: 'adjustments'; id: string; sessionId: string; revision: number; adjustments: PhotoAdjustments; processingVersion: 2; gestures: ExposureGesture[] } | { op: 'exposure-history'; id: string; sessionId: string; revision: number; direction: 'undo' | 'redo' } | { op: 'classify'; id: string; rating: number | null; flag: PhotoFlag };
+export type Request = { op: 'import' | 'list' | 'progress' | 'close-ready' } | ({ op: 'query' } & LibraryFilters) | { op: 'thumbnail' | 'availability' | 'status' | 'relocate' | 'classification' | 'recipe' | 'begin-edit'; id: string } | { op: 'end-edit'; id: string; sessionId: string } | { op: 'exposure'; id: string; sessionId: string; revision: number; exposureTenths: number; processingVersion: 2; gestures?: ExposureGesture[] } | { op: 'adjustments'; id: string; sessionId: string; revision: number; adjustments: PhotoAdjustments; processingVersion: 2; gestures: ExposureGesture[] } | { op: 'exposure-history'; id: string; sessionId: string; revision: number; direction: 'undo' | 'redo' } | { op: 'classify'; id: string; rating: number | null; flag: PhotoFlag };
 const photoId = (id: unknown): id is string => typeof id === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
 export function parseRequest(input: unknown): Request | null {
   if (!input || typeof input !== 'object' || Array.isArray(input)) return null;
@@ -43,7 +43,7 @@ export function parseRequest(input: unknown): Request | null {
       (value.flag === 'neutral' || value.flag === 'selected' || value.flag === 'rejected')) {
     return { op: 'classify', id: value.id, rating: value.rating, flag: value.flag };
   }
-  if ((value.op === 'preview' || value.op === 'thumbnail' || value.op === 'availability' || value.op === 'status' || value.op === 'relocate' || value.op === 'classification' || value.op === 'recipe' || value.op === 'begin-edit') && keys === 'id,op' && photoId(value.id)) {
+  if ((value.op === 'thumbnail' || value.op === 'availability' || value.op === 'status' || value.op === 'relocate' || value.op === 'classification' || value.op === 'recipe' || value.op === 'begin-edit') && keys === 'id,op' && photoId(value.id)) {
     return { op: value.op, id: value.id };
   }
   return null;

@@ -31,7 +31,8 @@
     "test:jpeg-export-circuit": "electron test/electron-jpeg-export-circuit.cjs",
     "test:jpeg-export-ui": "electron test/electron-jpeg-export-ui.cjs",
     "test:jpeg-workflow": "node scripts/run-jpeg-workflow.mjs",
-    "test:preview-memory": "electron test/electron-preview-memory.cjs"
+    "test:preview-memory": "electron test/electron-preview-memory.cjs",
+    "test:preview-queue": "electron test/electron-preview-queue.cjs"
   },
   "dependencies": {
     "@xmldom/xmldom": "0.9.12",

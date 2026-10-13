@@ -71,14 +71,34 @@ export function App() {
   async function leave(action: () => void | Promise<void>, discard = false) {
     if (transitioning.current || exportExitPending.current) return;
     transitioning.current = true; pendingExit.current = action; setExiting(true);
+    const leavingSequence = openSequence.current;
     try {
-      const exportResult = await editor.current?.leave(discard);
+      let previewRetired = false;
+      const retirePreview = async () => {
+        // This callback belongs only to this exit attempt and selected document.
+        if (previewRetired || leavingSequence !== openSequence.current) return;
+        const intent = await window.revelumo.invalidatePreview();
+        if (!intent.ok) throw new Error('Preview retirement failed');
+        previewRetired = true;
+      };
+      const exportResult = await editor.current?.leave(discard, retirePreview);
       if (exportResult?.state === 'succeeded') {
         rememberExport(exportResult); exportExitPending.current = true; setExportExit(true); return;
       }
+      if (leavingSequence !== openSequence.current) { pendingExit.current = null; return; }
+      // No initialized editor/session may have existed to run its retirement hook.
+      // Keep this fallback before committing the navigation action, not in resetViewer.
+      await retirePreview();
+      if (leavingSequence !== openSequence.current) { pendingExit.current = null; return; }
       setExitFailed(false); pendingExit.current = null;
       await action();
-    } catch { setExitFailed(true); }
+    } catch {
+      if (leavingSequence !== openSequence.current) { pendingExit.current = null; return; }
+      setExitFailed(true);
+      // A failed retirement/end-edit keeps the session. If no source was ready,
+      // make its canceled load explicitly recoverable in that same session.
+      if (!previewOwner.current) setPreviewFailure({ key: 'viewer.openFailed' });
+    }
     finally {
       transitioning.current = false; setExiting(false);
       if (pendingClose.current) { pendingClose.current = false; closeHandler.current(); }
@@ -190,19 +210,22 @@ export function App() {
     setViewing(true); setSelectedPhoto(photo); setCurrentStatus(null); setMessage([{ key: 'viewer.opening' }]); replacePreview(null); setPreviewFailure(null);
     previewLoadingRef.current = true; setPreviewLoading(true);
     try {
+      const intent = await window.revelumo.invalidatePreview();
+      if (sequence !== openSequence.current) return;
+      if (!intent.ok) throw new Error('Preview intent unavailable');
       const status = await window.revelumo.originalStatus(photo.id);
       if (sequence !== openSequence.current) return;
       if (!status.ok) { setMessage([status.descriptor ?? { key: 'errors.generic' }]); return; }
       setCurrentStatus(status.value);
       if (status.value.state !== 'available') { setMessage([status.value.descriptor ?? { key: 'errors.generic' }]); return; }
-      await loadPreview(photo, sequence);
+      await loadPreview(photo, sequence, intent.value);
     } catch { if (sequence === openSequence.current) { setMessage([{ key: 'viewer.openFailed' }]); setPreviewFailure({ key: 'viewer.openFailed' }); } }
     finally { if (sequence === openSequence.current) { previewLoadingRef.current = false; setPreviewLoading(false); } }
   }
 
-  async function loadPreview(photo: PhotoSummary, sequence: number) {
-    const result = await window.revelumo.previewPhoto(photo.id);
-    if (sequence !== openSequence.current) return;
+  async function loadPreview(photo: PhotoSummary, sequence: number, generation: number) {
+    const result = await window.revelumo.previewPhoto(photo.id, generation);
+    if (sequence !== openSequence.current || (!result.ok && 'canceled' in result)) return;
     if (result.ok) { replacePreview(new PreviewSource(result.value)); setMessage([]); setPreviewFailure(null); }
     else {
       const problem = result.descriptor ?? { key: 'errors.generic' };
@@ -219,7 +242,10 @@ export function App() {
     try {
       // previewPhoto reauthenticates the original. Do not create a new edit
       // session: the editor still owns its draft, confirmation and history.
-      await loadPreview(photo, sequence);
+      const intent = await window.revelumo.invalidatePreview();
+      if (sequence !== openSequence.current) return;
+      if (!intent.ok) throw new Error('Preview intent unavailable');
+      await loadPreview(photo, sequence, intent.value);
       if (sequence === openSequence.current) await refreshSelectedStatus(photo);
     } catch { if (sequence === openSequence.current) setPreviewFailure({ key: 'viewer.openFailed' }); }
     finally { if (sequence === openSequence.current) { previewLoadingRef.current = false; setPreviewLoading(false); } }
@@ -261,7 +287,12 @@ export function App() {
     finally { setImporting(false); setProgress(null); }
   }
 
-  function resetViewer() { if (viewing) returnFocusId.current = selectedPhoto?.id ?? null; ++openSequence.current; setLoading(true); setQueryRefresh(current => current + 1); setImportNotice(null); setViewing(false); setSelectedPhoto(null); setCurrentStatus(null); replacePreview(null); previewLoadingRef.current = false; setPreviewLoading(false); setPreviewFailure(null); setMessage([]); }
+  function resetViewer() {
+    // Only called after leave() has flushed successfully. A rejected save/export
+    // exit must keep its current preview intent, session and pending draft.
+    if (viewing) returnFocusId.current = selectedPhoto?.id ?? null;
+    ++openSequence.current;
+    setLoading(true); setQueryRefresh(current => current + 1); setImportNotice(null); setViewing(false); setSelectedPhoto(null); setCurrentStatus(null); replacePreview(null); previewLoadingRef.current = false; setPreviewLoading(false); setPreviewFailure(null); setMessage([]); }
   function showGrid() { void leave(resetViewer); }
 
   return <main className="catalog-shell" data-view={viewing ? 'editor' : 'catalog'}>
@@ -272,7 +303,7 @@ export function App() {
         <span aria-current={viewing ? 'page' : undefined} title={!viewing ? t({ key: 'shell.editHint' }) : undefined}>{t({ key: 'shell.editing' })}</span>
       </nav>
       <LanguageSelector/>
-      <button className="catalog-import" disabled={loading || importing || relocating || classifying || exiting} onClick={() => { if (viewing) void leave(async () => { resetViewer(); await importPhotos(); }); else void importPhotos(); }}><Icon name="import"/>{t({ key: 'shell.import' })}</button>
+      <button className="catalog-import" disabled={loading || importing || relocating || classifying || exiting} onClick={() => { if (viewing) void leave(async () => { await resetViewer(); await importPhotos(); }); else void importPhotos(); }}><Icon name="import"/>{t({ key: 'shell.import' })}</button>
     </header>
     {exportReceipt?.error === 'UNKNOWN_JOB' && <div className="export-receipt" role="alert">{t(exportFailureMessage('UNKNOWN_JOB'))}</div>}
     {exportReceipt?.result && <div className="export-receipt" role="status"><strong>{t({ key: 'export.receipt', params: { filename: exportReceipt.result.path.split(/[\\/]/).pop() ?? exportReceipt.result.path } })}</strong><details><summary>{t({ key: 'export.showPath' })}</summary><span>{exportReceipt.result.path}</span></details>{exportReceipt.result.cleanupPending && <p>{t({ key: 'export.cleanup' })}</p>}</div>}
@@ -300,7 +331,7 @@ export function App() {
           {progress && progress.total > 0 && <><progress max={progress.total} value={progress.completed}/><p className="current-file">{progress.currentName}</p></>}
         </div>}
       </aside>
-      <section ref={catalogSection} className={viewing ? 'viewer' : 'gallery'} aria-label={viewing ? t({ key: 'viewer.label' }) : t({ key: 'catalog.grid' })} aria-busy={loading}>
+      <section ref={catalogSection} className={viewing ? 'viewer' : 'gallery'} aria-label={viewing ? t({ key: 'viewer.label' }) : t({ key: 'catalog.grid' })} aria-busy={loading || (!viewing && exiting)}>
         {viewing ? <><button className="back" disabled={relocating || classifying || exiting} onClick={showGrid}>{t({ key: 'viewer.back' })}</button>{currentStatus && currentStatus.state !== 'available' ? <div className="original-notice" role="status"><h2>{selectedPhoto?.name}</h2><p>{t(currentStatus.descriptor ?? { key: 'errors.generic' })}</p>{preview && <p>{t({ key: 'viewer.draftPreserved' })}</p>}{currentStatus.canRelocate && <button disabled={relocating || importing || classifying || exiting} onClick={() => void relocatePhoto()} aria-label={t({ key: 'viewer.locateNamed', params: { filename: selectedPhoto?.name ?? '' } })}>{t({ key: relocating ? 'viewer.locating' : 'viewer.locate' })}</button>}</div> : !preview && <p className="quiet">{renderMessage(message) || t({ key: 'viewer.opening' })}</p>}{selectedPhoto && <><ExposureEditor key={`exposure-${selectedPhoto.id}`} ref={editor} photo={selectedPhoto} preview={preview} previewLoading={previewLoading} previewFailure={previewFailure} onRetryPreview={() => void retryPreview()} onExportResult={rememberExport}/><ClassificationControls key={selectedPhoto.id} photo={selectedPhoto} onBusyChange={setClassifying} onMessage={setMessage}/></>}</> :
           <><div className="catalog-heading"><h1 tabIndex={-1}>{t({ key: filtered ? 'catalog.filtered' : 'shell.allPhotos' })}</h1><p>{t({ key: 'catalog.description' })}</p></div>{failures.length > 0 && <details className="failures"><summary>{t({ key: 'import.failedFiles', params: { count: failures.length } })}</summary><ul>{failures.map((item, index) => <li key={index}>{item.name}: {!item.result.ok && t(item.result.descriptor ?? { key: 'errors.generic' })}</li>)}</ul></details>}
             {loading ? <p role="status">{t({ key: 'catalog.loading' })}</p> : queryError ? <div className="query-error" role="alert"><p>{t(queryError)}</p><button onClick={() => setQueryRefresh(current => current + 1)}>{t({ key: 'preferences.retry' })}</button></div> : photos.length ? <><p className="quiet" role="status">{t({ key: filtered ? 'catalog.filteredSummary' : 'catalog.summary', params: { count: photos.length, total } })}</p><div className="grid" role="list" aria-label={t({ key: 'catalog.imported' })}>{visible.map(photo => <div role="listitem" key={photo.id}><button className="tile" data-photo-id={photo.id} onClick={() => void openPhoto(photo)} aria-label={t({ key: 'catalog.openNamed', params: { filename: photo.name } })} aria-describedby={statuses[photo.id] && statuses[photo.id].state !== 'present' ? `original-${photo.id}` : undefined}>

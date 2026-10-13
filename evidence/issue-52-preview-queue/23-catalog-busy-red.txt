@@ -1,0 +1,8 @@
+[380910:1012/233000.206559:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[380910:1012/233000.291192:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[380910:1012/233000.291232:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+AssertionError [ERR_ASSERTION]: catalog refresh must expose its pending invalidation before the query begins
+
+'false' !== 'true'
+
+    at /workspace/scratch/827b15a15839/revelumo-issue-52/test/electron-preview-queue.cjs:103:14

@@ -3,10 +3,11 @@ import assert from 'node:assert/strict';
 import { parseRequest } from '../src/shared/requests.ts';
 const id = '905861ac-38d5-482c-b2b6-00f507a1d582';
 
-test('accepts the initial three typed operations', () => {
-  for (const input of [{ op: 'import' }, { op: 'list' }, { op: 'preview', id }]) {
+test('accepts catalog operations; preview has its authenticated document channel', () => {
+  for (const input of [{ op: 'import' }, { op: 'list' }]) {
     assert.deepEqual(parseRequest(input), input);
   }
+  assert.equal(parseRequest({ op: 'preview', id }), null);
 });
 
 test('rejects malformed, unknown and overprivileged IPC payloads', () => {

@@ -8,7 +8,7 @@ import type { PreviewSource } from './preview-source.ts';
 import { MAX_EXPOSURE_CHECKPOINT_GESTURES } from '../shared/contracts.ts';
 import type { EditSession, PhotoSummary, ExposureGesture, PhotoAdjustments } from '../shared/contracts.ts';
 
-export type ExposureHandle = { leave(discard?: boolean): Promise<ExportJobState | undefined> };
+export type ExposureHandle = { leave(discard?: boolean, retirePreview?: () => Promise<void>): Promise<ExportJobState | undefined> };
 type GestureKind = 'number' | 'slider-pointer' | 'slider-key' | 'reset';
 type Draft = PhotoAdjustments & { revision: number };
 type PendingGesture = ExposureGesture & Draft;
@@ -255,7 +255,7 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
   }
 
   useImperativeHandle(ref, () => ({
-    async leave(discard = false) {
+    async leave(discard = false, retirePreview) {
       leavingNow.current = true;
       if (exportFlight.current || exportJobId.current || pendingExportStart.current) {
         try {
@@ -293,6 +293,10 @@ export const ExposureEditor = forwardRef<ExposureHandle, { photo: PhotoSummary; 
           ending.current = true;
         }
         cancelDelay();
+        // Flush/export reconciliation has succeeded. Retire only derived preview
+        // work before end-edit joins the same protected queue; otherwise a stale
+        // preview ahead of end-edit would still read/decode its original.
+        await retirePreview?.();
         if (session.current) {
           const result = await window.revelumo.endEditingPhoto(photo.id, session.current.sessionId);
           if (!result.ok) throw new Error(result.message);

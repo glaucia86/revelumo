@@ -8,7 +8,7 @@ import { Catalog } from './catalog.ts';
 import { parseExportRecipe } from '../processing/jpeg-export-contract.ts';
 import { parseRequest } from '../shared/requests.ts';
 import type { PhotoClassification, PhotoFlag, PhotoRecipe, PhotoAdjustments, EditSession, ExposureGesture, LibraryFilters, LibraryResults } from '../shared/contracts.ts';
-import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcome, PhotoSummary, PhotoStatus, PhotoAvailability, Preview, Result } from '../shared/contracts.ts';
+import type { BatchItem, BatchOutcome, ImportProgress, FailureCode, ImportOutcome, PhotoSummary, PhotoStatus, PhotoAvailability, Preview, PreviewResult, Result } from '../shared/contracts.ts';
 
 const MAX_BYTES = 32 * 1024 * 1024;
 export type PreviewDecoder = (bytes: Buffer) => Promise<string>;
@@ -321,7 +321,11 @@ export class Library {
     });
   }
 
-  preview(id: string): Promise<Result<Preview>> { return this.serial(() => this.openPreview(id)); }
+  preview(id: string, isCurrent: () => boolean = () => true): Promise<PreviewResult> {
+    // Check after acquiring the protected queue, before any lookup/read/hash/decode.
+    // Once started, preserve the entire authentication/identity/error pipeline.
+    return this.serial<PreviewResult>(() => isCurrent() ? this.openPreview(id) : Promise.resolve({ ok: false, canceled: true } as const));
+  }
 
   private async openPreview(id: string): Promise<Result<Preview>> {
     const photo = this.catalog.find(id);

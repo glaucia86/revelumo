@@ -1,0 +1,15 @@
+✔ a retired preview waiting for the protected queue does not open its original (11.742835ms)
+✔ only the latest waiting preview survives while a started preview completes (5.960655ms)
+✔ old or duplicate generations cannot supersede the current selection (5.773739ms)
+✔ leaving the viewer retires queued previews without retiring a started pipeline (4.298607ms)
+✔ retired document tokens cannot become current again after reload or crash (5.942848ms)
+✔ untrusted owners, frames, origins and malformed preview payloads cannot change a selection (4.187253ms)
+✔ a preview storm settles replaced requests and does not overtake an accepted save (6.043978ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 177.455496

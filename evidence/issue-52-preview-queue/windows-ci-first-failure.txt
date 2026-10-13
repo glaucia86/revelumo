@@ -1,0 +1,19 @@
+Run: https://github.com/glaucia86/revelumo/actions/runs/38336874372
+Job: Verify (windows-latest), 115098838840
+Head: fc30aa399e5077153aba92217731a72e88dfbd8b
+
+02:27:33.7138824Z   HISTORY_SMOKE_DIR: D:\a\_temp\revelumo-smokes-194128ce-7c2a-42b2-909b-e77ac5446e58\history
+2026-10-13T02:27:33.7139235Z ##[endgroup]
+2026-10-13T02:27:34.4379997Z 
+2026-10-13T02:27:34.4380672Z > revelumo@0.1.0-alpha.1 test:filters
+2026-10-13T02:27:34.4383744Z > electron test/electron-filters.cjs D:\a\_temp\revelumo-filters-*** first
+2026-10-13T02:27:34.4384343Z 
+2026-10-13T02:27:34.5329893Z 
+2026-10-13T02:27:35.6169529Z Error: Renderer expression failed: document.querySelector(".pagination span").textContent
+2026-10-13T02:27:35.6174097Z     at D:\a\revelumo\revelumo\test\electron-filters.cjs:41:95
+2026-10-13T02:27:35.6175168Z     at async grid (D:\a\revelumo\revelumo\test\electron-filters.cjs:59:30)
+2026-10-13T02:27:35.6177981Z     at async D:\a\revelumo\revelumo\test\electron-filters.cjs:131:36
+2026-10-13T02:27:35.7668958Z ##[error]Process completed with exit code 1.
+2026-10-13T02:27:35.7947321Z ##[group]Run "## CI — $env:RUNNER_OS / $(Get-Date -AsUTC -Format o)" >> $env:GITHUB_STEP_SUMMARY
+2026-10-13T02:27:35.7948092Z [36;1m"## CI — $env:RUNNER_OS / $(Get-Date -AsUTC -Format o)" >> $env:GITHUB_STEP_SUMMARY[0m
+2026-10-13T02:27:35.7948839Z [36;1m"Checked SHA: $env:CHECKED_SHA" >> $env:GITHUB_STE

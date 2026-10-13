@@ -1,0 +1,21 @@
+✔ a retired preview waiting for the protected queue does not open its original (25.660899ms)
+✔ only the latest waiting preview survives while a started preview completes (17.119894ms)
+✔ old or duplicate generations cannot supersede the current selection (10.293183ms)
+✖ leaving the viewer retires queued previews without retiring a started pipeline (14.077349ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 279.883741
+
+✖ failing tests:
+
+test at test/preview-queue.test.ts:83:1
+✖ leaving the viewer retires queued previews without retiring a started pipeline (14.077349ms)
+  TypeError: requests.invalidate is not a function
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-issue-52/test/preview-queue.test.ts:90:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

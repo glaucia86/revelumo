@@ -1,0 +1,26 @@
+✔ preload keeps the document handshake private and reserves monotonic preview intents (64.600236ms)
+✔ a direct preview overtakes an earlier reservation without reusing its generation (18.219064ms)
+✔ a failed preload handshake fails closed and is never silently retried (13.32766ms)
+✔ a retired preview waiting for the protected queue does not open its original (11.523752ms)
+✔ only the latest waiting preview survives while a started preview completes (8.35089ms)
+✔ old or duplicate generations cannot supersede the current selection (4.302052ms)
+✔ leaving the viewer retires queued previews without retiring a started pipeline (3.77986ms)
+✔ retired document tokens cannot become current again after reload or crash (6.229192ms)
+✔ untrusted owners, frames, origins and malformed preview payloads cannot change a selection (3.841552ms)
+✔ a preview storm settles replaced requests and does not overtake an accepted save (5.35554ms)
+✔ repeated reloads retain only one pending preview behind an old active decode (3.545914ms)
+✔ superseding an already-started decode preserves its real decoder failure (3.8949ms)
+✔ a started legacy preview still records verified identity after its intent retires (4.429531ms)
+✔ a started original read reports its real failure after a newer intent arrives (3.440849ms)
+✔ accepts catalog operations; preview has its authenticated document channel (1.342175ms)
+✔ rejects malformed, unknown and overprivileged IPC payloads (0.544765ms)
+✔ accepts progress and UUID-scoped thumbnails but rejects paths and excess fields (0.310219ms)
+✔ availability, status and relocation accept only a UUID-scoped operation without file paths or identity supplied by the renderer (0.324109ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 413.548264

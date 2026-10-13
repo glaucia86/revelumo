@@ -133,3 +133,12 @@ Após `npm run package`, execute `npm run test:preview-memory -- <diretório-nov
 O teste usa dois JPEGs sintéticos distintos e o app empacotado. Confere importação, EV/WB, recuperação explícita, identidade após alteração externa controlada da fixture, preservação de draft/autosave/histórico, exportação reconciliada, callbacks obsoletos, retorno ao catálogo e reabertura. Diálogos, falha/ACK de Worker e tempo de resposta IPC são adaptados nas fronteiras; algoritmos, SQLite e worker/canvas reais não são substituídos. O perfil, screenshots e resultados JSON são locais; este gate não publica artifacts.
 
 Contagem de workers e descarte de referências são invariantes de propriedade, não medições de RSS/heap ou garantia de coleta imediata pelo Chromium. Esta parte não fecha #44: admissão sob orçamento reduzido, corpus próximo aos limites e medições repetidas por processo permanecem pendentes. Não comprova máquina de 8 GB nem macOS.
+
+## Fila de prévias — #52
+
+`npm run test:preview-queue -- <perfil novo> first`, seguido de `reopen` em outro
+processo, verifica A→B→C, cancelamento dentro da fila protegida, zero leitura/hash/
+decode da prévia aposentada, ordem de save e retorno real à grade. O gate Windows
+usa JPEGs sintéticos pequenos; não adiciona serviços, permissões, artifacts ou
+cargas grandes. O teste de recuperação de prévia existente também verifica falha
+do hook/end-edit, dupla saída e preservação da intenção quando save falha.
