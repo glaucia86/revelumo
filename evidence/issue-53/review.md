@@ -15,3 +15,5 @@ Correction: enforce the <=768-byte adjustment budget and Canvas aggregate covera
 Pending acceptance gates were correctly disclosed: packaged small circuit with independent reopen and final-SHA Windows/Ubuntu CI. Neither review ran suspended workloads.
 
 Summary: Standards 1 finding corrected, 0 remaining; Spec 0 findings. Verification gates remain separate from code review.
+
+After review, the small packaged publication circuit and independent Pillow/LittleCMS reopen passed; see report.md and independent-reopen.json. The product/test implementation did not change after review. Final-SHA CI remains required before merge.
