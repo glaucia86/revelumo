@@ -1,0 +1,34 @@
+✔ neutral JPEG adjustments return a detached exact copy of the original sRGB base (1.61649ms)
+✔ neutral white balance retains the established +1 EV result without changing alpha or base pixels (0.413451ms)
+✔ positive relative temperature warms middle gray with normalized linear sRGB gains (0.390227ms)
+✔ positive relative tint moves middle gray toward magenta while retaining normalized brightness (1.148819ms)
+✔ JPEG adjustments reject out-of-range or noninteger controls instead of silently rounding or coercing (0.576563ms)
+✔ JPEG adjustments reject incomplete RGBA pixels (0.192885ms)
+✔ neutral white balance exactly preserves every established exposure output and alpha byte (4.006292ms)
+✔ white balance matches independently frozen scalar color fixtures at both extremes and interior values (1.050443ms)
+✔ negative exposure retains highlight information until white balance and exposure are both applied (0.25709ms)
+✔ repeated adjustments derive from the original base and respect its view boundaries (0.379662ms)
+✔ prepared JPEG adjustments transform a caller-owned pixel view in place (0.297279ms)
+✔ prepared recipe is a snapshot reused across independent caller-owned views (0.39283ms)
+✔ prepared neutral recipe preserves its exact view and validates complete RGBA before mutation (0.559597ms)
+✔ preparation rejects noncanonical recipes before any caller pixels are supplied (0.429094ms)
+✔ prepared in-place adjustment matches all independently frozen EV and combined WB oracles (4.967504ms)
+✔ uses fixed .90 JPEG, EXIF decode orientation and explicit sRGB Canvas, then releases surfaces (3.340318ms)
+✔ codec failure also closes the bitmap and drops Canvas dimensions (0.759202ms)
+✔ unavailable Canvas context closes decoded bitmap and releases surface (0.533098ms)
+✔ applies the existing scalar WB oracle to every full-resolution canvas pixel (2.215846ms)
+✔ caps strip readback at 1 MiB and includes the final partial rows without seams (23.242582ms)
+✔ rejects invalid geometry instead of looping or silently processing nothing (0.46014ms)
+✔ one wide row is preserved even when wider than the target strip budget (11.956025ms)
+✔ varied multi-strip raster is byte-identical to full-buffer processing including alpha (39.181685ms)
+✔ multi-strip export allocates only one recipe LUT set beyond Canvas readbacks (106.442462ms)
+✔ neutral multi-strip export needs no explicit adjustment arrays (102.100022ms)
+✔ invalid recipe is rejected before Canvas readback or mutation (0.286954ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 420.159562

@@ -1,0 +1,28 @@
+✔ neutral JPEG adjustments return a detached exact copy of the original sRGB base (1.490986ms)
+✔ neutral white balance retains the established +1 EV result without changing alpha or base pixels (0.443807ms)
+✔ positive relative temperature warms middle gray with normalized linear sRGB gains (0.254036ms)
+✔ positive relative tint moves middle gray toward magenta while retaining normalized brightness (0.487121ms)
+✔ JPEG adjustments reject out-of-range or noninteger controls instead of silently rounding or coercing (1.681537ms)
+✔ JPEG adjustments reject incomplete RGBA pixels (0.181088ms)
+✔ neutral white balance exactly preserves every established exposure output and alpha byte (5.601584ms)
+✔ white balance matches independently frozen scalar color fixtures at both extremes and interior values (1.357848ms)
+✔ negative exposure retains highlight information until white balance and exposure are both applied (0.279654ms)
+✔ repeated adjustments derive from the original base and respect its view boundaries (0.365791ms)
+✖ prepared JPEG adjustments transform a caller-owned pixel view in place (0.567239ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 10
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 135.72649
+
+✖ failing tests:
+
+test at test/jpeg-adjustments.test.ts:91:1
+✖ prepared JPEG adjustments transform a caller-owned pixel view in place (0.567239ms)
+  TypeError: prepareJpegAdjustments is not a function
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-issue-53/test/jpeg-adjustments.test.ts:95:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

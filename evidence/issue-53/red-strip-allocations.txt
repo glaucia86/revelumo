@@ -1,0 +1,52 @@
+✔ applies the existing scalar WB oracle to every full-resolution canvas pixel (1.947117ms)
+✔ caps strip readback at 1 MiB and includes the final partial rows without seams (28.186456ms)
+✔ rejects invalid geometry instead of looping or silently processing nothing (0.677181ms)
+✔ one wide row is preserved even when wider than the target strip budget (10.920816ms)
+✔ varied multi-strip raster is byte-identical to full-buffer processing including alpha (35.369634ms)
+✖ multi-strip export allocates only one recipe LUT set beyond Canvas readbacks (119.337871ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 327.415497
+
+✖ failing tests:
+
+test at test/jpeg-export-strips.test.ts:54:1
+✖ multi-strip export allocates only one recipe LUT set beyond Canvas readbacks (119.337871ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      256,
+      256,
+      256,
+  +   1045500,
+  +   256,
+  +   256,
+  +   256,
+  +   1045500,
+  +   256,
+  +   256,
+  +   256,
+  +   12300
+    ]
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/827b15a15839/revelumo-issue-53/test/jpeg-export-strips.test.ts:60:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [
+          256,     256,   256,
+      1045500,     256,   256,
+          256, 1045500,   256,
+          256,     256, 12300
+    ],
+    expected: [ 256, 256, 256 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

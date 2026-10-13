@@ -1,0 +1,5 @@
+[368684:1012/230506.152202:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[368684:1012/230506.253697:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[368684:1012/230506.253743:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+PASS packaged notice, aliases/no-clobber, auth/crop/cancel and renderer cleanup
+CIRCUIT PASS {"path":"/workspace/scratch/827b15a15839/revelumo-issue-53/.test-temp/small-circuit-001/published.jpg","cleanupPending":false,"width":40,"height":80,"bytesWritten":2000}

@@ -2,19 +2,21 @@
 // The caller supplies the same unedited, oriented sRGB RGBA base on each render.
 export type JpegAdjustments = { exposureTenths: number; temperature: number; tint: number };
 
-/** Pure byte transform. Allocates a detached result and preserves every alpha byte.
- * This module does not decode, orient, resize, crop, retain, or mutate the base.
+/** Owns only three 256-byte LUTs for a validated recipe, never pixel buffers.
+ * applyInPlace mutates precisely the supplied RGBA view. Use it only for pixels
+ * owned by the caller (the exporter's private ImageData), never the preview base.
+ * There is no separate source/destination pair or partially overlapping views.
  */
-export function applyJpegAdjustments(base: Uint8ClampedArray, adjustments: JpegAdjustments): Uint8ClampedArray {
-  if (base.length % 4 !== 0) throw new RangeError('JPEG adjustment pixels must be complete RGBA tuples.');
+export function prepareJpegAdjustments(adjustments: JpegAdjustments): { applyInPlace(pixels: Uint8ClampedArray): void } {
   const { exposureTenths, temperature, tint } = adjustments;
   if (!Number.isInteger(exposureTenths) || exposureTenths < -30 || exposureTenths > 30
     || !Number.isInteger(temperature) || temperature < -100 || temperature > 100
     || !Number.isInteger(tint) || tint < -100 || tint > 100) {
     throw new RangeError('JPEG adjustments must use canonical integer values within their ranges.');
   }
-  const pixels = new Uint8ClampedArray(base);
-  if (exposureTenths === 0 && temperature === 0 && tint === 0) return pixels;
+  if (exposureTenths === 0 && temperature === 0 && tint === 0) return {
+    applyInPlace(pixels) { validatePixels(pixels); },
+  };
   const gains = [1, 1, 1];
   if (temperature !== 0 || tint !== 0) {
     gains[0] = 2 ** (temperature / 200);
@@ -38,6 +40,25 @@ export function applyJpegAdjustments(base: Uint8ClampedArray, adjustments: JpegA
     }
     return lut;
   });
-  for (let i = 0; i < pixels.length; i += 4) { pixels[i] = luts[0][base[i]]; pixels[i + 1] = luts[1][base[i + 1]]; pixels[i + 2] = luts[2][base[i + 2]]; }
+  return {
+    applyInPlace(pixels) {
+      validatePixels(pixels);
+      for (let i = 0; i < pixels.length; i += 4) { pixels[i] = luts[0][pixels[i]]; pixels[i + 1] = luts[1][pixels[i + 1]]; pixels[i + 2] = luts[2][pixels[i + 2]]; }
+    },
+  };
+}
+
+function validatePixels(pixels: Uint8ClampedArray): void {
+  if (pixels.length % 4 !== 0) throw new RangeError('JPEG adjustment pixels must be complete RGBA tuples.');
+}
+
+/** Pure byte transform. Allocates a detached result and preserves every alpha byte.
+ * This module does not decode, orient, resize, crop, retain, or mutate the base.
+ */
+export function applyJpegAdjustments(base: Uint8ClampedArray, adjustments: JpegAdjustments): Uint8ClampedArray {
+  validatePixels(base);
+  const prepared = prepareJpegAdjustments(adjustments);
+  const pixels = new Uint8ClampedArray(base);
+  prepared.applyInPlace(pixels);
   return pixels;
 }
