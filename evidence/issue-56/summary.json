@@ -1,0 +1,127 @@
+{
+  "runSet": "runs",
+  "reportedCheckoutSha": "5ca817fee87e15c35d172bd61bb56be3f9c2b1de",
+  "packageSha256": "aee3ee97654e0ef55866850b5fcfe8664383cb31a32e334ffd4a1d3ca438761f",
+  "countsPerRun": {
+    "created": 6,
+    "terminated": 6,
+    "live": 0,
+    "peak": 1,
+    "prepares": 6,
+    "ready": 6,
+    "renders": 18,
+    "pixels": 18,
+    "transferBytes": 215883,
+    "pixelBytes": 26726400,
+    "detached": 6
+  },
+  "timings": {
+    "off": {
+      "openMs": {
+        "n": 18,
+        "min": 23.48986100000002,
+        "median": 24.960946000000035,
+        "max": 46.14006500000005
+      },
+      "editMs": {
+        "n": 18,
+        "min": 309.1834449999999,
+        "median": 313.28441699999996,
+        "max": 323.004093
+      },
+      "totalMs": {
+        "n": 18,
+        "min": 374.6280770000001,
+        "median": 381.71621350000004,
+        "max": 403.25528499999996
+      }
+    },
+    "on": {
+      "openMs": {
+        "n": 18,
+        "min": 23.839002000000164,
+        "median": 24.93983750000018,
+        "max": 46.88047699999993
+      },
+      "editMs": {
+        "n": 18,
+        "min": 309.35859099999993,
+        "median": 313.3050884999999,
+        "max": 322.17392900000004
+      },
+      "totalMs": {
+        "n": 18,
+        "min": 372.95962800000007,
+        "median": 380.086118,
+        "max": 408.21673599999986
+      }
+    }
+  },
+  "mainPerInstrumentedRun": {
+    "status": {
+      "allocations": 6,
+      "allocationBytes": 215889,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "authenticatedHashes": 6
+    },
+    "preview": {
+      "allocations": 6,
+      "allocationBytes": 215889,
+      "payloadCopies": 6,
+      "payloadBytes": 215883,
+      "authenticatedHashes": 6
+    },
+    "adjustments": {
+      "allocations": 12,
+      "allocationBytes": 431778,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "authenticatedHashes": 12
+    }
+  },
+  "workerPerInstrumentedRun": {
+    "typedArrays": 63,
+    "typedBytes": 26737920,
+    "readbacks": 6,
+    "readbackBytes": 8908800
+  },
+  "versions": {
+    "node": "24.21.0",
+    "acorn": "8.18.0",
+    "ada": "4.0.0",
+    "amaro": "1.1.11",
+    "ares": "1.34.8",
+    "brotli": "1.2.0",
+    "cldr": "48.0",
+    "icu": "78.2",
+    "llhttp": "9.4.3",
+    "merve": "1.2.2",
+    "modules": "149",
+    "napi": "10",
+    "nbytes": "0.1.4",
+    "ncrypto": "0.0.1",
+    "nghttp2": "1.70.0",
+    "nghttp3": "",
+    "ngtcp2": "",
+    "openssl": "0.0.0",
+    "simdjson": "4.6.7",
+    "simdutf": "7.7.0",
+    "sqlite": "3.53.4",
+    "tz": "2026d",
+    "undici": "7.29.1",
+    "unicode": "17.0",
+    "uv": "1.52.1",
+    "uvwasi": "0.0.23",
+    "v8": "15.2.124.28-electron.0",
+    "zlib": "1.3.2.1-motley",
+    "zstd": "1.6.0",
+    "electron": "44.7.0",
+    "chrome": "152.0.7977.130"
+  },
+  "pairedTotalDifferenceMs": [
+    -8.573985999999877,
+    -12.975002000000131,
+    47.126093999999284
+  ]
+}

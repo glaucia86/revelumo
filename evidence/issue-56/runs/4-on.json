@@ -1,0 +1,968 @@
+{
+  "status": "passed",
+  "checkoutSha": "5ca817fee87e15c35d172bd61bb56be3f9c2b1de",
+  "packageSourceVerified": false,
+  "packageSha256": "aee3ee97654e0ef55866850b5fcfe8664383cb31a32e334ffd4a1d3ca438761f",
+  "instrument": true,
+  "versions": {
+    "node": "24.21.0",
+    "acorn": "8.18.0",
+    "ada": "4.0.0",
+    "amaro": "1.1.11",
+    "ares": "1.34.8",
+    "brotli": "1.2.0",
+    "cldr": "48.0",
+    "icu": "78.2",
+    "llhttp": "9.4.3",
+    "merve": "1.2.2",
+    "modules": "149",
+    "napi": "10",
+    "nbytes": "0.1.4",
+    "ncrypto": "0.0.1",
+    "nghttp2": "1.70.0",
+    "nghttp3": "",
+    "ngtcp2": "",
+    "openssl": "0.0.0",
+    "simdjson": "4.6.7",
+    "simdutf": "7.7.0",
+    "sqlite": "3.53.4",
+    "tz": "2026d",
+    "undici": "7.29.1",
+    "unicode": "17.0",
+    "uv": "1.52.1",
+    "uvwasi": "0.0.23",
+    "v8": "15.2.124.28-electron.0",
+    "zlib": "1.3.2.1-motley",
+    "zstd": "1.6.0",
+    "electron": "44.7.0",
+    "chrome": "152.0.7977.130"
+  },
+  "platform": "linux",
+  "manifest": {
+    "pillow": "12.3.0",
+    "fixtures": [
+      {
+        "name": "a.jpg",
+        "width": 640,
+        "height": 480,
+        "bytes": 27579,
+        "sha256": "3c500ecf3fdd57e81007a79d7fc4b3a8fc0da3b16e998d9d80594b8c17532fe8"
+      },
+      {
+        "name": "b.jpg",
+        "width": 800,
+        "height": 600,
+        "bytes": 48334,
+        "sha256": "6b56166e9a529a2099d12b12111f284ca8745295eefa79203c759464f0157827"
+      },
+      {
+        "name": "c.jpg",
+        "width": 720,
+        "height": 480,
+        "bytes": 36478,
+        "sha256": "e1efd0e9f26d0a35e31910cae56f3796f41b8f28ee301e1abf493901b4ff45c8"
+      }
+    ]
+  },
+  "steps": [
+    {
+      "i": 0,
+      "sequence": "ABA",
+      "name": "a.jpg",
+      "openMs": 24.905389000000014,
+      "editMs": 314.254641,
+      "totalMs": 378.236304,
+      "allocationsBeforeExit": {
+        "typedArrays": 5,
+        "typedBytes": 2458368,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      },
+      "allocations": {
+        "typedArrays": 9,
+        "typedBytes": 3687936,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      },
+      "canvasHash": {
+        "width": 640,
+        "height": 480,
+        "hash": 2354591638
+      },
+      "before": {
+        "created": 0,
+        "terminated": 0,
+        "live": 0,
+        "peak": 0,
+        "prepares": 0,
+        "ready": 0,
+        "renders": 0,
+        "pixels": 0,
+        "transferBytes": 0,
+        "pixelBytes": 0,
+        "detached": 0
+      },
+      "after": {
+        "created": 1,
+        "terminated": 1,
+        "live": 0,
+        "peak": 1,
+        "prepares": 1,
+        "ready": 1,
+        "renders": 3,
+        "pixels": 3,
+        "transferBytes": 27579,
+        "pixelBytes": 3686400,
+        "detached": 1
+      }
+    },
+    {
+      "i": 1,
+      "sequence": "ABA",
+      "name": "b.jpg",
+      "openMs": 24.735584000000017,
+      "editMs": 313.142867,
+      "totalMs": 384.391615,
+      "allocationsBeforeExit": {
+        "typedArrays": 5,
+        "typedBytes": 3840768,
+        "readbacks": 1,
+        "readbackBytes": 1920000
+      },
+      "allocations": {
+        "typedArrays": 9,
+        "typedBytes": 5761536,
+        "readbacks": 1,
+        "readbackBytes": 1920000
+      },
+      "canvasHash": {
+        "width": 800,
+        "height": 600,
+        "hash": 3652582650
+      },
+      "before": {
+        "created": 1,
+        "terminated": 1,
+        "live": 0,
+        "peak": 1,
+        "prepares": 1,
+        "ready": 1,
+        "renders": 3,
+        "pixels": 3,
+        "transferBytes": 27579,
+        "pixelBytes": 3686400,
+        "detached": 1
+      },
+      "after": {
+        "created": 2,
+        "terminated": 2,
+        "live": 0,
+        "peak": 1,
+        "prepares": 2,
+        "ready": 2,
+        "renders": 6,
+        "pixels": 6,
+        "transferBytes": 75913,
+        "pixelBytes": 9446400,
+        "detached": 2
+      }
+    },
+    {
+      "i": 2,
+      "sequence": "ABA",
+      "name": "a.jpg",
+      "openMs": 24.965734999999995,
+      "editMs": 322.17392900000004,
+      "totalMs": 388.13250199999993,
+      "allocationsBeforeExit": {
+        "typedArrays": 8,
+        "typedBytes": 2459136,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      },
+      "allocations": {
+        "typedArrays": 12,
+        "typedBytes": 3688704,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      },
+      "canvasHash": {
+        "width": 640,
+        "height": 480,
+        "hash": 43773752
+      },
+      "before": {
+        "created": 2,
+        "terminated": 2,
+        "live": 0,
+        "peak": 1,
+        "prepares": 2,
+        "ready": 2,
+        "renders": 6,
+        "pixels": 6,
+        "transferBytes": 75913,
+        "pixelBytes": 9446400,
+        "detached": 2
+      },
+      "after": {
+        "created": 3,
+        "terminated": 3,
+        "live": 0,
+        "peak": 1,
+        "prepares": 3,
+        "ready": 3,
+        "renders": 9,
+        "pixels": 9,
+        "transferBytes": 103492,
+        "pixelBytes": 13132800,
+        "detached": 3
+      }
+    },
+    {
+      "i": 3,
+      "sequence": "ABC",
+      "name": "a.jpg",
+      "openMs": 25.065210999999863,
+      "editMs": 313.30738099999985,
+      "totalMs": 376.20863699999995,
+      "allocationsBeforeExit": {
+        "typedArrays": 8,
+        "typedBytes": 2459136,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      },
+      "allocations": {
+        "typedArrays": 12,
+        "typedBytes": 3688704,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      },
+      "canvasHash": {
+        "width": 640,
+        "height": 480,
+        "hash": 2354591638
+      },
+      "before": {
+        "created": 3,
+        "terminated": 3,
+        "live": 0,
+        "peak": 1,
+        "prepares": 3,
+        "ready": 3,
+        "renders": 9,
+        "pixels": 9,
+        "transferBytes": 103492,
+        "pixelBytes": 13132800,
+        "detached": 3
+      },
+      "after": {
+        "created": 4,
+        "terminated": 4,
+        "live": 0,
+        "peak": 1,
+        "prepares": 4,
+        "ready": 4,
+        "renders": 12,
+        "pixels": 12,
+        "transferBytes": 131071,
+        "pixelBytes": 16819200,
+        "detached": 4
+      }
+    },
+    {
+      "i": 4,
+      "sequence": "ABC",
+      "name": "b.jpg",
+      "openMs": 44.728603999999905,
+      "editMs": 312.9555909999999,
+      "totalMs": 402.2261779999999,
+      "allocationsBeforeExit": {
+        "typedArrays": 8,
+        "typedBytes": 3841536,
+        "readbacks": 1,
+        "readbackBytes": 1920000
+      },
+      "allocations": {
+        "typedArrays": 12,
+        "typedBytes": 5762304,
+        "readbacks": 1,
+        "readbackBytes": 1920000
+      },
+      "canvasHash": {
+        "width": 800,
+        "height": 600,
+        "hash": 2726560255
+      },
+      "before": {
+        "created": 4,
+        "terminated": 4,
+        "live": 0,
+        "peak": 1,
+        "prepares": 4,
+        "ready": 4,
+        "renders": 12,
+        "pixels": 12,
+        "transferBytes": 131071,
+        "pixelBytes": 16819200,
+        "detached": 4
+      },
+      "after": {
+        "created": 5,
+        "terminated": 5,
+        "live": 0,
+        "peak": 1,
+        "prepares": 5,
+        "ready": 5,
+        "renders": 15,
+        "pixels": 15,
+        "transferBytes": 179405,
+        "pixelBytes": 22579200,
+        "detached": 5
+      }
+    },
+    {
+      "i": 5,
+      "sequence": "ABC",
+      "name": "c.jpg",
+      "openMs": 23.839002000000164,
+      "editMs": 314.9276990000003,
+      "totalMs": 379.63777900000014,
+      "allocationsBeforeExit": {
+        "typedArrays": 5,
+        "typedBytes": 2765568,
+        "readbacks": 1,
+        "readbackBytes": 1382400
+      },
+      "allocations": {
+        "typedArrays": 9,
+        "typedBytes": 4148736,
+        "readbacks": 1,
+        "readbackBytes": 1382400
+      },
+      "canvasHash": {
+        "width": 720,
+        "height": 480,
+        "hash": 1417597170
+      },
+      "before": {
+        "created": 5,
+        "terminated": 5,
+        "live": 0,
+        "peak": 1,
+        "prepares": 5,
+        "ready": 5,
+        "renders": 15,
+        "pixels": 15,
+        "transferBytes": 179405,
+        "pixelBytes": 22579200,
+        "detached": 5
+      },
+      "after": {
+        "created": 6,
+        "terminated": 6,
+        "live": 0,
+        "peak": 1,
+        "prepares": 6,
+        "ready": 6,
+        "renders": 18,
+        "pixels": 18,
+        "transferBytes": 215883,
+        "pixelBytes": 26726400,
+        "detached": 6
+      }
+    }
+  ],
+  "records": [
+    {
+      "op": "status",
+      "allocations": 1,
+      "allocationBytes": 27580,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "3c500ecf3fdd57e81007a79d7fc4b3a8fc0da3b16e998d9d80594b8c17532fe8"
+      ],
+      "ms": 1.0637530000000197,
+      "ok": true,
+      "id": "042668c0-cce6-4563-a031-3cd97addecfb",
+      "step": 0
+    },
+    {
+      "op": "preview",
+      "allocations": 1,
+      "allocationBytes": 27580,
+      "payloadCopies": 1,
+      "payloadBytes": 27579,
+      "hashes": [
+        "3c500ecf3fdd57e81007a79d7fc4b3a8fc0da3b16e998d9d80594b8c17532fe8"
+      ],
+      "ms": 2.089921000000004,
+      "ok": true,
+      "id": "042668c0-cce6-4563-a031-3cd97addecfb",
+      "step": 0
+    },
+    {
+      "op": "adjustments",
+      "allocations": 1,
+      "allocationBytes": 27580,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "3c500ecf3fdd57e81007a79d7fc4b3a8fc0da3b16e998d9d80594b8c17532fe8"
+      ],
+      "ms": 2.1857929999999897,
+      "ok": true,
+      "id": "042668c0-cce6-4563-a031-3cd97addecfb",
+      "step": 0
+    },
+    {
+      "op": "adjustments",
+      "allocations": 1,
+      "allocationBytes": 27580,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "3c500ecf3fdd57e81007a79d7fc4b3a8fc0da3b16e998d9d80594b8c17532fe8"
+      ],
+      "ms": 2.18190699999991,
+      "ok": true,
+      "id": "042668c0-cce6-4563-a031-3cd97addecfb",
+      "step": 0
+    },
+    {
+      "op": "status",
+      "allocations": 1,
+      "allocationBytes": 48335,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "6b56166e9a529a2099d12b12111f284ca8745295eefa79203c759464f0157827"
+      ],
+      "ms": 0.6753889999999956,
+      "ok": true,
+      "id": "4267fe7e-323f-43b2-bf6f-9cfa1eb21ea0",
+      "step": 1
+    },
+    {
+      "op": "preview",
+      "allocations": 1,
+      "allocationBytes": 48335,
+      "payloadCopies": 1,
+      "payloadBytes": 48334,
+      "hashes": [
+        "6b56166e9a529a2099d12b12111f284ca8745295eefa79203c759464f0157827"
+      ],
+      "ms": 2.6908899999999676,
+      "ok": true,
+      "id": "4267fe7e-323f-43b2-bf6f-9cfa1eb21ea0",
+      "step": 1
+    },
+    {
+      "op": "adjustments",
+      "allocations": 1,
+      "allocationBytes": 48335,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "6b56166e9a529a2099d12b12111f284ca8745295eefa79203c759464f0157827"
+      ],
+      "ms": 1.563472000000047,
+      "ok": true,
+      "id": "4267fe7e-323f-43b2-bf6f-9cfa1eb21ea0",
+      "step": 1
+    },
+    {
+      "op": "adjustments",
+      "allocations": 1,
+      "allocationBytes": 48335,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "6b56166e9a529a2099d12b12111f284ca8745295eefa79203c759464f0157827"
+      ],
+      "ms": 1.6840010000000802,
+      "ok": true,
+      "id": "4267fe7e-323f-43b2-bf6f-9cfa1eb21ea0",
+      "step": 1
+    },
+    {
+      "op": "status",
+      "allocations": 1,
+      "allocationBytes": 27580,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "3c500ecf3fdd57e81007a79d7fc4b3a8fc0da3b16e998d9d80594b8c17532fe8"
+      ],
+      "ms": 0.8798720000002049,
+      "ok": true,
+      "id": "042668c0-cce6-4563-a031-3cd97addecfb",
+      "step": 2
+    },
+    {
+      "op": "preview",
+      "allocations": 1,
+      "allocationBytes": 27580,
+      "payloadCopies": 1,
+      "payloadBytes": 27579,
+      "hashes": [
+        "3c500ecf3fdd57e81007a79d7fc4b3a8fc0da3b16e998d9d80594b8c17532fe8"
+      ],
+      "ms": 1.8760150000000522,
+      "ok": true,
+      "id": "042668c0-cce6-4563-a031-3cd97addecfb",
+      "step": 2
+    },
+    {
+      "op": "adjustments",
+      "allocations": 1,
+      "allocationBytes": 27580,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "3c500ecf3fdd57e81007a79d7fc4b3a8fc0da3b16e998d9d80594b8c17532fe8"
+      ],
+      "ms": 1.4759129999999914,
+      "ok": true,
+      "id": "042668c0-cce6-4563-a031-3cd97addecfb",
+      "step": 2
+    },
+    {
+      "op": "adjustments",
+      "allocations": 1,
+      "allocationBytes": 27580,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "3c500ecf3fdd57e81007a79d7fc4b3a8fc0da3b16e998d9d80594b8c17532fe8"
+      ],
+      "ms": 1.4694540000000416,
+      "ok": true,
+      "id": "042668c0-cce6-4563-a031-3cd97addecfb",
+      "step": 2
+    },
+    {
+      "op": "status",
+      "allocations": 1,
+      "allocationBytes": 27580,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "3c500ecf3fdd57e81007a79d7fc4b3a8fc0da3b16e998d9d80594b8c17532fe8"
+      ],
+      "ms": 0.5809100000001308,
+      "ok": true,
+      "id": "042668c0-cce6-4563-a031-3cd97addecfb",
+      "step": 3
+    },
+    {
+      "op": "preview",
+      "allocations": 1,
+      "allocationBytes": 27580,
+      "payloadCopies": 1,
+      "payloadBytes": 27579,
+      "hashes": [
+        "3c500ecf3fdd57e81007a79d7fc4b3a8fc0da3b16e998d9d80594b8c17532fe8"
+      ],
+      "ms": 1.6678369999999632,
+      "ok": true,
+      "id": "042668c0-cce6-4563-a031-3cd97addecfb",
+      "step": 3
+    },
+    {
+      "op": "adjustments",
+      "allocations": 1,
+      "allocationBytes": 27580,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "3c500ecf3fdd57e81007a79d7fc4b3a8fc0da3b16e998d9d80594b8c17532fe8"
+      ],
+      "ms": 1.7236390000000483,
+      "ok": true,
+      "id": "042668c0-cce6-4563-a031-3cd97addecfb",
+      "step": 3
+    },
+    {
+      "op": "adjustments",
+      "allocations": 1,
+      "allocationBytes": 27580,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "3c500ecf3fdd57e81007a79d7fc4b3a8fc0da3b16e998d9d80594b8c17532fe8"
+      ],
+      "ms": 1.5438030000000253,
+      "ok": true,
+      "id": "042668c0-cce6-4563-a031-3cd97addecfb",
+      "step": 3
+    },
+    {
+      "op": "status",
+      "allocations": 1,
+      "allocationBytes": 48335,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "6b56166e9a529a2099d12b12111f284ca8745295eefa79203c759464f0157827"
+      ],
+      "ms": 0.7069750000000568,
+      "ok": true,
+      "id": "4267fe7e-323f-43b2-bf6f-9cfa1eb21ea0",
+      "step": 4
+    },
+    {
+      "op": "preview",
+      "allocations": 1,
+      "allocationBytes": 48335,
+      "payloadCopies": 1,
+      "payloadBytes": 48334,
+      "hashes": [
+        "6b56166e9a529a2099d12b12111f284ca8745295eefa79203c759464f0157827"
+      ],
+      "ms": 2.2141540000000077,
+      "ok": true,
+      "id": "4267fe7e-323f-43b2-bf6f-9cfa1eb21ea0",
+      "step": 4
+    },
+    {
+      "op": "adjustments",
+      "allocations": 1,
+      "allocationBytes": 48335,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "6b56166e9a529a2099d12b12111f284ca8745295eefa79203c759464f0157827"
+      ],
+      "ms": 1.4996579999997266,
+      "ok": true,
+      "id": "4267fe7e-323f-43b2-bf6f-9cfa1eb21ea0",
+      "step": 4
+    },
+    {
+      "op": "adjustments",
+      "allocations": 1,
+      "allocationBytes": 48335,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "6b56166e9a529a2099d12b12111f284ca8745295eefa79203c759464f0157827"
+      ],
+      "ms": 1.5053470000002562,
+      "ok": true,
+      "id": "4267fe7e-323f-43b2-bf6f-9cfa1eb21ea0",
+      "step": 4
+    },
+    {
+      "op": "status",
+      "allocations": 1,
+      "allocationBytes": 36479,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "e1efd0e9f26d0a35e31910cae56f3796f41b8f28ee301e1abf493901b4ff45c8"
+      ],
+      "ms": 0.7482670000003964,
+      "ok": true,
+      "id": "785f4868-0b19-4be4-90ba-13f5b04d472d",
+      "step": 5
+    },
+    {
+      "op": "preview",
+      "allocations": 1,
+      "allocationBytes": 36479,
+      "payloadCopies": 1,
+      "payloadBytes": 36478,
+      "hashes": [
+        "e1efd0e9f26d0a35e31910cae56f3796f41b8f28ee301e1abf493901b4ff45c8"
+      ],
+      "ms": 1.8936900000003334,
+      "ok": true,
+      "id": "785f4868-0b19-4be4-90ba-13f5b04d472d",
+      "step": 5
+    },
+    {
+      "op": "adjustments",
+      "allocations": 1,
+      "allocationBytes": 36479,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "e1efd0e9f26d0a35e31910cae56f3796f41b8f28ee301e1abf493901b4ff45c8"
+      ],
+      "ms": 1.4933230000001458,
+      "ok": true,
+      "id": "785f4868-0b19-4be4-90ba-13f5b04d472d",
+      "step": 5
+    },
+    {
+      "op": "adjustments",
+      "allocations": 1,
+      "allocationBytes": 36479,
+      "payloadCopies": 0,
+      "payloadBytes": 0,
+      "hashes": [
+        "e1efd0e9f26d0a35e31910cae56f3796f41b8f28ee301e1abf493901b4ff45c8"
+      ],
+      "ms": 1.7028089999998883,
+      "ok": true,
+      "id": "785f4868-0b19-4be4-90ba-13f5b04d472d",
+      "step": 5
+    }
+  ],
+  "snapshots": [
+    {
+      "step": 0,
+      "op": "ready",
+      "counts": {
+        "typedArrays": 0,
+        "typedBytes": 0,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      }
+    },
+    {
+      "step": 0,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 1,
+        "typedBytes": 1228800,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      }
+    },
+    {
+      "step": 0,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 5,
+        "typedBytes": 2458368,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      }
+    },
+    {
+      "step": 0,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 9,
+        "typedBytes": 3687936,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      }
+    },
+    {
+      "step": 1,
+      "op": "ready",
+      "counts": {
+        "typedArrays": 0,
+        "typedBytes": 0,
+        "readbacks": 1,
+        "readbackBytes": 1920000
+      }
+    },
+    {
+      "step": 1,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 1,
+        "typedBytes": 1920000,
+        "readbacks": 1,
+        "readbackBytes": 1920000
+      }
+    },
+    {
+      "step": 1,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 5,
+        "typedBytes": 3840768,
+        "readbacks": 1,
+        "readbackBytes": 1920000
+      }
+    },
+    {
+      "step": 1,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 9,
+        "typedBytes": 5761536,
+        "readbacks": 1,
+        "readbackBytes": 1920000
+      }
+    },
+    {
+      "step": 2,
+      "op": "ready",
+      "counts": {
+        "typedArrays": 0,
+        "typedBytes": 0,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      }
+    },
+    {
+      "step": 2,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 4,
+        "typedBytes": 1229568,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      }
+    },
+    {
+      "step": 2,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 8,
+        "typedBytes": 2459136,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      }
+    },
+    {
+      "step": 2,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 12,
+        "typedBytes": 3688704,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      }
+    },
+    {
+      "step": 3,
+      "op": "ready",
+      "counts": {
+        "typedArrays": 0,
+        "typedBytes": 0,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      }
+    },
+    {
+      "step": 3,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 4,
+        "typedBytes": 1229568,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      }
+    },
+    {
+      "step": 3,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 8,
+        "typedBytes": 2459136,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      }
+    },
+    {
+      "step": 3,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 12,
+        "typedBytes": 3688704,
+        "readbacks": 1,
+        "readbackBytes": 1228800
+      }
+    },
+    {
+      "step": 4,
+      "op": "ready",
+      "counts": {
+        "typedArrays": 0,
+        "typedBytes": 0,
+        "readbacks": 1,
+        "readbackBytes": 1920000
+      }
+    },
+    {
+      "step": 4,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 4,
+        "typedBytes": 1920768,
+        "readbacks": 1,
+        "readbackBytes": 1920000
+      }
+    },
+    {
+      "step": 4,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 8,
+        "typedBytes": 3841536,
+        "readbacks": 1,
+        "readbackBytes": 1920000
+      }
+    },
+    {
+      "step": 4,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 12,
+        "typedBytes": 5762304,
+        "readbacks": 1,
+        "readbackBytes": 1920000
+      }
+    },
+    {
+      "step": 5,
+      "op": "ready",
+      "counts": {
+        "typedArrays": 0,
+        "typedBytes": 0,
+        "readbacks": 1,
+        "readbackBytes": 1382400
+      }
+    },
+    {
+      "step": 5,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 1,
+        "typedBytes": 1382400,
+        "readbacks": 1,
+        "readbackBytes": 1382400
+      }
+    },
+    {
+      "step": 5,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 5,
+        "typedBytes": 2765568,
+        "readbacks": 1,
+        "readbackBytes": 1382400
+      }
+    },
+    {
+      "step": 5,
+      "op": "pixels",
+      "counts": {
+        "typedArrays": 9,
+        "typedBytes": 4148736,
+        "readbacks": 1,
+        "readbackBytes": 1382400
+      }
+    }
+  ],
+  "counts": {
+    "created": 6,
+    "terminated": 6,
+    "live": 0,
+    "peak": 1,
+    "prepares": 6,
+    "ready": 6,
+    "renders": 18,
+    "pixels": 18,
+    "transferBytes": 215883,
+    "pixelBytes": 26726400,
+    "detached": 6
+  }
+}

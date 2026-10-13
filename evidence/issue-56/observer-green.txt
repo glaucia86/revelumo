@@ -1,0 +1,11 @@
+✔ counter observes actual typed-array construction without retaining or changing pixels (5.53403ms)
+✔ transfer detaches real storage; the counter neither pools nor retains it (1.537305ms)
+✔ snapshot reports final allocations at send without changing the message (0.809548ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 122.859716

@@ -1,0 +1,66 @@
+✖ counter observes actual typed-array construction without retaining or changing pixels (3.705731ms)
+✖ transfer detaches real storage; the counter neither pools nor retains it (0.932479ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 88.705003
+
+✖ failing tests:
+
+test at lab/issue-56/observer.test.cjs:3:1
+✖ counter observes actual typed-array construction without retaining or changing pixels (3.705731ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      a: [
+        1,
+        2,
+        3,
+  ...
+        readbacks: 0,
+  +     typedArrays: 0,
+  +     typedBytes: 0
+  -     typedArrays: 2,
+  -     typedBytes: 8
+      }
+    }
+  
+      at TestContext.<anonymous> (/workspace/scratch/827b15a15839/revelumo-issue-56/lab/issue-56/observer.test.cjs:6:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { a: [ 1, 2, 3, 4 ], b: [ 9, 2, 3, 4 ], stats: { typedArrays: 0, typedBytes: 0, readbacks: 0, readbackBytes: 0 } },
+    expected: { a: [ 1, 2, 3, 4 ], b: [ 9, 2, 3, 4 ], stats: { typedArrays: 2, typedBytes: 8, readbacks: 0, readbackBytes: 0 } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at lab/issue-56/observer.test.cjs:8:1
+✖ transfer detaches real storage; the counter neither pools nor retains it (0.932479ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 16
+  
+      at TestContext.<anonymous> (/workspace/scratch/827b15a15839/revelumo-issue-56/lab/issue-56/observer.test.cjs:11:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 16,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
