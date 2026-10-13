@@ -1,0 +1,28 @@
+✔ neutral JPEG adjustments return a detached exact copy of the original sRGB base (1.86742ms)
+✔ neutral white balance retains the established +1 EV result without changing alpha or base pixels (0.671062ms)
+✔ positive relative temperature warms middle gray with normalized linear sRGB gains (0.564083ms)
+✔ positive relative tint moves middle gray toward magenta while retaining normalized brightness (0.344519ms)
+✔ JPEG adjustments reject out-of-range or noninteger controls instead of silently rounding or coercing (0.854253ms)
+✔ JPEG adjustments reject incomplete RGBA pixels (1.372629ms)
+✔ neutral white balance exactly preserves every established exposure output and alpha byte (5.260063ms)
+✔ white balance matches independently frozen scalar color fixtures at both extremes and interior values (1.289405ms)
+✔ negative exposure retains highlight information until white balance and exposure are both applied (0.292041ms)
+✔ repeated adjustments derive from the original base and respect its view boundaries (0.43348ms)
+✔ prepared JPEG adjustments transform a caller-owned pixel view in place (0.451587ms)
+✔ uses fixed .90 JPEG, EXIF decode orientation and explicit sRGB Canvas, then releases surfaces (3.277884ms)
+✔ codec failure also closes the bitmap and drops Canvas dimensions (1.010573ms)
+✔ unavailable Canvas context closes decoded bitmap and releases surface (0.560579ms)
+✔ applies the existing scalar WB oracle to every full-resolution canvas pixel (2.534194ms)
+✔ caps strip readback at 1 MiB and includes the final partial rows without seams (26.064388ms)
+✔ rejects invalid geometry instead of looping or silently processing nothing (0.475363ms)
+✔ one wide row is preserved even when wider than the target strip budget (15.653463ms)
+✔ varied multi-strip raster is byte-identical to full-buffer processing including alpha (34.982567ms)
+✔ multi-strip export allocates only one recipe LUT set beyond Canvas readbacks (118.754986ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 328.291108

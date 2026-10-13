@@ -50,3 +50,34 @@ test('varied multi-strip raster is byte-identical to full-buffer processing incl
   for (let i = 3; i < f.data.length; i += 4) assert.equal(f.data[i], original[i]);
   assert.ok(f.largestRead() <= 1024 * 1024);
 });
+
+test('multi-strip export allocates only one recipe LUT set beyond Canvas readbacks', async () => {
+  const { execFileSync } = await import('node:child_process');
+  const { fileURLToPath } = await import('node:url');
+  const probe = fileURLToPath(new URL('./helpers/jpeg-strip-allocation-probe.mjs', import.meta.url));
+  const observed = JSON.parse(execFileSync(process.execPath, [probe], { encoding: 'utf8' }));
+  assert.equal(observed.readbacks.reduce((sum: number, bytes: number) => sum + bytes, 0), 1025 * 513 * 4);
+  assert.ok(observed.readbacks.every((bytes: number) => bytes <= 1024 * 1024));
+  // Resource budget, not a prescribed LUT layout or constructor ordering.
+  assert.ok(observed.explicitAllocatedBytes > 0 && observed.explicitAllocatedBytes <= 768);
+  assert.ok(observed.allocations.every((bytes: number) => bytes <= 768));
+});
+
+test('neutral multi-strip export needs no explicit adjustment arrays', async () => {
+  const { execFileSync } = await import('node:child_process');
+  const { fileURLToPath } = await import('node:url');
+  const probe = fileURLToPath(new URL('./helpers/jpeg-strip-allocation-probe.mjs', import.meta.url));
+  const module = fileURLToPath(new URL('../src/export-renderer/strips.ts', import.meta.url));
+  const observed = JSON.parse(execFileSync(process.execPath, [probe, module, 'neutral'], { encoding: 'utf8' }));
+  assert.equal(observed.readbacks.reduce((sum: number, bytes: number) => sum + bytes, 0), 1025 * 513 * 4);
+  assert.ok(observed.readbacks.every((bytes: number) => bytes <= 1024 * 1024));
+  assert.deepEqual(observed.allocations, []);
+});
+
+test('invalid recipe is rejected before Canvas readback or mutation', () => {
+  const context = {
+    getImageData() { assert.fail('Invalid recipe cannot read Canvas'); },
+    putImageData() { assert.fail('Invalid recipe cannot mutate Canvas'); },
+  };
+  assert.throws(() => adjustJpegCanvas(context, 1, 1, { ...recipe, temperature: 101 }), RangeError);
+});
