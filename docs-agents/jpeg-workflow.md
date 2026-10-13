@@ -68,8 +68,8 @@ xvfb-run -a node_modules/electron/dist/electron test/electron-graphics-probe.cjs
 ```
 
 CI uses the same workflow command. Windows runs it directly. Ubuntu first runs
-that real sandboxed-window probe. Only recognized missing graphics/library or
-sandbox prerequisites produce a structured CI skip with the original diagnostic;
+that real sandboxed-window probe. Only missing Xvfb or the specifically verified Electron SUID-helper abort
+produce a structured CI skip with the original diagnostic;
 unexpected probe failures and any workflow failure fail CI. A skipped Ubuntu
 workflow is missing coverage, not a pass. Check the current run's summary before
 claiming Ubuntu execution.

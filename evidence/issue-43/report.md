@@ -66,8 +66,8 @@ infrastructure was added.
 ## CI and remaining limits
 
 The Windows gate runs the same public command. Ubuntu runs the sandboxed-window
-prerequisite probe and, when it succeeds, the same command under Xvfb. Recognized
-missing prerequisites produce a structured skip with the original diagnostic;
+prerequisite probe and, when it succeeds, the same command under Xvfb. Missing Xvfb or the specifically recognized SUID-helper abort produce a
+structured skip with the original diagnostic;
 assertion failures and unexpected probe errors remain failures. Consult the
 linked PR/Actions run for the exact final SHA and actual Windows/Ubuntu outcomes.
 No CI result is asserted by this historical local report.
@@ -75,3 +75,22 @@ No CI result is asserted by this historical local report.
 Native dialogs, physical keyboard and screen-reader interaction, macOS package
 layout, perceptual QA and the 8 GB/no-dedicated-GPU target remain unverified by
 this scenario. Existing focused regressions are retained.
+
+### Ubuntu prerequisite result
+
+[Initial CI run 38326413570](https://github.com/glaucia86/revelumo/actions/runs/38326413570)
+passed all 305 Ubuntu core tests, types and packaging, then the real sandboxed
+probe aborted at `setuid_sandbox_host.cc:166`: the SUID sandbox helper was found
+but was not configured correctly. The diagnostic required root ownership/mode
+4755. Neither permissions nor ownership were changed. Ubuntu JPEG runtime
+first/reopen was not exercised. The CI-only classifier now recognizes that exact
+fatal source/message and emits a structured coverage skip; generic errors,
+assertions, crashes and unknown failures still fail CI. The public command keeps
+its nonzero result if it cannot run.
+
+The same initial CI run completed the full Windows job successfully at merge
+ref `6af1d2dbf55e2efb440d6ed48eaba6b30570b606` (PR head
+`b5b16618c0529e9c1de4a2df4d245fd2c0733f70`). Core reported 299 passes and
+6 explicit skips out of 305 tests. The public JPEG package/first/reopen command
+and every existing Windows regression gate passed. The subsequent CI-policy-only
+correction requires its own new CI run; this result is not substituted for it.
